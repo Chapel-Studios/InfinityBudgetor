@@ -1,0 +1,59 @@
+﻿<Window x:Class="Budgetor.Views.BudgetorMain"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Budgetor"
+        xmlns:models="clr-namespace:Budgetor.Models"
+        
+        mc:Ignorable="d"
+        Title="BudgetorMain" 
+        Height="450" Width="800" WindowStyle="ThreeDBorderWindow" >
+    <Window.Resources>
+        <DataTemplate x:Key="BankAccountsList_DT">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding Name}"></TextBlock>
+                <TextBlock Text="{Binding Balance}"></TextBlock>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="IncomeSourcesList_DT">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding Name}"></TextBlock>
+                <TextBlock Text="{Binding PayCycle}"></TextBlock>
+                <TextBlock Text="{Binding UsualAmount}"></TextBlock>
+                <TextBlock Text="{Binding NextPayDate}"></TextBlock>
+            </StackPanel>
+        </DataTemplate>
+        <Style x:Key="AccountsList_Style" TargetType="{x:Type ListBox}" BasedOn="{x:Null}">
+            <Setter Property="Margin" Value="25, 25, 0, 0" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <TabControl>
+            <TabItem Header="Accounts">
+                <StackPanel Orientation="Horizontal">
+                    <ListBox 
+                        ItemsSource="{Binding AccountsTab.BankAccounts}" 
+                        ItemTemplate="{StaticResource BankAccountsList_DT}"
+                        Style="{StaticResource AccountsList_Style}"
+                        Width="200"
+                    >
+
+                    </ListBox>
+                    <ListBox 
+                        ItemsSource="{Binding AccountsTab.IncomeSources}" 
+                        ItemTemplate="{StaticResource IncomeSourcesList_DT}"
+                        Style="{StaticResource AccountsList_Style}"
+                        Width="300"
+                    >
+
+                    </ListBox>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Transactions">
+                
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

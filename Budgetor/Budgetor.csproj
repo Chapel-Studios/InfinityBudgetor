@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{AA654E16-9C8C-4210-AA47-642882179039}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Budgetor</RootNamespace>
+    <AssemblyName>Budgetor</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>Budgetor.App</StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Models\Accounts\DetailVMs\AccountDetailVM.cs" />
+    <Compile Include="Models\Accounts\DetailVMs\IncomeSourceDetailVM.cs" />
+    <Compile Include="Constants\Frequency.cs" />
+    <Compile Include="Models\Scheduling\Schedule.cs" />
+    <Compile Include="Models\Shared\BindableBase.cs" />
+    <Compile Include="Constants\ConstantBaseTypes.cs" />
+    <Compile Include="Constants\MiscConstants.cs" />
+    <Compile Include="Factories\AccountFactory.cs" />
+    <Compile Include="Constants\AccountTypesConstants.cs" />
+    <Compile Include="Helpers\DispayFormatHelper.cs" />
+    <Compile Include="Helpers\FirstTimeInitHelper.cs" />
+    <Compile Include="Overminds\AccountsOM.cs" />
+    <Compile Include="Models\Contracts\IAccount.cs" />
+    <Compile Include="Models\Accounts\DetailVMs\BankAccountDetailVM.cs" />
+    <Compile Include="Models\Accounts\ListVMs\BankAccountListVM.cs" />
+    <Compile Include="Models\Accounts\ListVMs\IncomeSourceListVM.cs" />
+    <Compile Include="Models\Accounts\ListVMs\AccountListBaseVM.cs" />
+    <Compile Include="Repo\Models\BankAccountView.cs" />
+    <Compile Include="Repo\Models\DepositAccount.cs" />
+    <Compile Include="Repo\Models\IncomeSource.cs" />
+    <Compile Include="Repo\Models\IncomeSourceListView.cs" />
+    <Compile Include="Repo\Models\Schedule.cs" />
+    <Compile Include="Repo\Models\ScheduleFrequencyType.cs" />
+    <Compile Include="Repo\Models\Transaction.cs" />
+    <Compile Include="Repo\Models\TransactionType.cs" />
+    <Compile Include="Repo\Repository.cs" />
+    <Compile Include="Views\BudgetorMain.xaml.cs">
+      <DependentUpon>BudgetorMain.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Accounts\AccountsTabVM.cs" />
+    <Compile Include="Repo\Models\Account.cs" />
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Repo\Budgetor_Context.cs" />
+    <Page Include="Views\BudgetorMain.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DBScripts\SeedData\ScheduleFrequencyTypes.sql" />
+    <Content Include="DBScripts\Tables.sql" />
+    <Content Include="DBScripts\Views\BankAccountsListViews.sql" />
+    <Content Include="DBScripts\Views\IncomeSourcesListViews.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Factories\Models\" />
+    <Folder Include="Properties\DataSources\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
