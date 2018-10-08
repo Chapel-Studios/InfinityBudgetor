@@ -76,22 +76,24 @@
     <Compile Include="Factories\AccountFactory.cs" />
     <Compile Include="Constants\AccountTypesConstants.cs" />
     <Compile Include="Helpers\DispayFormatHelper.cs" />
-    <Compile Include="Helpers\FirstTimeInitHelper.cs" />
+    <Compile Include="Helpers\FirstTimeExperienceHelper.cs" />
     <Compile Include="Overminds\AccountsOM.cs" />
     <Compile Include="Models\Contracts\IAccount.cs" />
     <Compile Include="Models\Accounts\DetailVMs\BankAccountDetailVM.cs" />
     <Compile Include="Models\Accounts\ListVMs\BankAccountListVM.cs" />
     <Compile Include="Models\Accounts\ListVMs\IncomeSourceListVM.cs" />
     <Compile Include="Models\Accounts\ListVMs\AccountListBaseVM.cs" />
-    <Compile Include="Repo\Models\BankAccountView.cs" />
+    <Compile Include="Overminds\MappingOM.cs" />
+    <Compile Include="Repo\Models\BankAccountsListView.cs" />
     <Compile Include="Repo\Models\DepositAccount.cs" />
     <Compile Include="Repo\Models\IncomeSource.cs" />
-    <Compile Include="Repo\Models\IncomeSourceListView.cs" />
+    <Compile Include="Repo\Models\IncomeSourcesListView.cs" />
     <Compile Include="Repo\Models\Schedule.cs" />
     <Compile Include="Repo\Models\ScheduleFrequencyType.cs" />
     <Compile Include="Repo\Models\Transaction.cs" />
     <Compile Include="Repo\Models\TransactionType.cs" />
     <Compile Include="Repo\Repository.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="Views\BudgetorMain.xaml.cs">
       <DependentUpon>BudgetorMain.xaml</DependentUpon>
     </Compile>

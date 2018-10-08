@@ -9,15 +9,13 @@ namespace Budgetor.Models.Accounts
 {
     public class BankAccountDetailVM : AccountDetailVM
     {
-        public int Account { get; set; }
+        public int DepositAccountId { get; set; }
 
         public bool IsDefault { get; set; }
 
         public bool IsActiveCashAccount { get; set; }
 
-        public decimal InitialBalance { get; set; }
-
-        public int? InitialDeposit { get; set; }
+        public int? InitialDepositId { get; set; }
 
     }
 }

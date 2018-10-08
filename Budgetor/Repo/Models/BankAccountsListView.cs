@@ -10,7 +10,9 @@ namespace Budgetor.Repo.Models
     public class BankAccountsListView
     {
         [Key]
-        public int LocalId { get; set; }
+        public int DepositAccountId { get; set; }
+
+        public int AccountId { get; set; }
 
         [Required]
         [StringLength(50)]
@@ -24,6 +26,7 @@ namespace Budgetor.Repo.Models
 
         public bool IsActiveCashAccount { get; set; }
 
-        public decimal Balance { get; set; }
+        //todo: need to figure out how we're getting this
+        //public decimal Balance { get; set; }
     }
 }

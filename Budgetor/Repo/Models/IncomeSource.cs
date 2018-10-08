@@ -9,14 +9,16 @@ namespace Budgetor.Repo.Models
     public partial class IncomeSource
     {
         [Key]
-        public int Account { get; set; }
+        public int LocalId { get; set; }
+
+        public int AccountId { get; set; }
 
         public decimal ExpectedAmount { get; set; }
 
         public decimal TotalFromSource { get; set; }
 
-        public int DefaultToAccount { get; set; }
+        public int? DefaultToAccountId { get; set; }
 
-        public int? Schedule { get; set; }
+        public int? ScheduleId { get; set; }
     }
 }

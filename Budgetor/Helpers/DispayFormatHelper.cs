@@ -18,5 +18,17 @@ namespace Budgetor.Helpers
             return string.Format(value.ToString(), "d/m/yy");
         }
 
+        public static string GetDisplayDate(DateTime? value)
+        {
+            if (value.HasValue)
+            {
+                return GetDisplayDate(value.Value);
+            }
+            else
+            {
+                return "";
+            }
+        }
+
     }
 }

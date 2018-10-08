@@ -1,5 +1,6 @@
 ﻿using Budgetor.Models;
 using Budgetor.Models.Accounts;
+using Budgetor.Models.Scheduling;
 using Budgetor.Repo;
 using Budgetor.Repo.Models;
 using System;
@@ -24,7 +25,7 @@ namespace Budgetor.Overminds
         }
 
 
-        public BankAccountDetailVM GetBankAccountsById(int BankAccountId)
+        public BankAccountDetailVM GetBankAccountById(int BankAccountId)
         {
             throw new NotImplementedException();
         }
@@ -36,12 +37,14 @@ namespace Budgetor.Overminds
             return repo.GetBankAccountsListViews().Select(x => new BankAccountListVM()
             {
                 AccountName = x.AccountName,
-                Balance = x.Balance,
+                //todo: need to know how to get this
+                //Balance = x.Balance,
                 DateTime_Created = x.DateTime_Created,
                 DateTime_Deactivated = x.DateTime_Deactivated,
                 IsActiveCashAccount = x.IsActiveCashAccount,
                 IsDefault = x.IsDefault,
-                LocalId = x.LocalId
+                AccountId = x.AccountId,
+                DepositAccountId = x.DepositAccountId
             }).ToList();
 
         }
@@ -53,7 +56,8 @@ namespace Budgetor.Overminds
                 AccountName = x.AccountName,
                 DateTime_Created = x.DateTime_Created,
                 DateTime_Deactivated = x.DateTime_Deactivated,
-                LocalId = x.LocalId,
+                AccountId = x.AccountId,
+                IncomeSourceId = x.IncomeSourceId,
                 DateTime_NextTransaction = x.DateTime_NextTransaction,
                 ExpectedAmount = x.ExpectedAmount,
                 PayCycle = x.PayCycle
@@ -61,57 +65,153 @@ namespace Budgetor.Overminds
 
         }
 
+        #endregion AccountLists Tab Calls
+
+        #region Saves
+
         internal AccountDetailVM SaveAccount(AccountDetailVM account)
         {
-            var result = repo.SaveAccount(new Account() {
-                AccountName = account.AccountName,
-                LocalId = account.LocalId,
-                Notes = account.Notes
-            });
-            return new AccountDetailVM()
-            {
-                AccountName = result.AccountName,
-                Notes = result.Notes,
-                LocalId = result.LocalId,
-                DateTime_Created = result.DateTime_Created,
-                DateTime_Deactivated = result.DateTime_Deactivated
-            };
+            var result = repo.SaveAccount(AccountFromDetailVM(account));
+            return AccountToDetailVM(result);
         }
 
         internal IncomeSourceDetailVM SaveAccount(IncomeSourceDetailVM account)
         {
             AccountDetailVM baseAccount = SaveAccount((AccountDetailVM)account);
-            var result = repo.SaveAccount(new IncomeSource() {
-                Account = baseAccount.LocalId,
-                DefaultToAccount = account.DefaultToAccount,
-                ExpectedAmount = account.ExpectedAmount,
-                Schedule = account.Schedule?.LocalId
+            account.AccountId = baseAccount.AccountId;
+            IncomeSource result = repo.SaveAccount(IncomeSourceFromDetailVM(account));
+
+            return IncomeSourceToDetailVM(result, baseAccount);
+        }
+
+        internal BankAccountDetailVM SaveAccount(BankAccountDetailVM account)
+        {
+            AccountDetailVM baseAccount = SaveAccount((AccountDetailVM)account);
+            var result = repo.SaveAccount(new DepositAccount()
+            {
+                LocalId = account.DepositAccountId,
+                AccountId = baseAccount.AccountId,
+                InitialDepositId = account.InitialDepositId,
+                IsActiveCashAccount = account.IsActiveCashAccount,
+                IsDefault = account.IsDefault
             });
-            Schedule accountSchedule = result.Schedule.HasValue ? repo.GetSchedule(result.Schedule.Value) : null;
+
+            return new BankAccountDetailVM()
+            {
+                AccountName = baseAccount.AccountName,
+                Notes = baseAccount.Notes,
+                DepositAccountId = result.LocalId,
+                AccountId = baseAccount.AccountId,
+                DateTime_Created = baseAccount.DateTime_Created,
+                DateTime_Deactivated = baseAccount.DateTime_Deactivated,
+                IsDefault = account.IsDefault,
+                IsActiveCashAccount = account.IsActiveCashAccount,
+                InitialDepositId = account.InitialDepositId,
+            };
+        }
+
+        #endregion Saves
+
+        #region FYE Calls
+
+        internal bool SetAccountToSystem(int account)
+        {
+            var result = false;
+
+            try
+            {
+                repo.SetAccountToSystem(account);
+                result = true;
+            }
+            catch
+            {
+                //todo: need logging!!!!!!
+            }
+
+            return result;
+        }
+
+        #endregion FYE Calls
+
+        #region mapping
+
+        private AccountDetailVM AccountToDetailVM(Account account)
+        {
+            return new AccountDetailVM()
+            {
+                AccountName = account.AccountName,
+                Notes = account.Notes,
+                AccountId = account.LocalId,
+                DateTime_Created = account.DateTime_Created,
+                DateTime_Deactivated = account.DateTime_Deactivated
+            };
+
+        }
+
+        private Account AccountFromDetailVM(AccountDetailVM account)
+        {
+            return new Account()
+            {
+                AccountName = account.AccountName,
+                LocalId = account.AccountId,
+                Notes = account.Notes
+            };
+        }
+
+        private IncomeSource IncomeSourceFromDetailVM(IncomeSourceDetailVM source)
+        {
+            return new IncomeSource()
+            {
+                LocalId = source.IncomeSourceId,
+                AccountId = source.AccountId,
+                DefaultToAccountId = source.DefaultToAccountId,
+                ExpectedAmount = source.ExpectedAmount,
+                ScheduleId = source.Schedule?.LocalId
+            };
+        }
+
+        private IncomeSourceDetailVM IncomeSourceToDetailVM(IncomeSource source, AccountDetailVM baseAccount)
+        {
+
+            ScheduleVM accountSchedule = null;
+            if (source.ScheduleId.HasValue)
+            {
+                var repoSched = repo.GetSchedule(source.ScheduleId.Value);
+                accountSchedule = ScheduleToVM(repoSched);
+            }
 
             return new IncomeSourceDetailVM()
             {
                 AccountName = baseAccount.AccountName,
                 Notes = baseAccount.Notes,
-                LocalId = baseAccount.LocalId,
+                IncomeSourceId = source.LocalId,
+                AccountId = baseAccount.AccountId,
                 DateTime_Created = baseAccount.DateTime_Created,
                 DateTime_Deactivated = baseAccount.DateTime_Deactivated,
-                DefaultToAccount = result.DefaultToAccount,
-                ExpectedAmount = result.ExpectedAmount,
-                Schedule = new Models.Scheduling.Schedule() {
-                    LocalId = accountSchedule.LocalId,
-                    Frequency = Constants.Frequency.GetDisplayByTypeName(accountSchedule.Frequency).Enum,
-                    DateTime_Created = accountSchedule.DateTime_Created,
-                    DateTime_Deactivated = accountSchedule.DateTime_Deactivated,
-                    Occurrence_Final = accountSchedule.Occurrence_Final,
-                    Occurrence_First = accountSchedule.Occurrence_First,
-                    Occurrence_LastConfirmed = accountSchedule.Occurrence_LastConfirmed,
-                    Occurrence_LastPlanned = accountSchedule.Occurrence_LastPlanned
-                },
-                TotalFromSource = result.TotalFromSource,
+                DefaultToAccountId = source.DefaultToAccountId,
+                ExpectedAmount = source.ExpectedAmount,
+                Schedule = accountSchedule,
+                TotalFromSource = source.TotalFromSource,
             };
         }
 
-        #endregion AccountLists Tab Calls
+        private ScheduleVM ScheduleToVM(Schedule schedule)
+        {
+            return new ScheduleVM()
+            {
+                LocalId = schedule.LocalId,
+                Frequency = Constants.Frequency.GetDisplayByTypeName(schedule.Frequency).Enum,
+                DateTime_Created = schedule.DateTime_Created,
+                DateTime_Deactivated = schedule.DateTime_Deactivated,
+                Occurrence_Final = schedule.Occurrence_Final,
+                Occurrence_First = schedule.Occurrence_First,
+                Occurrence_LastConfirmed = schedule.Occurrence_LastConfirmed,
+                Occurrence_LastPlanned = schedule.Occurrence_LastPlanned
+            };
+        }
+
+        #endregion mapping
+
+
     }
 }

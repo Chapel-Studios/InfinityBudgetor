@@ -10,7 +10,9 @@ namespace Budgetor.Repo.Models
     public class IncomeSourcesListView
     {
         [Key]
-        public int LocalId { get; set; }
+        public int IncomeSourceId { get; set; }
+
+        public int AccountId { get; set; }
 
         [Required]
         [StringLength(50)]
@@ -26,5 +28,6 @@ namespace Budgetor.Repo.Models
 
         [StringLength(50)]
         public string PayCycle { get; set; }
+
     }
 }

@@ -12,7 +12,7 @@ using System.Windows;
 
 namespace Budgetor.Helpers
 {
-    public class FirstTimeInitHelper : IDisposable
+    public class FirstTimeExperienceHelper : IDisposable
     {
         private AccountsOM _accountOverMind;
         public AccountsOM AccountOverMind
@@ -27,47 +27,65 @@ namespace Budgetor.Helpers
             }
         }
 
-        private AccountDetailVM sysAccount;
+        private readonly bool hasRan;
 
-        public FirstTimeInitHelper()
+        public FirstTimeExperienceHelper()
         {
-            
+            hasRan = Budgetor.Properties.Settings.Default.DateTime_FirstRun != DateTime.MinValue;
+
+            //todo: remove Dev testing option
+            //if (hasRan)
+            //{
+            //    var force = MessageBox.Show("Force First-Run Init?", "Dev", MessageBoxButton.YesNo);
+            //    if (force == MessageBoxResult.Yes)
+            //    {
+            //        hasRan = false;
+            //    }
+            //}
         }
 
-        public void CreateDoNotTrackIncomeSource()
+        public void FirstRunInit()
         {
-            sysAccount = new AccountDetailVM()
+            if (!hasRan)
             {
-                AccountName = AccountTypesConstants.SystemAccountName,
-                Notes = "Default account used by the system when no account exists."
-            };
+                var depAcct = CreateDoNotTrackIncomeSource();
+                var cash = CreateDefaultCashAccount();
+                depAcct.DefaultToAccountId = cash.DepositAccountId;
+                AccountOverMind.SaveAccount(depAcct);
 
-            sysAccount = AccountOverMind.SaveAccount(sysAccount);
-
-            if (sysAccount.LocalId == 0)
-            {
-                throw new Exception("Save System Account failed... wtf?");
+                Budgetor.Properties.Settings.Default.DateTime_FirstRun = DateTime.UtcNow;
+                Budgetor.Properties.Settings.Default.SystemIncomeSource = depAcct.IncomeSourceId;
+                Budgetor.Properties.Settings.Default.Save();
             }
+        }
 
+
+
+        private IncomeSourceDetailVM CreateDoNotTrackIncomeSource()
+        {
             IncomeSourceDetailVM nullSource = new IncomeSourceDetailVM()
             {
                 AccountName = AccountTypesConstants.DefaultIncomeSourceAccountName,
                 Schedule = null,
-                DefaultToAccount = sysAccount.LocalId,
+                DefaultToAccountId = null,
                 ExpectedAmount = 0,
                 TotalFromSource = 0,
-                Notes = "Default account placeholder for when income source data is not tracked seperately. Info kept for checks and balances"
+                Notes = "Default account placeholder for when income source data is not tracked seperately. Info kept for checks and balances",
             };
 
             nullSource = AccountOverMind.SaveAccount(nullSource);
-            if (nullSource.LocalId == 0)
+            if (nullSource.IncomeSourceId == 0)
             {
                 throw new Exception("System worked but not saving the null source....");
             }
+            AccountOverMind.SetAccountToSystem(nullSource.AccountId);
+            return nullSource;
         }
 
-        public void CreateDefaultCashAccount()
+        private BankAccountDetailVM CreateDefaultCashAccount()
         {
+            BankAccountDetailVM cash = null;
+
             var shouldCreate = MessageBox.Show("Would you like to create an account to track your cash?", "Welcome", MessageBoxButton.YesNo);
             if (shouldCreate == MessageBoxResult.Cancel || shouldCreate == MessageBoxResult.No)
             {
@@ -77,13 +95,22 @@ namespace Budgetor.Helpers
             }
             else if (shouldCreate == MessageBoxResult.Yes)
             {
-                //do stuff
+                cash = new BankAccountDetailVM()
+                {
+                    AccountName = AccountTypesConstants.DefaultCashAccountName,
+                    InitialDepositId = null,
+                    IsActiveCashAccount = true,
+                    IsDefault = true,
+                    Notes = "Physical Money"
+                };
+                cash = AccountOverMind.SaveAccount(cash);
             }
             else
             {
                 throw new Exception("WTF! options shouldn't exist!");
             }
 
+            return cash;
         }
 
         #region IDisposable Implementation

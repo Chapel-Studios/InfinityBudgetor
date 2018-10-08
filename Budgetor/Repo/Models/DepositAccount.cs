@@ -10,7 +10,9 @@ namespace Budgetor.Repo.Models
     public partial class DepositAccount
     {
         [Key]
-        public int Account { get; set; }
+        public int LocalId { get; set; }
+
+        public int AccountId { get; set; }
 
         public bool IsDefault { get; set; }
 
@@ -18,6 +20,6 @@ namespace Budgetor.Repo.Models
 
         public decimal Balance { get; set; }
 
-        public int? InitialDeposit { get; set; }
+        public int? InitialDepositId { get; set; }
     }
 }

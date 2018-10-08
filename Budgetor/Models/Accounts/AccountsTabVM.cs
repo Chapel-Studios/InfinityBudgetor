@@ -1,13 +1,11 @@
-﻿using Budgetor.Models;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 
 namespace Budgetor.Models
 {
     public class AccountsTabVM : BindableBase
     {
-        private List<BankAccountListVM> _BankAccounts;
-        public List<BankAccountListVM> BankAccounts
+        private ObservableCollection<BankAccountListVM> _BankAccounts;
+        public ObservableCollection<BankAccountListVM> BankAccounts
         {
             get
             {
@@ -23,8 +21,8 @@ namespace Budgetor.Models
             }
         }
 
-        private List<IncomeSourceListVM> _IncomeSources;
-        public List<IncomeSourceListVM> IncomeSources
+        private ObservableCollection<IncomeSourceListVM> _IncomeSources;
+        public ObservableCollection<IncomeSourceListVM> IncomeSources
         {
             get
             {

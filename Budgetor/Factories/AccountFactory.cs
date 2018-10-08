@@ -1,6 +1,7 @@
 ﻿
 using Budgetor.Overminds;
 using Budgetor.Models;
+using System.Collections.ObjectModel;
 
 namespace Budgetor.Factories
 {
@@ -23,8 +24,8 @@ namespace Budgetor.Factories
         {
             return new AccountsTabVM()
             {
-                BankAccounts = accountOverMind.GetBankAccountsList(),
-                IncomeSources = accountOverMind.GetIncomeSourcesList()
+                BankAccounts = new ObservableCollection<BankAccountListVM>(accountOverMind.GetBankAccountsList()),
+                IncomeSources = new ObservableCollection<IncomeSourceListVM>(accountOverMind.GetIncomeSourcesList())
             };
         }
     }

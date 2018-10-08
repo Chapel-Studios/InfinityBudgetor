@@ -12,16 +12,16 @@
     <Window.Resources>
         <DataTemplate x:Key="BankAccountsList_DT">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding Name}"></TextBlock>
-                <TextBlock Text="{Binding Balance}"></TextBlock>
+                <TextBlock Text="{Binding AccountName}" Width="150"></TextBlock>
+                <TextBlock Text="{Binding Balance}" Width="50"></TextBlock>
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="IncomeSourcesList_DT">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding Name}"></TextBlock>
-                <TextBlock Text="{Binding PayCycle}"></TextBlock>
-                <TextBlock Text="{Binding UsualAmount}"></TextBlock>
-                <TextBlock Text="{Binding NextPayDate}"></TextBlock>
+                <TextBlock Text="{Binding AccountName}" Width="150"></TextBlock>
+                <TextBlock Text="{Binding PayCycle}" Width="50"></TextBlock>
+                <TextBlock Text="{Binding UsualAmount}" Width="50"></TextBlock>
+                <TextBlock Text="{Binding NextPayDate}" Width="50"></TextBlock>
             </StackPanel>
         </DataTemplate>
         <Style x:Key="AccountsList_Style" TargetType="{x:Type ListBox}" BasedOn="{x:Null}">
@@ -31,10 +31,12 @@
     </Window.Resources>
     <Grid>
         <TabControl>
-            <TabItem Header="Accounts">
+            <TabItem Header="Accounts"
+                     Name="AccountsTab">
                 <StackPanel Orientation="Horizontal">
                     <ListBox 
-                        ItemsSource="{Binding AccountsTab.BankAccounts}" 
+                        Name="BankAccountsList"
+                        ItemsSource="{Binding BankAccounts}" 
                         ItemTemplate="{StaticResource BankAccountsList_DT}"
                         Style="{StaticResource AccountsList_Style}"
                         Width="200"
@@ -42,7 +44,8 @@
 
                     </ListBox>
                     <ListBox 
-                        ItemsSource="{Binding AccountsTab.IncomeSources}" 
+                        Name="IncomeSourcesList"
+                        ItemsSource="{Binding IncomeSources}" 
                         ItemTemplate="{StaticResource IncomeSourcesList_DT}"
                         Style="{StaticResource AccountsList_Style}"
                         Width="300"

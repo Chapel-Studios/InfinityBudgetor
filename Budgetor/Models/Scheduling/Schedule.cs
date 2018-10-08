@@ -3,7 +3,7 @@ using static Budgetor.Constants.Frequency;
 
 namespace Budgetor.Models.Scheduling
 {
-    class Schedule
+    public class ScheduleVM
     {
         public int LocalId { get; set; }
 

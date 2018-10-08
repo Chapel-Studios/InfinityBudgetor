@@ -37,14 +37,16 @@ namespace Budgetor.Repo
             if (account.LocalId != 0)
             {
                 record = context.Accounts.FirstOrDefault(a => a.LocalId == account.LocalId);
-                context.Accounts.Add(record);
-                context.Entry(record).State = EntityState.Added;
+                record.AccountName = account.AccountName;
+                record.Notes = account.Notes;
+                context.Entry(record).State = EntityState.Modified;
             }
             else
             {
                 record = account;
                 record.DateTime_Created = DateTime.UtcNow;
-                context.Entry(record).State = EntityState.Modified;
+                context.Accounts.Add(record);
+                context.Entry(record).State = EntityState.Added;
             }
 
             context.SaveChanges();
@@ -54,8 +56,7 @@ namespace Budgetor.Repo
 
         internal IncomeSource SaveAccount(IncomeSource account)
         {
-            IncomeSource record = null;
-            record = context.IncomeSources.FirstOrDefault(a => a.Account == account.Account);
+            IncomeSource record = context.IncomeSources.FirstOrDefault(a => a.AccountId == account.AccountId);
             if (record == null)
             {
                 record = account;
@@ -64,9 +65,9 @@ namespace Budgetor.Repo
             }
             else
             {
-                record.DefaultToAccount = account.DefaultToAccount;
+                record.DefaultToAccountId = account.DefaultToAccountId;
                 record.ExpectedAmount = account.ExpectedAmount;
-                record.Schedule = account.Schedule;
+                record.ScheduleId = account.ScheduleId;
 
                 context.Entry(record).State = EntityState.Modified;
             }
@@ -78,8 +79,7 @@ namespace Budgetor.Repo
 
         internal DepositAccount SaveAccount(DepositAccount account)
         {
-            DepositAccount record = null;
-            record = context.DepositAccounts.FirstOrDefault(a => a.Account == account.Account);
+            DepositAccount record = context.DepositAccounts.FirstOrDefault(a => a.AccountId == account.AccountId);
             if (record == null)
             {
                 record = account;
@@ -88,7 +88,7 @@ namespace Budgetor.Repo
             }
             else
             {
-                record.InitialDeposit = account.InitialDeposit;
+                record.InitialDepositId = account.InitialDepositId;
                 record.IsActiveCashAccount = account.IsActiveCashAccount;
                 record.IsDefault = account.IsDefault;
 
@@ -102,7 +102,7 @@ namespace Budgetor.Repo
 
         internal decimal UpdateIncomeSourceTotal (int account, decimal difference)
         {
-            var record = context.IncomeSources.FirstOrDefault(a => a.Account == account);
+            var record = context.IncomeSources.FirstOrDefault(a => a.AccountId == account);
             if (record == null)
             {
                 throw new Exception($"IncomeSource Account {account} not found when attempting to update it's total");
@@ -113,6 +113,21 @@ namespace Budgetor.Repo
             context.SaveChanges();
 
             return record.TotalFromSource;
+        }
+
+        internal void SetAccountToSystem(int account)
+        {
+            var record = context.Accounts.FirstOrDefault(x => x.LocalId == account);
+            if (record == null)
+            {
+                throw new Exception($"Account {account} not found when attempting to update it to a system account");
+            }
+
+            record.IsSystem = true;
+
+            context.Entry(record).State = EntityState.Modified;
+            context.SaveChanges();
+            //todo: Log this!
         }
 
         #endregion Accounts

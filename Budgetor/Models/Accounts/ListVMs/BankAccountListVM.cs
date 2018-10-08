@@ -9,6 +9,7 @@ namespace Budgetor.Models
 {
     public class BankAccountListVM : AccountListBaseVM
     {
+        public int DepositAccountId { get; set; }
 
         public bool IsDefault { get; set; }
 

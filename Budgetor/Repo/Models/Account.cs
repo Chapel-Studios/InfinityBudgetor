@@ -19,5 +19,7 @@ namespace Budgetor.Repo.Models
 
         public DateTime? DateTime_Deactivated { get; set; }
 
+        public bool IsSystem { get; set; }
+
     }
 }

@@ -37,7 +37,7 @@ namespace Budgetor.Views
             }
         }
 
-        public AccountsTabVM AccountsTab;
+        public AccountsTabVM AccountsTabVM;
 
 
         #endregion Properties
@@ -45,8 +45,9 @@ namespace Budgetor.Views
         public BudgetorMain()
         {
             InitializeComponent();
-            AccountsTab = Factory.GetAcountsTabVM();
-            
+
+            AccountsTabVM = Factory.GetAcountsTabVM();
+            AccountsTab.DataContext = AccountsTabVM;
         }
     }
 }

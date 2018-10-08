@@ -7,21 +7,16 @@ using System.Threading.Tasks;
 
 namespace Budgetor.Models.Accounts
 {
-    class IncomeSourceDetailVM : AccountDetailVM//, IAccountDetail
+    public class IncomeSourceDetailVM : AccountDetailVM//, IAccountDetail
     {
+        public int IncomeSourceId { get; set; }
+
         public decimal ExpectedAmount { get; set; }
 
         public decimal TotalFromSource { get; set; }
 
-        public int DefaultToAccount { get; set; }
+        public int? DefaultToAccountId { get; set; }
 
-        public Scheduling.Schedule Schedule { get; set; }
-
-        public AccountDetailVM RootAccount => MapToAccountDetailVM();
-
-        private AccountDetailVM MapToAccountDetailVM()
-        {
-            return new AccountDetailVM();
-        }
+        public Scheduling.ScheduleVM Schedule { get; set; }
     }
 }

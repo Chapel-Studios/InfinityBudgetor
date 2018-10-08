@@ -32,6 +32,7 @@ namespace Budgetor.Constants
             TypeName = "DebtAccount"
         };
         public const string DefaultIncomeSourceAccountName = "Don't track";
+        public const string DefaultCashAccountName = "Cash";
         public const string SystemAccountName = "System Account";
 
         public enum AccountType

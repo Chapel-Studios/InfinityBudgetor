@@ -8,7 +8,7 @@ namespace Budgetor.Models
 {
     public class AccountListBaseVM
     {
-        public int LocalId { get; set; }
+        public int AccountId { get; set; }
 
         public string AccountName { get; set; }
 

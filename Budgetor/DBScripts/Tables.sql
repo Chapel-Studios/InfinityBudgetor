@@ -60,6 +60,7 @@ CREATE TABLE dbo.Accounts (
 	Notes NVARCHAR(250) NULL,
 	DateTime_Created DATETIME DEFAULT getDate() NOT NULL,
 	DateTime_Deactivated DATETIME NULL,
+	IsSystem BIT DEFAULT 0 NOT NULL
 )
 
 CREATE TABLE dbo.Transactions (
@@ -68,9 +69,7 @@ CREATE TABLE dbo.Transactions (
 	Title NVARCHAR(50) NOT NULL,
 	Amount MONEY DEFAULT 0 NOT NULL,
 	ToAccount INT NOT NULL,
-	FOREIGN KEY (ToAccount) REFERENCES dbo.Accounts(LocalId),
 	FromAccount INT NOT NULL,
-	FOREIGN KEY (FromAccount) REFERENCES dbo.Accounts(LocalId),
 	DateTime_Created DATETIME DEFAULT getDate() NOT NULL,
 	DateTime_Occurred DATETIME NOT NULL,
 	TransactionType NVARCHAR(10) NOT NULL,
@@ -84,24 +83,28 @@ CREATE TABLE dbo.Transactions (
 ALTER TABLE [dbo].[Transactions] WITH CHECK ADD CHECK ([ToAccount] <> [FromAccount])
 
 CREATE TABLE dbo.DepositAccount (
-	Account INT NOT NULL,
-	FOREIGN KEY (Account) REFERENCES dbo.Accounts(LocalId),
+	LocalId INT NOT NULL IDENTITY(1,1),
+	PRIMARY KEY NONCLUSTERED (LocalId),
+	AccountId INT NOT NULL,
+	FOREIGN KEY (AccountId) REFERENCES dbo.Accounts(LocalId),
 	IsDefault BIT NOT NULL,
 	IsActiveCashAccount BIT NOT NULL,
 	Balance MONEY DEFAULT 0 NOT NULL,
-	InitialDeposit INT,
-	FOREIGN KEY (InitialDeposit) REFERENCES dbo.Transactions(LocalId),
+	InitialDepositId INT NULL,
+	FOREIGN KEY (InitialDepositId) REFERENCES dbo.Transactions(LocalId),
 )
 
 CREATE TABLE dbo.IncomeSources (
-	Account INT NOT NULL,
-	FOREIGN KEY (Account) REFERENCES dbo.Accounts(LocalId),
-	ExpectedAmount MONEY DEFAULT 0 NOT NULL, --
-	TotalFromSource MONEY DEFAULT 0 NOT NULL, --
-	DefaultToAccount INT NOT NULL,
-	FOREIGN KEY (DefaultToAccount) REFERENCES dbo.Accounts(LocalId),
-	Schedule INT NULL,
-	FOREIGN KEY (Schedule) REFERENCES dbo.Schedules(LocalId),
+	LocalId INT NOT NULL IDENTITY(1,1),
+	PRIMARY KEY NONCLUSTERED (LocalId),
+	AccountId INT NOT NULL,
+	FOREIGN KEY (AccountId) REFERENCES dbo.Accounts(LocalId),
+	ExpectedAmount MONEY DEFAULT 0 NOT NULL,
+	TotalFromSource MONEY DEFAULT 0 NOT NULL,
+	DefaultToAccountId INT NULL,
+	FOREIGN KEY (DefaultToAccountId) REFERENCES dbo.DepositAccount(LocalId),
+	ScheduleId INT NULL,
+	FOREIGN KEY (ScheduleId) REFERENCES dbo.Schedules(LocalId),
 )
 
 GO

@@ -33,5 +33,16 @@ namespace Budgetor.Properties {
                 this["DateTime_FirstRun"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public int SystemIncomeSource {
+            get {
+                return ((int)(this["SystemIncomeSource"]));
+            }
+            set {
+                this["SystemIncomeSource"] = value;
+            }
+        }
     }
 }

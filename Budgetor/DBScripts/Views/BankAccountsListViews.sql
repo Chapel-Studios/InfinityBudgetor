@@ -9,14 +9,16 @@ GO
 
 CREATE VIEW [dbo].[BankAccountsListViews] AS 
 SELECT 
-	a.LocalId
+	d.LocalId as DepositAccountId
+	, a.LocalId as AccountId
 	, a.AccountName
 	, a.DateTime_Created
 	, a.DateTime_Deactivated
 	, d.IsDefault
 	, d.IsActiveCashAccount
-	, d.Balance
+	, d.InitialDepositId
 FROM DepositAccount d
-	LEFT JOIN Accounts a ON a.LocalId = d.Account
+	LEFT JOIN Accounts a ON a.LocalId = d.AccountId
 WHERE
 	a.DateTime_Deactivated IS NULL
+	AND a.IsSystem = 0
