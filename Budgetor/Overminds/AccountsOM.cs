@@ -1,5 +1,5 @@
 ﻿using Budgetor.Models;
-using Budgetor.Models.Accounts;
+using Budgetor.Models.Contracts;
 using Budgetor.Models.Scheduling;
 using Budgetor.Repo;
 using Budgetor.Repo.Models;
@@ -9,22 +9,12 @@ using System.Linq;
 
 namespace Budgetor.Overminds
 {
-    public class AccountsOM
+    public class AccountsOM : OverMindBase
     {
-        private Repository _repo;
-        private Repository repo
+        public AccountDetailVM GetGenericAccountDetails(int accountId)
         {
-            get
-            {
-                if (_repo == null)
-                {
-                    _repo = new Repository();
-                }
-                return _repo;
-            }
+            return AccountToDetailVM(Repo.GetAccount(accountId));
         }
-
-
         public BankAccountDetailVM GetBankAccountById(int BankAccountId)
         {
             throw new NotImplementedException();
@@ -32,9 +22,9 @@ namespace Budgetor.Overminds
 
         #region AccountLists_Tab Calls
 
-        public List<BankAccountListVM> GetBankAccountsList()
+        public List<BankAccountsListItemVM> GetBankAccountsList()
         {
-            return repo.GetBankAccountsListViews().Select(x => new BankAccountListVM()
+            return Repo.GetBankAccountsListViews().Select(x => new BankAccountsListItemVM()
             {
                 AccountName = x.AccountName,
                 //todo: need to know how to get this
@@ -51,7 +41,7 @@ namespace Budgetor.Overminds
 
         public List<IncomeSourceListVM> GetIncomeSourcesList()
         {
-            return repo.GetIncomeSourceListViews().Select(x => new IncomeSourceListVM()
+            var result = Repo.GetIncomeSourceListViews().Select(x => new IncomeSourceListVM()
             {
                 AccountName = x.AccountName,
                 DateTime_Created = x.DateTime_Created,
@@ -62,7 +52,16 @@ namespace Budgetor.Overminds
                 ExpectedAmount = x.ExpectedAmount,
                 PayCycle = x.PayCycle
             }).ToList();
-
+            if (result.Count == 0)
+            {
+                result.Add(new IncomeSourceListVM()
+                {
+                    AccountId = -1,
+                    IncomeSourceId = -1,
+                    AccountName = "No you currently do not have any income source accounts."
+                });
+            }
+            return result;
         }
 
         #endregion AccountLists Tab Calls
@@ -71,7 +70,7 @@ namespace Budgetor.Overminds
 
         internal AccountDetailVM SaveAccount(AccountDetailVM account)
         {
-            var result = repo.SaveAccount(AccountFromDetailVM(account));
+            var result = Repo.SaveAccount(AccountFromDetailVM(account));
             return AccountToDetailVM(result);
         }
 
@@ -79,7 +78,7 @@ namespace Budgetor.Overminds
         {
             AccountDetailVM baseAccount = SaveAccount((AccountDetailVM)account);
             account.AccountId = baseAccount.AccountId;
-            IncomeSource result = repo.SaveAccount(IncomeSourceFromDetailVM(account));
+            IncomeSource result = Repo.SaveAccount(IncomeSourceFromDetailVM(account));
 
             return IncomeSourceToDetailVM(result, baseAccount);
         }
@@ -87,7 +86,7 @@ namespace Budgetor.Overminds
         internal BankAccountDetailVM SaveAccount(BankAccountDetailVM account)
         {
             AccountDetailVM baseAccount = SaveAccount((AccountDetailVM)account);
-            var result = repo.SaveAccount(new DepositAccount()
+            var result = Repo.SaveAccount(new DepositAccount()
             {
                 LocalId = account.DepositAccountId,
                 AccountId = baseAccount.AccountId,
@@ -120,7 +119,7 @@ namespace Budgetor.Overminds
 
             try
             {
-                repo.SetAccountToSystem(account);
+                Repo.SetAccountToSystem(account);
                 result = true;
             }
             catch
@@ -133,7 +132,7 @@ namespace Budgetor.Overminds
 
         #endregion FYE Calls
 
-        #region mapping
+        #region Mapping
 
         private AccountDetailVM AccountToDetailVM(Account account)
         {
@@ -143,7 +142,8 @@ namespace Budgetor.Overminds
                 Notes = account.Notes,
                 AccountId = account.LocalId,
                 DateTime_Created = account.DateTime_Created,
-                DateTime_Deactivated = account.DateTime_Deactivated
+                DateTime_Deactivated = account.DateTime_Deactivated,
+                AccountType = Constants.Accounts.GetDisplayByTypeName(account.AccountType).Enum
             };
 
         }
@@ -154,7 +154,8 @@ namespace Budgetor.Overminds
             {
                 AccountName = account.AccountName,
                 LocalId = account.AccountId,
-                Notes = account.Notes
+                Notes = account.Notes,
+                AccountType = Constants.Accounts.GetDisplay(account.AccountType).TypeName
             };
         }
 
@@ -176,7 +177,7 @@ namespace Budgetor.Overminds
             ScheduleVM accountSchedule = null;
             if (source.ScheduleId.HasValue)
             {
-                var repoSched = repo.GetSchedule(source.ScheduleId.Value);
+                var repoSched = Repo.GetSchedule(source.ScheduleId.Value);
                 accountSchedule = ScheduleToVM(repoSched);
             }
 
@@ -210,7 +211,7 @@ namespace Budgetor.Overminds
             };
         }
 
-        #endregion mapping
+        #endregion Mapping
 
 
     }

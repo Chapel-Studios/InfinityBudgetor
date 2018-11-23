@@ -46,8 +46,10 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -66,17 +68,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Constants\Transactions.cs" />
+    <Compile Include="Controls\EditButton.cs" />
+    <Compile Include="Models\Accounts\AccountBasicInfo.cs" />
     <Compile Include="Models\Accounts\DetailVMs\AccountDetailVM.cs" />
     <Compile Include="Models\Accounts\DetailVMs\IncomeSourceDetailVM.cs" />
     <Compile Include="Constants\Frequency.cs" />
+    <Compile Include="Models\Accounts\EditBankAccountVM.cs" />
     <Compile Include="Models\Scheduling\Schedule.cs" />
     <Compile Include="Models\Shared\BindableBase.cs" />
     <Compile Include="Constants\ConstantBaseTypes.cs" />
     <Compile Include="Constants\MiscConstants.cs" />
     <Compile Include="Factories\AccountFactory.cs" />
-    <Compile Include="Constants\AccountTypesConstants.cs" />
+    <Compile Include="Constants\Accounts.cs" />
     <Compile Include="Helpers\DispayFormatHelper.cs" />
     <Compile Include="Helpers\FirstTimeExperienceHelper.cs" />
+    <Compile Include="Models\Transactions\TransactionBase.cs" />
     <Compile Include="Overminds\AccountsOM.cs" />
     <Compile Include="Models\Contracts\IAccount.cs" />
     <Compile Include="Models\Accounts\DetailVMs\BankAccountDetailVM.cs" />
@@ -84,6 +91,8 @@
     <Compile Include="Models\Accounts\ListVMs\IncomeSourceListVM.cs" />
     <Compile Include="Models\Accounts\ListVMs\AccountListBaseVM.cs" />
     <Compile Include="Overminds\MappingOM.cs" />
+    <Compile Include="Overminds\OverMindBase.cs" />
+    <Compile Include="Overminds\TransactionsOM.cs" />
     <Compile Include="Repo\Models\BankAccountsListView.cs" />
     <Compile Include="Repo\Models\DepositAccount.cs" />
     <Compile Include="Repo\Models\IncomeSource.cs" />
@@ -94,6 +103,9 @@
     <Compile Include="Repo\Models\TransactionType.cs" />
     <Compile Include="Repo\Repository.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="Views\BankAccount_Form.xaml.cs">
+      <DependentUpon>BankAccount_Form.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\BudgetorMain.xaml.cs">
       <DependentUpon>BudgetorMain.xaml</DependentUpon>
     </Compile>
@@ -104,6 +116,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Repo\Budgetor_Context.cs" />
+    <Page Include="Views\BankAccount_Form.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\BudgetorMain.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -10,7 +10,7 @@ namespace Budgetor.Helpers
     {
         public static string GetDisplayAmountText(decimal value)
         {
-            return string.Format(value.ToString(), "money");
+            return value.ToString("C");
         }
 
         public static string GetDisplayDate(DateTime value)

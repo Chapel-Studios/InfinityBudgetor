@@ -2,9 +2,9 @@
 GO
 
 IF (OBJECT_ID ('[dbo].[IncomeSourcesListViews]', 'V') IS NOT NULL)
-BEGIN
-	DROP VIEW [dbo].[IncomeSourcesListViews];  
-END
+	BEGIN
+		DROP VIEW [dbo].[IncomeSourcesListViews];  
+	END
 GO 
 
 CREATE VIEW [dbo].[IncomeSourcesListViews] AS 

@@ -1,4 +1,4 @@
-﻿using Budgetor.Models.Accounts;
+﻿using Budgetor.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

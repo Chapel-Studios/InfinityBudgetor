@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Budgetor"
         xmlns:models="clr-namespace:Budgetor.Models"
-        
+        xmlns:controls="clr-namespace:Budgetor.Controls"
         mc:Ignorable="d"
         Title="BudgetorMain" 
         Height="450" Width="800" WindowStyle="ThreeDBorderWindow" >
@@ -13,7 +13,8 @@
         <DataTemplate x:Key="BankAccountsList_DT">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="{Binding AccountName}" Width="150"></TextBlock>
-                <TextBlock Text="{Binding Balance}" Width="50"></TextBlock>
+                <TextBlock Text="{Binding DisplayBalance}" Width="50"></TextBlock>
+                <controls:EditButton AccountId="{Binding AccountId}" Content="Edit" Click="EditBankAccount_Click"></controls:EditButton>
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="IncomeSourcesList_DT">
@@ -32,29 +33,54 @@
     <Grid>
         <TabControl>
             <TabItem Header="Accounts"
-                     Name="AccountsTab">
-                <StackPanel Orientation="Horizontal">
-                    <ListBox 
-                        Name="BankAccountsList"
-                        ItemsSource="{Binding BankAccounts}" 
-                        ItemTemplate="{StaticResource BankAccountsList_DT}"
-                        Style="{StaticResource AccountsList_Style}"
-                        Width="200"
-                    >
+                     Name="AccountsTab"
+                     Padding="10">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal"
+                                VerticalAlignment="Top"
+                                >
+                        <StackPanel Orientation="Vertical">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Width="auto">
+                                    <TextBlock.Text>
+                                        Bank Accounts
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </StackPanel>
+                            <ListBox 
+                                Name="BankAccountsList"
+                                ItemsSource="{Binding BankAccounts}" 
+                                ItemTemplate="{StaticResource BankAccountsList_DT}"
+                                Style="{StaticResource AccountsList_Style}"
+                                Width="200"
+                            />
+                        </StackPanel>
 
-                    </ListBox>
-                    <ListBox 
-                        Name="IncomeSourcesList"
-                        ItemsSource="{Binding IncomeSources}" 
-                        ItemTemplate="{StaticResource IncomeSourcesList_DT}"
-                        Style="{StaticResource AccountsList_Style}"
-                        Width="300"
-                    >
-
-                    </ListBox>
-                </StackPanel>
+                        <StackPanel Orientation="Vertical">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Width="auto">
+                                    <TextBlock.Text>
+                                        Income Sources
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </StackPanel>
+                            <ListBox 
+                                Name="IncomeSourcesList"
+                                ItemsSource="{Binding IncomeSources}" 
+                                ItemTemplate="{StaticResource IncomeSourcesList_DT}"
+                                Style="{StaticResource AccountsList_Style}"
+                                Width="300"
+                            />
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
             </TabItem>
-            <TabItem Header="Transactions">
+            <TabItem Header="Transactions"
+                     Padding="10">
                 
             </TabItem>
         </TabControl>

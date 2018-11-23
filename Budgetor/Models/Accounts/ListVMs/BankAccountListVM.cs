@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Budgetor.Models
 {
-    public class BankAccountListVM : AccountListBaseVM
+    public class BankAccountsListItemVM : AccountListItemBaseVM
     {
         public int DepositAccountId { get; set; }
 

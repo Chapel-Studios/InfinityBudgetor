@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Budgetor.Repo
 {
-    class Repository
+    public class Repository
     {
         private Budgetor_Context context;
 
@@ -19,6 +19,11 @@ namespace Budgetor.Repo
 
 
         #region Accounts
+
+        internal Account GetAccount(int id)
+        {
+            return context.Accounts.FirstOrDefault(a => a.LocalId == id);
+        }
 
         internal List<BankAccountsListView> GetBankAccountsListViews()
         {
@@ -140,5 +145,34 @@ namespace Budgetor.Repo
         }
 
         #endregion Scheduling
+
+        #region Transactions
+
+        internal List<Transaction> GetTransactionById(int id)
+        {
+            return GetTransactionsById(new List<int>() { id });
+        }
+
+        internal List<Transaction> GetTransactionsById(List<int> ids)
+        {
+            return context.Transactions.Where(x => ids.Contains(x.LocalId)).ToList();
+        }
+
+        internal decimal GetMonthlyStartingBalanceForAccount(int accountId, DateTime month)
+        {
+            var date = new DateTime(month.Year, month.Month, 1);
+            var balance = context.Transactions
+                .Where(x => x.ToAccount == accountId
+                    && x.DateTime_Occurred < date)
+                .Sum(x => x.Amount);
+            var deductions = context.Transactions
+                .Where(x => x.FromAccount == accountId
+                    && x.DateTime_Occurred < date)
+                .Sum(x => x.Amount);
+            return balance - deductions;
+        }
+
+        #endregion Transactions
+
     }
 }

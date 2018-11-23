@@ -17,9 +17,6 @@ IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Accounts'
 IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Schedules' AND TABLE_SCHEMA = 'dbo')
 	DROP TABLE dbo.Schedules
 
-IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'TransactionTypes' AND TABLE_SCHEMA = 'dbo')
-	DROP TABLE dbo.TransactionTypes
-
 IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'ScheduleFrequencyTypes' AND TABLE_SCHEMA = 'dbo')
 	DROP TABLE dbo.ScheduleFrequencyTypes
 
@@ -32,16 +29,11 @@ CREATE TABLE dbo.ScheduleFrequencyTypes (
 )
 ALTER TABLE [dbo].[ScheduleFrequencyTypes] WITH CHECK ADD CHECK ((NOT [FrequencyType] LIKE '% %'))
 
-CREATE TABLE dbo.TransactionTypes (
-	TransactionType NVARCHAR(10) NOT NULL,
-	TransactionName NVARCHAR(50) NOT NULL,
-	PRIMARY KEY NONCLUSTERED (TransactionType),
-)
-ALTER TABLE [dbo].[TransactionTypes] WITH CHECK ADD CHECK ((NOT [TransactionType] LIKE '% %'))
-
 CREATE TABLE dbo.Schedules (
 	LocalId INT NOT NULL IDENTITY(1,1),
+	PRIMARY KEY NONCLUSTERED (LocalId),
 	Frequency NVARCHAR(10) NOT NULL,
+	FOREIGN KEY (Frequency) REFERENCES dbo.ScheduleFrequencyTypes(FrequencyType),
 	Occurrence_First DATETIME NOT NULL,
 	Occurrence_LastConfirmed DATETIME NULL,
 	Occurrence_LastPlanned DATETIME NULL,
@@ -49,14 +41,13 @@ CREATE TABLE dbo.Schedules (
 	IsAutoConfirm BIT NOT NULL,
 	DateTime_Created DATETIME DEFAULT getDate() NOT NULL,
 	DateTime_Deactivated DATETIME NULL,
-	PRIMARY KEY NONCLUSTERED (LocalId),
-	FOREIGN KEY (Frequency) REFERENCES dbo.ScheduleFrequencyTypes(FrequencyType),
 )
 
 CREATE TABLE dbo.Accounts (
 	LocalId INT NOT NULL IDENTITY(1,1),
 	PRIMARY KEY NONCLUSTERED (LocalId),
 	AccountName NVARCHAR(50) NOT NULL,
+	AccountType NVARCHAR(20) NOT NULL,
 	Notes NVARCHAR(250) NULL,
 	DateTime_Created DATETIME DEFAULT getDate() NOT NULL,
 	DateTime_Deactivated DATETIME NULL,
@@ -69,11 +60,12 @@ CREATE TABLE dbo.Transactions (
 	Title NVARCHAR(50) NOT NULL,
 	Amount MONEY DEFAULT 0 NOT NULL,
 	ToAccount INT NOT NULL,
+	FOREIGN KEY (ToAccount) REFERENCES dbo.Accounts(LocalId),
 	FromAccount INT NOT NULL,
+	FOREIGN KEY (FromAccount) REFERENCES dbo.Accounts(LocalId),
 	DateTime_Created DATETIME DEFAULT getDate() NOT NULL,
 	DateTime_Occurred DATETIME NOT NULL,
-	TransactionType NVARCHAR(10) NOT NULL,
-	FOREIGN KEY (TransactionType) REFERENCES dbo.TransactionTypes(TransactionType),
+	TransactionType NVARCHAR(15) NOT NULL,
 	IsUserCreated BIT NOT NULL,
 	IsConfirmed BIT NOT NULL,
 	IsOccurrence BIT NOT NULL,

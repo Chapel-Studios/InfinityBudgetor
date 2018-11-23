@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Budgetor.Models.Accounts
+namespace Budgetor.Models
 {
     public class IncomeSourceDetailVM : AccountDetailVM//, IAccountDetail
     {
@@ -14,9 +14,14 @@ namespace Budgetor.Models.Accounts
         public decimal ExpectedAmount { get; set; }
 
         public decimal TotalFromSource { get; set; }
-
+        
         public int? DefaultToAccountId { get; set; }
 
         public Scheduling.ScheduleVM Schedule { get; set; }
+
+        public IncomeSourceDetailVM()
+        {
+            base.AccountType = Constants.Accounts.AccountType.IncomeSource;
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Budgetor.Factories;
+﻿using Budgetor.Controls;
+using Budgetor.Factories;
 using Budgetor.Models;
 using System;
 using System.Collections.Generic;
@@ -48,6 +49,18 @@ namespace Budgetor.Views
 
             AccountsTabVM = Factory.GetAcountsTabVM();
             AccountsTab.DataContext = AccountsTabVM;
+        }
+
+        public void EditBankAccount(int id)
+        {
+            var editor = new BankAccount_Form(Factory.GetEditBankAccountVM(id));
+            editor.Show();
+        }
+
+        private void EditBankAccount_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as EditButton;
+            EditBankAccount(button.AccountId);
         }
     }
 }

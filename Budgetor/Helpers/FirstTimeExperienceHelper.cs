@@ -1,6 +1,5 @@
 ﻿using Budgetor.Constants;
 using Budgetor.Models;
-using Budgetor.Models.Accounts;
 using Budgetor.Overminds;
 using System;
 using System.Collections.Generic;
@@ -65,7 +64,7 @@ namespace Budgetor.Helpers
         {
             IncomeSourceDetailVM nullSource = new IncomeSourceDetailVM()
             {
-                AccountName = AccountTypesConstants.DefaultIncomeSourceAccountName,
+                AccountName = Accounts.DefaultIncomeSourceAccountName,
                 Schedule = null,
                 DefaultToAccountId = null,
                 ExpectedAmount = 0,
@@ -97,7 +96,7 @@ namespace Budgetor.Helpers
             {
                 cash = new BankAccountDetailVM()
                 {
-                    AccountName = AccountTypesConstants.DefaultCashAccountName,
+                    AccountName = Accounts.DefaultCashAccountName,
                     InitialDepositId = null,
                     IsActiveCashAccount = true,
                     IsDefault = true,

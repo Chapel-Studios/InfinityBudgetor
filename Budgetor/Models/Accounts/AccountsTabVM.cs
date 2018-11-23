@@ -4,8 +4,8 @@ namespace Budgetor.Models
 {
     public class AccountsTabVM : BindableBase
     {
-        private ObservableCollection<BankAccountListVM> _BankAccounts;
-        public ObservableCollection<BankAccountListVM> BankAccounts
+        private ObservableCollection<BankAccountsListItemVM> _BankAccounts;
+        public ObservableCollection<BankAccountsListItemVM> BankAccounts
         {
             get
             {

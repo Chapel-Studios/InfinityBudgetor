@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Budgetor.Models
 {
-    public class IncomeSourceListVM : AccountListBaseVM
+    public class IncomeSourceListVM : AccountListItemBaseVM
     {
         public int IncomeSourceId { get; set; }
 

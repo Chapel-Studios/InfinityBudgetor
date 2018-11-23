@@ -12,6 +12,10 @@ namespace Budgetor.Repo.Models
         [StringLength(50)]
         public string AccountName { get; set; }
 
+        [Required]
+        [StringLength(20)]
+        public string AccountType { get; set; }
+
         [StringLength(250)]
         public string Notes { get; set; }
 
