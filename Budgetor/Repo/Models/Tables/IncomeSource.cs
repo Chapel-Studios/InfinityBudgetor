@@ -1,5 +1,6 @@
 namespace Budgetor.Repo.Models
 {
+    using Budgetor.Models;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -20,5 +21,24 @@ namespace Budgetor.Repo.Models
         public int? DefaultToAccountId { get; set; }
 
         public int? ScheduleId { get; set; }
+
+        #region Constructors
+
+        public IncomeSource()
+        {
+
+        }
+
+        public IncomeSource(IncomeSourceDetailVM source)
+        {
+            LocalId = source.IncomeSourceId;
+            AccountId = source.AccountId;
+            DefaultToAccountId = source.DefaultToAccountId;
+            ExpectedAmount = source.ExpectedAmount;
+            ScheduleId = source.Schedule?.LocalId;
+        }
+
+        #endregion Constructors
+
     }
 }

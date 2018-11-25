@@ -5,22 +5,37 @@ using Budgetor.Repo;
 using Budgetor.Repo.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Budgetor.Overminds
 {
     public class AccountsOM : OverMindBase
     {
+        #region Get Accounts
+
         public AccountDetailVM GetGenericAccountDetails(int accountId)
         {
-            return AccountToDetailVM(Repo.GetAccount(accountId));
-        }
-        public BankAccountDetailVM GetBankAccountById(int BankAccountId)
-        {
-            throw new NotImplementedException();
+            return new AccountDetailVM(Repo.GetAccount(accountId));
         }
 
+        public BankAccountDetailVM GetBankAccountById(int BankAccountId)
+        {
+            return new BankAccountDetailVM(Repo.GetDepositAccountDetail(BankAccountId));
+        }
+
+        #endregion Get Accounts
+
         #region AccountLists_Tab Calls
+
+        public AccountsTabVM GetAcountsTabVM()
+        {
+            return new AccountsTabVM()
+            {
+                BankAccounts = new ObservableCollection<BankAccountsListItemVM>(GetBankAccountsList()),
+                IncomeSources = new ObservableCollection<IncomeSourceListVM>(GetIncomeSourcesList())
+            };
+        }
 
         public List<BankAccountsListItemVM> GetBankAccountsList()
         {
@@ -66,50 +81,102 @@ namespace Budgetor.Overminds
 
         #endregion AccountLists Tab Calls
 
+        #region ManageBankAccount Window Calls
+
+        public ManageBankAccountVM GetEditBankAccountVM(int? id)
+        {
+            BankAccountDetailVM bankAccount;
+            if (id.HasValue)
+            {
+                bankAccount = GetBankAccountById(id.Value);
+            }
+            else
+            {
+                bankAccount = new BankAccountDetailVM();
+            }
+
+            return new ManageBankAccountVM()
+            {
+                Account = bankAccount,
+                IsEditMode = id.HasValue,
+                FromAccounts = GetDepositFromList()
+            };
+        }
+
+        internal List<FromAccountComboItem> GetDepositFromList()
+        {
+            return GetFromList(new List<string>()
+            {
+                Constants.Accounts.BankAccount.TypeName,
+                Constants.Accounts.IncomeSource.TypeName
+            });
+        }
+
+        internal List<FromAccountComboItem> GetFromList(List<string> types)
+        {
+            return Repo.GetFromList(types).Select(x => new FromAccountComboItem(x)).ToList();
+        }
+
+        #endregion ManageBankAccount Window Calls
+
         #region Saves
 
         internal AccountDetailVM SaveAccount(AccountDetailVM account)
         {
-            var result = Repo.SaveAccount(AccountFromDetailVM(account));
-            return AccountToDetailVM(result);
+            return new AccountDetailVM(Repo.SaveAccount(new Account(account)));
         }
 
         internal IncomeSourceDetailVM SaveAccount(IncomeSourceDetailVM account)
         {
             AccountDetailVM baseAccount = SaveAccount((AccountDetailVM)account);
             account.AccountId = baseAccount.AccountId;
-            IncomeSource result = Repo.SaveAccount(IncomeSourceFromDetailVM(account));
+            IncomeSource result = Repo.SaveAccount(new IncomeSource(account));
+            Schedule accountSchedule = null;
+            if (result.ScheduleId.HasValue)
+            {
+                accountSchedule = Repo.GetSchedule(result.ScheduleId.Value);
+            }
 
-            return IncomeSourceToDetailVM(result, baseAccount);
+            return new IncomeSourceDetailVM(result, baseAccount, accountSchedule);
         }
 
         internal BankAccountDetailVM SaveAccount(BankAccountDetailVM account)
         {
             AccountDetailVM baseAccount = SaveAccount((AccountDetailVM)account);
-            var result = Repo.SaveAccount(new DepositAccount()
+            var result = Repo.SaveAccount(new DepositAccount(account));
+            Transaction transaction = null;
+            if (result.InitialDepositId.HasValue)
             {
-                LocalId = account.DepositAccountId,
-                AccountId = baseAccount.AccountId,
-                InitialDepositId = account.InitialDepositId,
-                IsActiveCashAccount = account.IsActiveCashAccount,
-                IsDefault = account.IsDefault
-            });
+                transaction = Repo.GetTransactionById(result.InitialDepositId.Value);
+            }
+            return new BankAccountDetailVM(baseAccount, result, transaction);
+        }
 
-            return new BankAccountDetailVM()
-            {
-                AccountName = baseAccount.AccountName,
-                Notes = baseAccount.Notes,
-                DepositAccountId = result.LocalId,
-                AccountId = baseAccount.AccountId,
-                DateTime_Created = baseAccount.DateTime_Created,
-                DateTime_Deactivated = baseAccount.DateTime_Deactivated,
-                IsDefault = account.IsDefault,
-                IsActiveCashAccount = account.IsActiveCashAccount,
-                InitialDepositId = account.InitialDepositId,
-            };
+        internal void SaveTransaction(TransactionSaveModel initialDeposit)
+        {
+            Repo.SaveTransaction(new Transaction(initialDeposit));
+            throw new NotImplementedException(); // what does this return?
         }
 
         #endregion Saves
+
+        #region Deactivation
+
+        internal DateTime DeactivateAccount(int accountId)
+        {
+            var account = GetBankAccountById(accountId);
+            switch (account.AccountType)
+            {
+                case Constants.Accounts.AccountType.BankAccount:
+                    Repo.DeactivateDepositAccount(accountId);
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+            return Repo.DeactivateAccount(accountId).DateTime_Deactivated.Value;
+        }
+
+        #endregion Deactivation
 
         #region FYE Calls
 
@@ -131,88 +198,6 @@ namespace Budgetor.Overminds
         }
 
         #endregion FYE Calls
-
-        #region Mapping
-
-        private AccountDetailVM AccountToDetailVM(Account account)
-        {
-            return new AccountDetailVM()
-            {
-                AccountName = account.AccountName,
-                Notes = account.Notes,
-                AccountId = account.LocalId,
-                DateTime_Created = account.DateTime_Created,
-                DateTime_Deactivated = account.DateTime_Deactivated,
-                AccountType = Constants.Accounts.GetDisplayByTypeName(account.AccountType).Enum
-            };
-
-        }
-
-        private Account AccountFromDetailVM(AccountDetailVM account)
-        {
-            return new Account()
-            {
-                AccountName = account.AccountName,
-                LocalId = account.AccountId,
-                Notes = account.Notes,
-                AccountType = Constants.Accounts.GetDisplay(account.AccountType).TypeName
-            };
-        }
-
-        private IncomeSource IncomeSourceFromDetailVM(IncomeSourceDetailVM source)
-        {
-            return new IncomeSource()
-            {
-                LocalId = source.IncomeSourceId,
-                AccountId = source.AccountId,
-                DefaultToAccountId = source.DefaultToAccountId,
-                ExpectedAmount = source.ExpectedAmount,
-                ScheduleId = source.Schedule?.LocalId
-            };
-        }
-
-        private IncomeSourceDetailVM IncomeSourceToDetailVM(IncomeSource source, AccountDetailVM baseAccount)
-        {
-
-            ScheduleVM accountSchedule = null;
-            if (source.ScheduleId.HasValue)
-            {
-                var repoSched = Repo.GetSchedule(source.ScheduleId.Value);
-                accountSchedule = ScheduleToVM(repoSched);
-            }
-
-            return new IncomeSourceDetailVM()
-            {
-                AccountName = baseAccount.AccountName,
-                Notes = baseAccount.Notes,
-                IncomeSourceId = source.LocalId,
-                AccountId = baseAccount.AccountId,
-                DateTime_Created = baseAccount.DateTime_Created,
-                DateTime_Deactivated = baseAccount.DateTime_Deactivated,
-                DefaultToAccountId = source.DefaultToAccountId,
-                ExpectedAmount = source.ExpectedAmount,
-                Schedule = accountSchedule,
-                TotalFromSource = source.TotalFromSource,
-            };
-        }
-
-        private ScheduleVM ScheduleToVM(Schedule schedule)
-        {
-            return new ScheduleVM()
-            {
-                LocalId = schedule.LocalId,
-                Frequency = Constants.Frequency.GetDisplayByTypeName(schedule.Frequency).Enum,
-                DateTime_Created = schedule.DateTime_Created,
-                DateTime_Deactivated = schedule.DateTime_Deactivated,
-                Occurrence_Final = schedule.Occurrence_Final,
-                Occurrence_First = schedule.Occurrence_First,
-                Occurrence_LastConfirmed = schedule.Occurrence_LastConfirmed,
-                Occurrence_LastPlanned = schedule.Occurrence_LastPlanned
-            };
-        }
-
-        #endregion Mapping
-
 
     }
 }

@@ -1,19 +1,19 @@
 ﻿using Budgetor.Models.Contracts;
+using Budgetor.Repo.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Budgetor.Constants.Accounts;
-using static Budgetor.Constants.Transactions;
+using Budgetor.Constants;
 
 namespace Budgetor.Models
 {
-    public class TransactionBase
+    public class TransactionDetailBase : ITransactionDetail
     {
         public string Title { get; set; }
 
-        public TransactionType TransactionType { get; set; }
+        public Constants.Transactions.TransactionType TransactionType { get; private set; }
 
         public decimal Amount { get; set; }
 
@@ -29,8 +29,30 @@ namespace Budgetor.Models
 
         public bool IsConfirmed { get; set; }
 
-        public bool IsOccurrence { get; set; }
-
         public AccountBasicInfo OccerrenceAccount { get; set; }
+
+        public TransactionDetailBase()
+        {
+
+        }
+
+        public TransactionDetailBase(Constants.Transactions.TransactionType transactionType)
+        {
+            TransactionType = transactionType;
+        }
+
+        public TransactionDetailBase(Transaction repoTransaction, AccountBasicInfo toAccount, AccountBasicInfo fromAccount, AccountBasicInfo occerrenceAccount)
+        {
+            Title = repoTransaction.Title;
+            TransactionType = Constants.Transactions.GetDisplayByTypeName(repoTransaction.TransactionType).Enum;
+            Amount = repoTransaction.Amount;
+            ToAccount = toAccount;
+            FromAccount = fromAccount;
+            DateTime_Created = repoTransaction.DateTime_Created;
+            DateTime_Occurred = repoTransaction.DateTime_Occurred;
+            IsUserCreated = repoTransaction.IsUserCreated;
+            IsConfirmed = repoTransaction.IsConfirmed;
+            OccerrenceAccount = occerrenceAccount;
+        }
     }
 }

@@ -1,5 +1,6 @@
 namespace Budgetor.Repo.Models
 {
+    using Budgetor.Models;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -34,9 +35,25 @@ namespace Budgetor.Repo.Models
 
         public bool IsConfirmed { get; set; }
 
-        public bool IsOccurrence { get; set; }
-
         public int? OccerrenceAccount { get; set; }
 
+        public Transaction()
+        {
+
+        }
+
+        public Transaction(TransactionSaveModel saveModel)
+        {
+            LocalId = saveModel.TransactionId;
+            Title = saveModel.Title;
+            Amount = saveModel.Amount;
+            ToAccount = saveModel.ToAccount;
+            FromAccount = saveModel.FromAccount;
+            DateTime_Occurred = DateTime_Occurred;
+            TransactionType = Constants.Transactions.GetDisplay(saveModel.TransactionType).TypeName;
+            IsUserCreated = saveModel.IsUserCreated;
+            IsConfirmed = saveModel.IsConfirmed;
+            OccerrenceAccount = saveModel.OccerrenceAccount;
+        }
     }
 }

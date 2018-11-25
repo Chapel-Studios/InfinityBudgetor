@@ -68,7 +68,6 @@ CREATE TABLE dbo.Transactions (
 	TransactionType NVARCHAR(15) NOT NULL,
 	IsUserCreated BIT NOT NULL,
 	IsConfirmed BIT NOT NULL,
-	IsOccurrence BIT NOT NULL,
 	OccerrenceAccount INT NULL,
 	FOREIGN KEY (OccerrenceAccount) REFERENCES dbo.Accounts(LocalId),
 )

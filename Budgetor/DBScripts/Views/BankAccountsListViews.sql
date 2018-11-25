@@ -9,8 +9,8 @@ GO
 
 CREATE VIEW [dbo].[BankAccountsListViews] AS 
 SELECT 
-	d.LocalId as DepositAccountId
-	, a.LocalId as AccountId
+	d.LocalId AS DepositAccountId
+	, a.LocalId AS AccountId
 	, a.AccountName
 	, a.DateTime_Created
 	, a.DateTime_Deactivated

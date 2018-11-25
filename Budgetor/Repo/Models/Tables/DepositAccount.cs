@@ -1,5 +1,6 @@
 namespace Budgetor.Repo.Models
 {
+    using Budgetor.Models;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -21,5 +22,20 @@ namespace Budgetor.Repo.Models
         public decimal Balance { get; set; }
 
         public int? InitialDepositId { get; set; }
+
+        public DepositAccount()
+        {
+
+        }
+
+        public DepositAccount(BankAccountDetailVM accountDetailVM)
+        {
+            LocalId = accountDetailVM.DepositAccountId;
+            AccountId = accountDetailVM.AccountId;
+            InitialDepositId = accountDetailVM.InitialDepositId;
+            IsActiveCashAccount = accountDetailVM.IsActiveCashAccount;
+            IsDefault = accountDetailVM.IsDefault;
+        }
+
     }
 }

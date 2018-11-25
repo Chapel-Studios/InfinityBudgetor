@@ -13,6 +13,8 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -23,6 +25,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -32,6 +35,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>Budgetor.App</StartupObject>
@@ -69,38 +73,44 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Constants\Transactions.cs" />
+    <Compile Include="Controls\AddAccountButton.cs" />
     <Compile Include="Controls\EditButton.cs" />
     <Compile Include="Models\Accounts\AccountBasicInfo.cs" />
     <Compile Include="Models\Accounts\DetailVMs\AccountDetailVM.cs" />
     <Compile Include="Models\Accounts\DetailVMs\IncomeSourceDetailVM.cs" />
     <Compile Include="Constants\Frequency.cs" />
     <Compile Include="Models\Accounts\EditBankAccountVM.cs" />
+    <Compile Include="Models\Contracts\ITransaction.cs" />
     <Compile Include="Models\Scheduling\Schedule.cs" />
     <Compile Include="Models\Shared\BindableBase.cs" />
     <Compile Include="Constants\ConstantBaseTypes.cs" />
     <Compile Include="Constants\MiscConstants.cs" />
-    <Compile Include="Factories\AccountFactory.cs" />
     <Compile Include="Constants\Accounts.cs" />
     <Compile Include="Helpers\DispayFormatHelper.cs" />
     <Compile Include="Helpers\FirstTimeExperienceHelper.cs" />
+    <Compile Include="Models\Shared\GenericComboBoxItem.cs" />
+    <Compile Include="Models\Transactions\Deposit.cs" />
     <Compile Include="Models\Transactions\TransactionBase.cs" />
+    <Compile Include="Models\Transactions\TransactionModalVM.cs" />
+    <Compile Include="Models\Transactions\TransactionSaveModel.cs" />
     <Compile Include="Overminds\AccountsOM.cs" />
     <Compile Include="Models\Contracts\IAccount.cs" />
     <Compile Include="Models\Accounts\DetailVMs\BankAccountDetailVM.cs" />
     <Compile Include="Models\Accounts\ListVMs\BankAccountListVM.cs" />
     <Compile Include="Models\Accounts\ListVMs\IncomeSourceListVM.cs" />
     <Compile Include="Models\Accounts\ListVMs\AccountListBaseVM.cs" />
-    <Compile Include="Overminds\MappingOM.cs" />
     <Compile Include="Overminds\OverMindBase.cs" />
     <Compile Include="Overminds\TransactionsOM.cs" />
-    <Compile Include="Repo\Models\BankAccountsListView.cs" />
-    <Compile Include="Repo\Models\DepositAccount.cs" />
-    <Compile Include="Repo\Models\IncomeSource.cs" />
-    <Compile Include="Repo\Models\IncomeSourcesListView.cs" />
-    <Compile Include="Repo\Models\Schedule.cs" />
-    <Compile Include="Repo\Models\ScheduleFrequencyType.cs" />
-    <Compile Include="Repo\Models\Transaction.cs" />
-    <Compile Include="Repo\Models\TransactionType.cs" />
+    <Compile Include="Repo\Models\Sprocs\DepositAccount_Detail.cs" />
+    <Compile Include="Repo\Models\Sprocs\FromAccount.cs" />
+    <Compile Include="Repo\Models\Views\BankAccountsListView.cs" />
+    <Compile Include="Repo\Models\Tables\DepositAccount.cs" />
+    <Compile Include="Repo\Models\Tables\IncomeSource.cs" />
+    <Compile Include="Repo\Models\Views\IncomeSourcesListView.cs" />
+    <Compile Include="Repo\Models\Tables\Schedule.cs" />
+    <Compile Include="Repo\Models\Tables\ScheduleFrequencyType.cs" />
+    <Compile Include="Repo\Models\Tables\Transaction.cs" />
+    <Compile Include="Repo\Models\Tables\TransactionType.cs" />
     <Compile Include="Repo\Repository.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Views\BankAccount_Form.xaml.cs">
@@ -110,17 +120,28 @@
       <DependentUpon>BudgetorMain.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\Accounts\AccountsTabVM.cs" />
-    <Compile Include="Repo\Models\Account.cs" />
+    <Compile Include="Repo\Models\Tables\Account.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Repo\Budgetor_Context.cs" />
+    <Compile Include="Views\Transaction_Modal.xaml.cs">
+      <DependentUpon>Transaction_Modal.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\BankAccount_Form.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\BudgetorMain.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Transaction_Modal.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -155,17 +176,24 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="DBScripts\Sprocs\GetBankAccount.sql" />
     <Content Include="DBScripts\SeedData\ScheduleFrequencyTypes.sql" />
     <Content Include="DBScripts\Tables.sql" />
     <Content Include="DBScripts\Views\BankAccountsListViews.sql" />
+    <Content Include="DBScripts\Sprocs\GetFromAccounts.sql" />
     <Content Include="DBScripts\Views\IncomeSourcesListViews.sql" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Factories\Models\" />
     <Folder Include="Properties\DataSources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.UI.Xaml.2.0.181018003\build\Microsoft.UI.Xaml.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.UI.Xaml.2.0.181018003\build\Microsoft.UI.Xaml.props'))" />
+  </Target>
 </Project>

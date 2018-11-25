@@ -1,20 +1,7 @@
 ﻿using Budgetor.Controls;
-using Budgetor.Factories;
 using Budgetor.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Budgetor.Overminds;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-
 namespace Budgetor.Views
 {
     /// <summary>
@@ -24,17 +11,31 @@ namespace Budgetor.Views
     {
         #region Properties
 
-        private AccountFactory _Factory;
-        public AccountFactory Factory
+        private AccountsOM _AccountsOM;
+        public AccountsOM AccountsOM
         {
             get
             {
-                if (_Factory == null)
+                if (_AccountsOM == null)
                 {
-                    _Factory = new AccountFactory();
+                    _AccountsOM = new AccountsOM();
                 }
 
-                return _Factory;
+                return _AccountsOM;
+            }
+        }
+
+        private TransactionsOM _TransactionsOM;
+        public TransactionsOM TransactionsOM
+        {
+            get
+            {
+                if (_TransactionsOM == null)
+                {
+                    _TransactionsOM = new TransactionsOM();
+                }
+
+                return _TransactionsOM;
             }
         }
 
@@ -43,24 +44,68 @@ namespace Budgetor.Views
 
         #endregion Properties
 
+        #region Constructors
+
         public BudgetorMain()
         {
             InitializeComponent();
 
-            AccountsTabVM = Factory.GetAcountsTabVM();
+            AccountsTabVM = AccountsOM.GetAcountsTabVM();
             AccountsTab.DataContext = AccountsTabVM;
         }
 
-        public void EditBankAccount(int id)
-        {
-            var editor = new BankAccount_Form(Factory.GetEditBankAccountVM(id));
-            editor.Show();
-        }
+        #endregion Constructors
+
+        #region Accounts Tab Calls
 
         private void EditBankAccount_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as EditButton;
             EditBankAccount(button.AccountId);
         }
+
+        private void AddBankAccount_Button_Click(object sender, RoutedEventArgs e)
+        {
+            EditBankAccount(null);
+        }
+
+        private void AddIncSource_Button_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as EditButton;
+            EditBankAccount(button.AccountId);
+        }
+
+        #endregion Accounts Tab Calls
+
+        #region Transactions Tab Calls
+
+        private void AddNewTransaction_Button_Click(object sender, RoutedEventArgs e)
+        {
+            EditTransaction(null);
+        }
+
+        #endregion Transactions Tab Calls
+
+        #region Private Methods
+
+        private void EditBankAccount(int? id)
+        {
+            var editor = new BankAccount_Form(AccountsOM.GetEditBankAccountVM(id), AccountsOM);
+            editor.Show();
+        }
+
+        private void EditIncSource(int? id)
+        {
+            //var editor = new BankAccount_Form(AccountFactory.GetEditBankAccountVM(id), AccountFactory);
+            //editor.Show();
+        }
+
+        private void EditTransaction(int? id)
+        {
+            var editor = new Transaction_Modal(TransactionsOM.GetTransactionModalVM(id), TransactionsOM);
+            editor.Show();
+        }
+
+        #endregion Private Methods
     }
 }

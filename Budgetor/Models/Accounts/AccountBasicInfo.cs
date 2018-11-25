@@ -13,10 +13,15 @@ namespace Budgetor.Models
 
         public string AccountName { get; set; }
 
-        public AccountType AccountType { get; set; }
+        public readonly AccountType AccountType;
 
         public DateTime DateTime_Created { get; set; }
 
         public DateTime? DateTime_Deactivated { get; set; }
+
+        public AccountBasicInfo(AccountType accountType)
+        {
+            AccountType = accountType;
+        }
     }
 }

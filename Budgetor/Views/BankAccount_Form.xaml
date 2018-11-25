@@ -3,13 +3,19 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
         xmlns:local="clr-namespace:Budgetor.Views"
         mc:Ignorable="d"
-        Title="BankAccount_Form" Height="420" Width="500">
-    <Grid Margin="15,15,15,0" >
+        Title="" 
+        Name="VMHandle"
+        Height="420" Width="500">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
+    </Window.Resources>
+    <Grid Margin="15,15,15,0" Name="BankAccount_Grid">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="94*"/>
-            <ColumnDefinition Width="67*"/>
+            <ColumnDefinition Width="197*"/>
+            <ColumnDefinition Width="125*"/>
             <ColumnDefinition Width="140"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -20,21 +26,22 @@
             <RowDefinition Height="100"/>
             <RowDefinition Height="35*" />
         </Grid.RowDefinitions>
+
         <TextBox HorizontalAlignment="Right"
                  VerticalAlignment="Center"
                  Grid.ColumnSpan="2"
                  Height="26" Width="300"
-                 Margin="0,12"
+                 Margin="0,7"
                  TextWrapping="Wrap"
-                 Text="E.G. Credit Union Checking"
+                 Text="{Binding AccountName}"
                  TextBlock.FontStyle="Italic"
                  TextBlock.FontWeight="Light"
-        />
+        /> <!--"E.G. Credit Union Checking"-->
         <StackPanel Orientation="Vertical"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Left"
-                    Margin="25,4,0,4"
-                    Grid.Column="2" Height="42" Width="105"
+                    Margin="25,-1,0,59"
+                    Grid.Column="2" Height="42" Width="105" Grid.RowSpan="2"
         >
             <Label VerticalAlignment="Top" HorizontalAlignment="Stretch" TextBlock.TextAlignment="Center">
                 <Label.Content>
@@ -54,55 +61,57 @@
                 <RowDefinition Height="25"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="110*"/>
+                <ColumnDefinition Width="90"/>
             </Grid.ColumnDefinitions>
 
             <DatePicker HorizontalAlignment="Left" 
                         VerticalAlignment="Center"
-                        Margin="0,6,0,7"
+                        Margin="0,8" Height="26" Width="105"
+                        SelectedDate="{Binding 
+                            Path=DateTime_Created,
+                            Mode=TwoWay,
+                            TargetNullValue={x:Static System:DateTime.Now}
+                        }"
+                        IsEnabled="{Binding IsAddMode, ElementName=VMHandle}"
             />
-            <Label Grid.Column="1" 
-                   HorizontalAlignment="Center"
+            <Label HorizontalAlignment="Center"
                    VerticalAlignment="Center"
-                   Content="Creation Date" 
-                   Margin="9,6,9,5" 
+                   Grid.Column="1"
+                   Height="26" Width="90"
+                   Content="Creation Date"  
             />
-            <TextBlock HorizontalAlignment="Center"
-                       VerticalAlignment="Top"
-                       Margin="0,0,0,10" 
-                       Grid.Row="1"
-                       Grid.ColumnSpan="2"
+            
+            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top" 
+                       Grid.Row="1" Grid.ColumnSpan="2"
+                       Height="32" Width="175" 
                        TextWrapping="Wrap"
-                       Text="You will not be able to enter transactions before this date." 
+                       TextAlignment="Center"
+                       Text="You will not be able to enter transactions before this date."
             />
-            <CheckBox HorizontalAlignment="Left" 
-                      VerticalAlignment="Center"
-                      Margin="15,0,0,0" 
-                      Grid.Row="2"
-                      Grid.ColumnSpan="2"
+            
+            <CheckBox HorizontalAlignment="Left" VerticalAlignment="Center"
+                      Height="15" Width="142" Margin="15,5,0,5" 
+                      Grid.Row="2" Grid.ColumnSpan="2"
+                      IsChecked="{Binding IsDefault, Mode=TwoWay}"
                       Content="Set as default account?" 
             />
-            <CheckBox HorizontalAlignment="Left" 
-                      VerticalAlignment="Center"
-                      Margin="15,0,0,0" 
-                      Grid.Row="3"
-                      Grid.ColumnSpan="2"
-                      Content="Is this a cash account?" 
+            <CheckBox HorizontalAlignment="Left" VerticalAlignment="Center"
+                      Height="15" Width="137" Margin="15,5,0,5" 
+                      Grid.Row="3" Grid.ColumnSpan="2"
+                      IsChecked="{Binding IsActiveCashAccount, Mode=TwoWay}"
+                      Content="Is this a cash account?"
             />
         </Grid>
 
-        <TextBox HorizontalAlignment="Right"
-                 VerticalAlignment="Center" 
-                 Grid.Column="1" 
-                 Grid.Row="1" 
-                 Height="24" 
-                 Margin="0,18"
-                 Text="$0.00"
+        <TextBox HorizontalAlignment="Right" VerticalAlignment="Center" 
+                 Grid.Column="1" Grid.Row="1" 
+                 Height="24" Width="80" Margin="0,18"
+                 Text="{Binding InitialBalance_Display, Mode=TwoWay}"
                  TextWrapping="Wrap"
                  TextBlock.FontStyle="Italic"
                  TextBlock.TextAlignment="Center"
-                 Width="80"
+                 IsEnabled="{Binding IsAddMode, ElementName=VMHandle}"
         />
         <Label HorizontalAlignment="Left" 
                VerticalAlignment="Center"
@@ -114,13 +123,12 @@
 
         <ComboBox HorizontalAlignment="Right"
                   VerticalAlignment="Center"
-                  Grid.Column="1" 
-                  Grid.Row="2" 
-                  Margin="0,24" 
+                  Grid.Column="1" Grid.Row="2"
                   Width="120" Height="22"
+                  Name="FromAccount_ComboBox"
+                  Visibility="{Binding IsAddMode, ElementName=VMHandle, Converter={StaticResource BoolToVisConverter}}"
         />
-        <TextBlock HorizontalAlignment="Left"
-                   VerticalAlignment="Center"
+        <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center"
                    Grid.Column="2" Grid.Row="2"
                    Height="32" Width="99"
                    MaxHeight="70" MaxWidth="110"
@@ -128,13 +136,22 @@
                    Text="Which account did this come from?"
                    TextWrapping="Wrap" 
                    TextAlignment="Center"
+                   Visibility="{Binding IsAddMode, Mode=OneTime, ElementName=VMHandle, Converter={StaticResource BoolToVisConverter}}"
+        />
+        <Button HorizontalAlignment="Center" VerticalAlignment="Top"
+                Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2"
+                Height="25" Width="120"
+                Content="Edit Initial Deposit"
+                Name="EditTransaction_Button"
+                Click="EditTransaction_Button_Click"
+                Visibility="{Binding Path=IsEditMode, ElementName=VMHandle, Converter={StaticResource BoolToVisConverter}}"
         />
 
         <Label HorizontalAlignment="Center" 
                VerticalAlignment="Top"
-               Grid.Row="3" Grid.ColumnSpan="3"
-               Height="26" Width="83"
-               Content="Special Notes" 
+               Grid.Row="3" Grid.ColumnSpan="2"
+               Height="26" Width="82"
+               Content="Special Notes" Margin="190,0,50,0" 
         />
         <TextBox HorizontalAlignment="Center"
                  VerticalAlignment="Top"
@@ -142,11 +159,12 @@
                  Height="100" Width="442"
                  Margin="10,0"
                  TextWrapping="Wrap"
+                 Text="{Binding Notes, Mode=TwoWay}"
         />
-        
+
         <Grid HorizontalAlignment="Stretch"
               VerticalAlignment="Center"
-              Grid.Row="5" Grid.ColumnSpan="3"
+              Grid.Row="5" Grid.ColumnSpan="3" Height="26" Margin="0,26"
         >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
@@ -158,21 +176,27 @@
                     VerticalAlignment="Top"
                     Height="25" Width="120"
                     Content="Cancel"
+                    Name="Cancel_Button"
+                    Click="Cancel_Button_Click"
             />
             <Button HorizontalAlignment="Center"
                     VerticalAlignment="Top"
                     Grid.Column="1"
                     Height="25" Width="120"
                     Content="Deactivate Account"
+                    Name="Deactivate_Button"
+                    Click="Deactivate_Button_Click"
             />
             <Button HorizontalAlignment="Right"
                     VerticalAlignment="Top"
                     Grid.Column="2"
                     Height="25" Width="120"
                     Content="Save Account"
+                    Name="Save_Button"
+                    Click="Save_Button_Click"
             />
 
         </Grid>
-        
+
     </Grid>
 </Window>

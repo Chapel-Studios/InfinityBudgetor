@@ -1,5 +1,6 @@
 namespace Budgetor.Repo.Models
 {
+    using Budgetor.Models;
     using System;
     using System.ComponentModel.DataAnnotations;
 
@@ -24,6 +25,23 @@ namespace Budgetor.Repo.Models
         public DateTime? DateTime_Deactivated { get; set; }
 
         public bool IsSystem { get; set; }
+
+        #region Constructors
+
+        public Account()
+        {
+
+        }
+
+        public Account(AccountDetailVM account)
+        {
+            AccountName = account.AccountName;
+            LocalId = account.AccountId;
+            Notes = account.Notes;
+            AccountType = Constants.Accounts.GetDisplay(account.AccountType).TypeName;
+        }
+
+        #endregion Constructors
 
     }
 }

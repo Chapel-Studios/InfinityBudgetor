@@ -10,11 +10,22 @@
         Title="BudgetorMain" 
         Height="450" Width="800" WindowStyle="ThreeDBorderWindow" >
     <Window.Resources>
+        <!--<ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\Themes\Generic.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>-->
+
+        <!--<Style TargetType="{x:Type controls:EditButton}">
+        </Style>-->
         <DataTemplate x:Key="BankAccountsList_DT">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="{Binding AccountName}" Width="150"></TextBlock>
                 <TextBlock Text="{Binding DisplayBalance}" Width="50"></TextBlock>
-                <controls:EditButton AccountId="{Binding AccountId}" Content="Edit" Click="EditBankAccount_Click"></controls:EditButton>
+                <controls:EditButton AccountId="{Binding AccountId}"
+                                     Content="Edit" 
+                                     Click="EditBankAccount_Click"
+                />
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="IncomeSourcesList_DT">
@@ -44,12 +55,22 @@
                                 VerticalAlignment="Top"
                                 >
                         <StackPanel Orientation="Vertical">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Width="auto">
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Center">
+                                <TextBlock Width="auto" VerticalAlignment="Center">
                                     <TextBlock.Text>
                                         Bank Accounts
                                     </TextBlock.Text>
                                 </TextBlock>
+
+                                <Button HorizontalAlignment="Right"
+                                    VerticalAlignment="Top"
+                                    Height="25" Width="45"
+                                        Margin="15,0"
+                                    Content="Add"
+                                    Name="AddBankAccount_Button"
+                                    Click= "AddBankAccount_Button_Click"
+                                />
                             </StackPanel>
                             <ListBox 
                                 Name="BankAccountsList"
@@ -61,12 +82,22 @@
                         </StackPanel>
 
                         <StackPanel Orientation="Vertical">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Width="auto">
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Center">
+                                <TextBlock Width="auto" VerticalAlignment="Center">
                                     <TextBlock.Text>
                                         Income Sources
                                     </TextBlock.Text>
                                 </TextBlock>
+
+                                <Button HorizontalAlignment="Right"
+                                    VerticalAlignment="Top"
+                                    Height="25" Width="45"
+                                        Margin="15,0"
+                                    Content="Add"
+                                    Name="AddIncSource_Button"
+                                    Click= "AddIncSource_Button_Click"
+                                />
                             </StackPanel>
                             <ListBox 
                                 Name="IncomeSourcesList"
@@ -80,8 +111,18 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Transactions"
+                     Name="TransactionsTab"
                      Padding="10">
-                
+                <Grid>
+                    <Button HorizontalAlignment="Left"
+                            VerticalAlignment="Top"
+                            Height="25" Width="100"
+                            Margin="15"
+                            Content="Add Transaction"
+                            Name="AddNewTransaction_Button"
+                            Click= "AddNewTransaction_Button_Click"
+                    />
+                </Grid>
             </TabItem>
         </TabControl>
     </Grid>

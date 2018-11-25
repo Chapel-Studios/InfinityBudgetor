@@ -69,6 +69,7 @@ namespace Budgetor.Helpers
                 DefaultToAccountId = null,
                 ExpectedAmount = 0,
                 TotalFromSource = 0,
+                DateTime_Created = DateTime.UtcNow,
                 Notes = "Default account placeholder for when income source data is not tracked seperately. Info kept for checks and balances",
             };
 
@@ -100,7 +101,8 @@ namespace Budgetor.Helpers
                     InitialDepositId = null,
                     IsActiveCashAccount = true,
                     IsDefault = true,
-                    Notes = "Physical Money"
+                    Notes = "Physical Money",
+                    DateTime_Created = DateTime.UtcNow,
                 };
                 cash = AccountOverMind.SaveAccount(cash);
             }

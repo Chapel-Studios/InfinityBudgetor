@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Budgetor.Overminds
+namespace Budgetor.Models
 {
-    class MappingOM
+    public class TransactionModalVM
     {
-
     }
 }
