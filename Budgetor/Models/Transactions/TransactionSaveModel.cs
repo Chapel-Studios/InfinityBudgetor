@@ -12,7 +12,7 @@ namespace Budgetor.Models
 
         public string Title { get; set; }
 
-        public Constants.Transactions.TransactionType TransactionType { get; set; }
+        public Constants.TransactionType TransactionType { get; set; }
 
         public decimal Amount { get; set; }
 

@@ -70,6 +70,7 @@ CREATE TABLE dbo.Transactions (
 	IsConfirmed BIT NOT NULL,
 	OccerrenceAccount INT NULL,
 	FOREIGN KEY (OccerrenceAccount) REFERENCES dbo.Accounts(LocalId),
+	Notes NVARCHAR(MAX) NULL
 )
 ALTER TABLE [dbo].[Transactions] WITH CHECK ADD CHECK ([ToAccount] <> [FromAccount])
 

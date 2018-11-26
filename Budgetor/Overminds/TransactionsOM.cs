@@ -2,34 +2,46 @@
 using Budgetor.Models;
 using Budgetor.Constants;
 using System;
+using System.Collections.Generic;
+using Budgetor.Models.Contracts;
+using Budgetor.Helpers.Extensions;
 
 namespace Budgetor.Overminds
 {
     public class TransactionsOM : OverMindBase
     {
-        #region Mapping
-
-        private TransactionDetailBase FromRepoToTransactionBase(Transaction repoTransaction)
+        internal TransactionModalVM GetTransactionModalVM(int? transactionId)
         {
-            return new TransactionDetailBase(Transactions.GetDisplayByTypeName(repoTransaction.TransactionType).Enum)
+            TransactionDetailBase transaction;
+            if (transactionId.HasValue)
             {
-                Title = repoTransaction.Title,
-                Amount = repoTransaction.Amount,
-                DateTime_Created = repoTransaction.DateTime_Created,
-                DateTime_Occurred = repoTransaction.DateTime_Occurred,
-                FromAccount = AccountsOM.GetGenericAccountDetails(repoTransaction.FromAccount),
-                ToAccount = AccountsOM.GetGenericAccountDetails(repoTransaction.ToAccount),
-                IsConfirmed = repoTransaction.IsConfirmed,
-                IsUserCreated = repoTransaction.IsUserCreated,
-                OccerrenceAccount = repoTransaction.OccerrenceAccount.HasValue ? AccountsOM.GetGenericAccountDetails(repoTransaction.OccerrenceAccount.Value) : null,
-            };
+                transaction = MapRepoTransactionToTransactionBase(Repo.GetTransactionById(transactionId.Value));
+            }
+            else
+            {
+                transaction = new TransactionDetailBase();
+            }
+
+            return new TransactionModalVM(transaction,
+                                          Transactions.TransactionTypesDropDown,
+                                          Time.GetHoursComboBoxItems(),
+                                          Time.GetMeridianComboBoxItems(),
+                                          Time.GetTimeZonesComboBoxItems(),
+                                          new List<IComboBoxItem>() { new GenericComboBoxItem("Not yet Implemented") },
+                                          Repo.GetAccountComboBoxInfo(new List<string>(Enum.GetNames(typeof(AccountType)))).ConvertRepoToView(),
+                                          transactionId.HasValue
+            );
         }
 
-        internal TransactionModalVM GetTransactionModalVM(int? id)
+        internal void DeleteTransaction(int transactionId)
         {
-            return new TransactionModalVM();
+            throw new NotImplementedException();
         }
 
-        #endregion Mapping
+        internal void SaveTransaction(TransactionSaveModel initialDeposit)
+        {
+            Repo.SaveTransaction(new Transaction(initialDeposit));
+            throw new NotImplementedException(); // what does this return?
+        }
     }
 }

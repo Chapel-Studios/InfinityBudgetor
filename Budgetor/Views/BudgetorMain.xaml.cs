@@ -90,7 +90,7 @@ namespace Budgetor.Views
 
         private void EditBankAccount(int? id)
         {
-            var editor = new BankAccount_Form(AccountsOM.GetEditBankAccountVM(id), AccountsOM);
+            var editor = new BankAccount_Form(AccountsOM.GetEditBankAccountVM(id), AccountsOM, TransactionsOM);
             editor.Show();
         }
 

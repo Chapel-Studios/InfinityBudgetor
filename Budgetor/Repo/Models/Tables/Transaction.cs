@@ -37,6 +37,8 @@ namespace Budgetor.Repo.Models
 
         public int? OccerrenceAccount { get; set; }
 
+        public string Notes { get; set; }
+
         public Transaction()
         {
 

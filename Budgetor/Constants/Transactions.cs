@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Budgetor.Models.Contracts;
+using System.Collections.Generic;
 
 namespace Budgetor.Constants
 {
@@ -8,7 +9,7 @@ namespace Budgetor.Constants
         {
             DisplayText = "Purchase",
             TypeName = "Purchase",
-            Enum = TransactionType.Purchase,
+            EnumOption = TransactionType.Purchase,
             HelpText = ""
         };
 
@@ -16,18 +17,23 @@ namespace Budgetor.Constants
         {
             DisplayText = "Deposit",
             TypeName = "Deposit",
-            Enum = TransactionType.Deposit,
+            EnumOption = TransactionType.Deposit,
             HelpText = ""
         };
 
-        private static List<DisplaySet<TransactionType>> TransactionTypes = new List<DisplaySet<TransactionType>>()
+        public static List<DisplaySet<TransactionType>> TransactionTypes = new List<DisplaySet<TransactionType>>()
+        {
+            Purchase, Deposit
+        };
+
+        public static List<IComboBoxItem> TransactionTypesDropDown = new List<IComboBoxItem>()
         {
             Purchase, Deposit
         };
 
         public static DisplaySet<TransactionType> GetDisplay(TransactionType transactionType)
         {
-            return TransactionTypes.Find(x => x.Enum == transactionType);
+            return TransactionTypes.Find(x => x.EnumOption == transactionType);
         }
 
         public static DisplaySet<TransactionType> GetDisplayByTypeName(string transactionType)
@@ -35,12 +41,12 @@ namespace Budgetor.Constants
             return TransactionTypes.Find(x => x.TypeName == transactionType);
         }
 
-        public enum TransactionType
-        {
-            Purchase = 0,
-            Deposit = 1
-        }
-
-
     }
+
+    public enum TransactionType
+    {
+        Purchase = 0,
+        Deposit = 1
+    }
+
 }

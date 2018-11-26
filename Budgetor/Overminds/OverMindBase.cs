@@ -1,4 +1,6 @@
-﻿using Budgetor.Repo;
+﻿using Budgetor.Models;
+using Budgetor.Repo;
+using Budgetor.Repo.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,5 +36,21 @@ namespace Budgetor.Overminds
                 return _AccountsOM;
             }
         }
+
+        #region Mapping
+
+        protected TransactionDetailBase MapRepoTransactionToTransactionBase(Transaction repoTransaction)
+        {
+            return new TransactionDetailBase(repoTransaction,
+                                            AccountsOM.GetGenericAccountDetails(repoTransaction.ToAccount),
+                                            AccountsOM.GetGenericAccountDetails(repoTransaction.FromAccount),
+                                            repoTransaction.OccerrenceAccount.HasValue
+                                                ? AccountsOM.GetGenericAccountDetails(repoTransaction.OccerrenceAccount.Value)
+                                                : null
+            );
+        }
+
+        #endregion Mapping
+
     }
 }

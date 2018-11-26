@@ -17,7 +17,7 @@ namespace Budgetor.Constants
         {
             DisplayText = "Bank Account",
             TypeName = "BankAccount",
-            Enum = AccountType.BankAccount,
+            EnumOption = AccountType.BankAccount,
             HelpText = "These accounts are used for storing money and can be either a checking or savings account or even your personal pigggy bank or matress money."
         };
 
@@ -25,7 +25,7 @@ namespace Budgetor.Constants
         {
             DisplayText = "Income Source",
             TypeName = "IncomeSource",
-            Enum = AccountType.IncomeSource,
+            EnumOption = AccountType.IncomeSource,
             HelpText = "Income sources are used for reoccurring revenue like wages from jobs or settlement payments."
         };
 
@@ -33,7 +33,7 @@ namespace Budgetor.Constants
         {
             DisplayText = "Bill Account",
             TypeName = "BillAccount",
-            Enum = AccountType.BillAccount,
+            EnumOption = AccountType.BillAccount,
             HelpText = "Bill accounts will track regularly occuring bills from utilities to things like yearly subscription fees."
         };
 
@@ -41,7 +41,7 @@ namespace Budgetor.Constants
         {
             DisplayText = "Debt Account",
             TypeName = "DebtAccount",
-            Enum = AccountType.DebtAccount,
+            EnumOption = AccountType.DebtAccount,
             HelpText = "Debt account help you catch up on debts with payment plans that help minimize costly fees."
         };
 
@@ -52,21 +52,21 @@ namespace Budgetor.Constants
 
         public static DisplaySet<AccountType> GetDisplay(AccountType type)
         {
-            return AccountTypes.Find(x => x.Enum == type);
+            return AccountTypes.Find(x => x.EnumOption == type);
         }
 
         public static DisplaySet<AccountType> GetDisplayByTypeName(string accountType)
         {
             return AccountTypes.Find(x => x.TypeName == accountType);
         }
+    }
 
-        public enum AccountType
-        {
-            //MasterAccount = 0
-            BankAccount = 1,
-            IncomeSource = 2,
-            BillAccount = 3,
-            DebtAccount = 4
-        }
+    public enum AccountType
+    {
+        //MasterAccount = 0
+        BankAccount = 1,
+        IncomeSource = 2,
+        BillAccount = 3,
+        DebtAccount = 4
     }
 }

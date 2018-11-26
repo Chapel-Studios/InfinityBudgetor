@@ -14,7 +14,6 @@ namespace Budgetor.Repo
         public virtual DbSet<ScheduleFrequencyType> ScheduleFrequencyTypes { get; set; }
         public virtual DbSet<Schedule> Schedules { get; set; }
         public virtual DbSet<Transaction> Transactions { get; set; }
-        public virtual DbSet<TransactionType> TransactionTypes { get; set; }
         public virtual DbSet<DepositAccount> DepositAccounts { get; set; }
         public virtual DbSet<IncomeSource> IncomeSources { get; set; }
         // Views

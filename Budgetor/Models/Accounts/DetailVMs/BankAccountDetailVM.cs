@@ -40,11 +40,12 @@ namespace Budgetor.Models
             }
         }
 
-        public BankAccountDetailVM() : base(Constants.Accounts.AccountType.BankAccount)
+        public BankAccountDetailVM() : base(Constants.AccountType.BankAccount)
         {
+
         }
 
-        public BankAccountDetailVM(DepositAccount_DetailView repoModel) : base(Constants.Accounts.AccountType.BankAccount)
+        public BankAccountDetailVM(DepositAccount_DetailView repoModel) : base(Constants.AccountType.BankAccount)
         {
             DepositAccountId = repoModel.DepositAccountId;
             IsDefault = repoModel.IsDefault;

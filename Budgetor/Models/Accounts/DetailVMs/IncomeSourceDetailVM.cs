@@ -23,7 +23,7 @@ namespace Budgetor.Models
 
         #region Constructors
 
-        public IncomeSourceDetailVM() : base(Constants.Accounts.AccountType.IncomeSource)
+        public IncomeSourceDetailVM() : base(Constants.AccountType.IncomeSource)
         {
 
         }

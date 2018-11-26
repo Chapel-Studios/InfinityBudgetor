@@ -17,7 +17,7 @@ namespace Budgetor.Constants
             DisplayText = "InFrequent",
             HelpText = "These only occur when you create them.",
             TypeName = _Infrequent,
-            Enum = FrequencyType.Infrequent
+            EnumOption = FrequencyType.Infrequent
         };
 
         public static DisplaySet<FrequencyType> Weekly = new DisplaySet<FrequencyType>()
@@ -25,7 +25,7 @@ namespace Budgetor.Constants
             DisplayText = "Weekly",
             HelpText = "These occur once a week based on your starting date.",
             TypeName = _Weekly,
-            Enum = FrequencyType.Weekly
+            EnumOption = FrequencyType.Weekly
         };
 
         public static DisplaySet<FrequencyType> BiWeekly = new DisplaySet<FrequencyType>()
@@ -33,7 +33,7 @@ namespace Budgetor.Constants
             DisplayText = "BiWeekly",
             HelpText = "These only occur once every other week based on your starting date.",
             TypeName = _BiWeekly,
-            Enum = FrequencyType.BiWeekly
+            EnumOption = FrequencyType.BiWeekly
         };
 
         public static DisplaySet<FrequencyType> Monthly = new DisplaySet<FrequencyType>()
@@ -41,7 +41,7 @@ namespace Budgetor.Constants
             DisplayText = "Monthly",
             HelpText = "These occur once a month on the same day of the month as the first transaction. If the month doesn't have enough days, it will take place on the last day of the month.",
             TypeName = _Monthly,
-            Enum = FrequencyType.Monthly
+            EnumOption = FrequencyType.Monthly
         };
 
         public static DisplaySet<FrequencyType> Quarterly = new DisplaySet<FrequencyType>()
@@ -49,7 +49,7 @@ namespace Budgetor.Constants
             DisplayText = "Quarterly",
             HelpText = "These only occur once every 3 months on the same day of the month as the first transaction. If the month doesn't have enough days, it will take place on the last day of the month.",
             TypeName = _Quarterly,
-            Enum = FrequencyType.Quarterly
+            EnumOption = FrequencyType.Quarterly
         };
 
         public static DisplaySet<FrequencyType> Yearly = new DisplaySet<FrequencyType>()
@@ -57,7 +57,7 @@ namespace Budgetor.Constants
             DisplayText = "Yearly",
             HelpText = "These only occur once every year on it's anniversary.",
             TypeName = _Yearly,
-            Enum = FrequencyType.Yearly
+            EnumOption = FrequencyType.Yearly
         };
 
         private static List<DisplaySet<FrequencyType>> Frequencies = new List<DisplaySet<FrequencyType>>()
@@ -67,7 +67,7 @@ namespace Budgetor.Constants
 
         public static DisplaySet<FrequencyType> GetDisplay(FrequencyType frequency)
         {
-            return Frequencies.Find(x => x.Enum == frequency);
+            return Frequencies.Find(x => x.EnumOption == frequency);
         }
 
         public static DisplaySet<FrequencyType> GetDisplayByTypeName(string frequency)
@@ -75,15 +75,15 @@ namespace Budgetor.Constants
             return Frequencies.Find(x => x.TypeName == frequency);
         }
 
-        public enum FrequencyType
-        {
-            Infrequent = 0,
-            Weekly = 7,
-            BiWeekly = 14,
-            Monthly = 30,
-            Quarterly = 90,
-            Yearly = 365
-        }
+    }
 
+    public enum FrequencyType
+    {
+        Infrequent = 0,
+        Weekly = 7,
+        BiWeekly = 14,
+        Monthly = 30,
+        Quarterly = 90,
+        Yearly = 365
     }
 }

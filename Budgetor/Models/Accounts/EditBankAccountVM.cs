@@ -15,34 +15,11 @@ namespace Budgetor.Models
 
         public bool IsEditMode { get; set; }
 
-        public List<FromAccountComboItem> FromAccounts { get; set; }
+        public List<AccountComboBoxItem> FromAccounts { get; set; }
 
         public ManageBankAccountVM()
         {
-            FromAccounts = new List<FromAccountComboItem>();
+            FromAccounts = new List<AccountComboBoxItem>();
         }
-    }
-
-    public class FromAccountComboItem : GenericComboBoxItem
-    {
-
-        public FromAccountComboItem(FromAccount from)
-        {
-            AccountId = from.AccountId;
-            AccountName = from.AccountName;
-            IsCategoryDefault = from.IsDefault;
-        }
-
-        public FromAccountComboItem(int accountId, string accountName)
-        {
-            AccountId = accountId;
-            AccountName = accountName;
-        }
-
-        public int AccountId { get; set; }
-
-        public String AccountName { get; set; }
-
-        public bool IsCategoryDefault { get; set; }
     }
 }

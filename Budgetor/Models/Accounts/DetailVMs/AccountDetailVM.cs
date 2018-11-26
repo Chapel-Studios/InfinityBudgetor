@@ -8,11 +8,11 @@ namespace Budgetor.Models
     {
         public string Notes { get; set; }
 
-        public AccountDetailVM(Constants.Accounts.AccountType accountType) : base(accountType)
+        public AccountDetailVM(Constants.AccountType accountType) : base(accountType)
         {
         }
 
-        public AccountDetailVM(Account account) : base(Constants.Accounts.GetDisplayByTypeName(account.AccountType).Enum)
+        public AccountDetailVM(Account account) : base(Constants.Accounts.GetDisplayByTypeName(account.AccountType).EnumOption)
         {
             AccountName = account.AccountName;
             Notes = account.Notes;

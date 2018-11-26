@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using Budgetor.Constants;
 using Budgetor.Models;
 using Budgetor.Overminds;
+using Budgetor.Helpers.Extensions;
 
 namespace Budgetor.Views
 {
@@ -12,9 +14,11 @@ namespace Budgetor.Views
     public partial class BankAccount_Form : Window
     {
         #region Properties
-        private AccountsOM accountsOM;
 
-        private ManageBankAccountVM formVM;
+        private AccountsOM accountsOM;
+        private TransactionsOM transactionsOM;
+
+        private ManageBankAccountVM vm;
 
         private bool ShowCreationDateWarning { get; set; }
         public bool NeedResponse { get; set; }
@@ -60,7 +64,14 @@ namespace Budgetor.Views
             {
                 if (!_SelectedFromAccount.HasValue)
                 {
-                    _SelectedFromAccount = GetDefaultFromAccount();
+                    if (vm != null)
+                    {
+                        _SelectedFromAccount = vm.FromAccounts.GetDefaultAccount();
+                    }
+                    else
+                    {
+                        _SelectedFromAccount = 1;
+                    }
                 }
                 return _SelectedFromAccount.Value;
             }
@@ -74,20 +85,22 @@ namespace Budgetor.Views
 
         #region Constructors
 
-        public BankAccount_Form(ManageBankAccountVM vm, AccountsOM accountOverMind)
+        public BankAccount_Form(ManageBankAccountVM initialVM, AccountsOM accountOverMind, TransactionsOM transactionsOverMind)
         {
             accountsOM = accountOverMind;
-            formVM = vm;
-            IsEditMode = vm.IsEditMode;
-            OGAccount = vm.Account; 
+            transactionsOM = transactionsOverMind;
+            vm = initialVM;
+            IsEditMode = initialVM.IsEditMode;
+            OGAccount = initialVM.Account;
+
             InitializeComponent();
-            Title = formVM.IsEditMode ? formVM.Account.AccountName : "Add a new bank account";
-            VMHandle.DataContext = formVM;
+
+            Title = vm.IsEditMode ? vm.Account.AccountName : "Add a new bank account";
+
+            VMHandle.DataContext = vm;
             BankAccount_Grid.DataContext = Account;
-            FromAccount_ComboBox.ItemsSource = vm.FromAccounts;
-            FromAccount_ComboBox.DisplayMemberPath = "AccountName";
-            FromAccount_ComboBox.SelectedValuePath = "AccountId";
-            FromAccount_ComboBox.SelectedValue = SelectedFromAccount;
+
+            FromAccount_ComboBox.BindToList(initialVM.FromAccounts, SelectedFromAccount);
         }
 
         #endregion Constructors
@@ -101,7 +114,7 @@ namespace Budgetor.Views
 
         private void Deactivate_Button_Click(object sender, RoutedEventArgs e)
         {
-            accountsOM.DeactivateAccount(formVM.Account.AccountId);
+            accountsOM.DeactivateAccount(vm.Account.AccountId);
             this.Close();
         }
 
@@ -125,9 +138,9 @@ namespace Budgetor.Views
                     Title = "Default Cash Account Initial Deposit",
                     OccerrenceAccount = null,
                     ToAccount = Account.AccountId,
-                    TransactionType = Constants.Transactions.TransactionType.Deposit
+                    TransactionType = TransactionType.Deposit
                 };
-                accountsOM.SaveTransaction(InitialDeposit);
+                transactionsOM.SaveTransaction(InitialDeposit);
             }
             this.Close();
         }
@@ -141,39 +154,7 @@ namespace Budgetor.Views
 
         #region Private Methods
 
-        private int GetDefaultFromAccount()
-        {
-            if (Account.InitialDepositAccountId.HasValue)
-            {
-                return Account.InitialDepositAccountId.Value;
-            }
-            else
-            {
-                if (formVM == null)
-                    return 1; // This should always be the 'don't track' inc source
-
-                List<int> defaults = new List<int>();
-                foreach (var option in formVM.FromAccounts)
-                {
-                    if (option.IsCategoryDefault)
-                        defaults.Add(option.AccountId);
-                }
-
-                if (defaults.Count == 0)
-                {
-                    return 1;
-                }
-                else if (defaults.Count == 1)
-                {
-                    return defaults[0];
-                }
-                else
-                {
-                    //TODO: maybe revisit this logic later, maybe return certian account type first?
-                    return defaults.Min(); //returns the oldest min
-                }
-            }
-        }
+        
 
         #endregion Private Methods
     }

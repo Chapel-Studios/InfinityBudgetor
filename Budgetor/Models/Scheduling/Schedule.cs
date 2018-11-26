@@ -1,6 +1,6 @@
 ﻿using Budgetor.Repo.Models;
 using System;
-using static Budgetor.Constants.Frequency;
+using Budgetor.Constants;
 
 namespace Budgetor.Models.Scheduling
 {
@@ -30,7 +30,7 @@ namespace Budgetor.Models.Scheduling
         public ScheduleVM(Schedule schedule)
         {
             LocalId = schedule.LocalId;
-            Frequency = Constants.Frequency.GetDisplayByTypeName(schedule.Frequency).Enum;
+            Frequency = Constants.Frequency.GetDisplayByTypeName(schedule.Frequency).EnumOption;
             DateTime_Created = schedule.DateTime_Created;
             DateTime_Deactivated = schedule.DateTime_Deactivated;
             Occurrence_Final = schedule.Occurrence_Final;

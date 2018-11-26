@@ -103,18 +103,18 @@ namespace Budgetor.Overminds
             };
         }
 
-        internal List<FromAccountComboItem> GetDepositFromList()
+        internal List<AccountComboBoxItem> GetDepositFromList()
         {
-            return GetFromList(new List<string>()
+            return GetAccountComboBoxItem(new List<string>()
             {
                 Constants.Accounts.BankAccount.TypeName,
                 Constants.Accounts.IncomeSource.TypeName
             });
         }
 
-        internal List<FromAccountComboItem> GetFromList(List<string> types)
+        internal List<AccountComboBoxItem> GetAccountComboBoxItem(List<string> types)
         {
-            return Repo.GetFromList(types).Select(x => new FromAccountComboItem(x)).ToList();
+            return Repo.GetAccountComboBoxInfo(types).Select(x => new AccountComboBoxItem(x)).ToList();
         }
 
         #endregion ManageBankAccount Window Calls
@@ -152,12 +152,6 @@ namespace Budgetor.Overminds
             return new BankAccountDetailVM(baseAccount, result, transaction);
         }
 
-        internal void SaveTransaction(TransactionSaveModel initialDeposit)
-        {
-            Repo.SaveTransaction(new Transaction(initialDeposit));
-            throw new NotImplementedException(); // what does this return?
-        }
-
         #endregion Saves
 
         #region Deactivation
@@ -167,7 +161,7 @@ namespace Budgetor.Overminds
             var account = GetBankAccountById(accountId);
             switch (account.AccountType)
             {
-                case Constants.Accounts.AccountType.BankAccount:
+                case Constants.AccountType.BankAccount:
                     Repo.DeactivateDepositAccount(accountId);
                     break;
                 default:

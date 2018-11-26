@@ -4,47 +4,45 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Budgetor.Views"
-        xmlns:orc="clr-namespace:Orc.Controls;assembly=Orc.Controls"
         mc:Ignorable="d"
-        Title="" Height="500" Width="650"
+        Title="" Name="VMHandle"
+        Height="500" Width="650"
 >
     <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
     </Window.Resources>
     
-    <Grid>
+    <Grid Margin="15,20,15,0" Name="Transaction_Grid">
         <Grid.RowDefinitions>
-            <RowDefinition Height="20*"/>
-            <RowDefinition Height="61*"/>
-            <RowDefinition Height="80*"/>
-            <RowDefinition Height="34*"/>
-            <RowDefinition Height="60*"/>
-            <RowDefinition Height="53*"/>
-            <RowDefinition Height="34*"/>
-            <RowDefinition Height="77*"/>
-            <RowDefinition Height="50*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="1.25*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1.25*"/>
+            <RowDefinition Height="6*"/>
+            <RowDefinition Height="4*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
         
-        <StackPanel Grid.Row="1" 
-                    HorizontalAlignment="Center" VerticalAlignment="Center" 
+        <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" 
                     Margin="0,0,0,0"
-                    Orientation="Horizontal"
+                    Orientation="Horizontal" Panel.ZIndex="20" 
         >
             <Label HorizontalAlignment="Left" VerticalAlignment="Top"
                    Height="26" Margin="0,0" 
                    Content="Transaction Title:"
             />
             <TextBox HorizontalAlignment="Left" VerticalAlignment="Top" 
-                     Height="26" Width="120" Margin="15,0,0,0" 
+                     Height="26" Width="200" Margin="15,0,0,0" 
                      TextWrapping="Wrap" 
-                     Text=""
+                     Text="{Binding Title}"
             />
         </StackPanel>
-
-        <StackPanel Grid.Row="1" Grid.Column="1"
+        <StackPanel Grid.Column="1"
                     HorizontalAlignment="Center" VerticalAlignment="Center" 
                     Height="26" Margin="0,0,0,0"
                     Orientation="Horizontal"
@@ -55,12 +53,13 @@
             />
             <ComboBox HorizontalAlignment="Left" VerticalAlignment="Top"
                       Height="26" Width="120" Margin="15,0,0,0"
+                      Name="TransactionType_ComboBox"
             />
         </StackPanel>
 
-        <GroupBox Grid.Row="2" Grid.ColumnSpan="2" 
-                Height="60" Margin="40,10,40,10"
-                BorderBrush="Black" BorderThickness="1"
+        <GroupBox Grid.Row="1" Grid.ColumnSpan="2"
+                  Height="60" Margin="40,10,40,10"
+                  BorderBrush="Black" BorderThickness="1"
                   Header="Enter the Date and Time of the Transaction"
         >
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" 
@@ -69,45 +68,159 @@
                 <DatePicker HorizontalAlignment="Left" VerticalAlignment="Center"
                             Height="26"
                             Name="TransactionDate_DatePicker"
+                            SelectedDate="{Binding DateTime_Occurred}"
                 />
                 <Label Height="26" Margin="10,0"
                        Content="Date" 
                 />
-                <ComboBox Width="120"/>
-                <TextBox HorizontalAlignment="Left" VerticalAlignment="Center" 
-                         Height="26" Width="" Margin="25,0,0,0"
-                    
-                />
-                <ComboBox Width="120"/>
-                    <Label HorizontalAlignment="Left" VerticalAlignment="Center" 
-                       Height="26" Margin="15,0"
-                       Content="Time (Optional)"
-                />
+                <!-- 
+                //  This will need to be styled much better later on. 
+                //  This is a good tutorial for that: 
+                //  https://patconroy.wordpress.com/2008/12/18/restyling-the-wpf-expander-control/ 
+                -->
+                <Expander VerticalAlignment="Center" HorizontalAlignment="Left"
+                          Height="36" Width="250"
+                          ExpandDirection="Right" 
+                          IsExpanded="{Binding UseTime, ElementName=VMHandle}"
+                >
+                    <Expander.Header>
+                        <BulletDecorator HorizontalAlignment="Right" Width="70" Margin="0,0,0,0"
+                        >
+                            <TextBlock HorizontalAlignment="Right">Show Time</TextBlock>
+                        </BulletDecorator>
+                    </Expander.Header>
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                Orientation="Horizontal" Background="#FFE5E5E5"
+                    >
+                        <ComboBox Height="26" Width="45"
+                                  Name="Hour_ComboBox"
+                        />
+                        <TextBlock Height="26" Margin="5,0"
+                                   Text=":" TextBlock.FontSize="18"
+                        />
+                        <TextBox HorizontalAlignment="Left" VerticalAlignment="Center" 
+                                 Height="26" Width="25" Margin="0,0,0,0"
+                                 TextAlignment="Center" TextBlock.TextAlignment="Center"
+                                 Text="{Binding SelectedMinutesString, ElementName=VMHandle}"
+                        />
+                        <ComboBox Height="26" Width="50" Margin="10,0,0,0"
+                                  Name="Meridian_ComboBox"
+                        />
+                    </StackPanel>
+                </Expander>
+                <!-- TODO: This needs to be turned into a tool tip
                 <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" 
                            Height="40" Width="150" Margin="-15,0,0,0"
                            TextWrapping="Wrap" TextBlock.FontSize="9"
                            Text="Transactions with the same time will be processed in the order they're input into the system"
-                />
+                />-->
             </StackPanel>
         </GroupBox>
+
+        <Label Grid.Row="2" 
+               HorizontalAlignment="Center" VerticalAlignment="Center"
+               Margin="0,0,0,0"
+               Name="FromAccount_Label"
+               Content="{Binding FromAccountLabelCopy, ElementName=VMHandle}"
+               Visibility="{Binding ShowFromAccount, ElementName=VMHandle, Converter={StaticResource BoolToVisConverter}}"
+        />
+        <ComboBox Grid.Row="3" 
+                  HorizontalAlignment="Center" VerticalAlignment="Center" 
+                  Height="26" Width="175" Margin="0,0,0,0"
+                  Name="FromAccount_ComboBox"
+                  Visibility="{Binding ShowFromAccount, ElementName=VMHandle, Converter={StaticResource BoolToVisConverter}}"
+        />
+
+        <Label Grid.Row="2" Grid.Column="1" 
+               HorizontalAlignment="Center" VerticalAlignment="Center"
+               Margin="0,0,0,0"
+               Name="ToAccount_Label"
+               Content="{Binding ToAccountLabelCopy, ElementName=VMHandle}"
+               Visibility="{Binding ShowToAccount, ElementName=VMHandle, Converter={StaticResource BoolToVisConverter}}"
+        />
+        <ComboBox Grid.Row="3" Grid.Column="1"
+                  HorizontalAlignment="Center" VerticalAlignment="Center" 
+                  Height="26" Width="175" Margin="0,0,0,0"
+                  Name="ToAccount_ComboBox"
+                  Visibility="{Binding ShowToAccount, ElementName=VMHandle, Converter={StaticResource BoolToVisConverter}}"
+        />
         
-        <Label Content="Label" HorizontalAlignment="Left" Margin="146,0,0,0" Grid.Row="3" VerticalAlignment="Top"/>
-        <Label Content="Label" HorizontalAlignment="Left" Margin="91,0,0,0" Grid.Row="3" VerticalAlignment="Top" Grid.Column="1" RenderTransformOrigin="-9.421,4.962"/>
-        <Label Content="Label" HorizontalAlignment="Left" Margin="67,17,0,0" Grid.Row="5" VerticalAlignment="Top" RenderTransformOrigin="-9.421,4.962"/>
-        <Label Content="Label" HorizontalAlignment="Left" Margin="50,10,0,0" Grid.Row="5" VerticalAlignment="Top" RenderTransformOrigin="-9.421,4.962" Grid.Column="1"/>
-        <ComboBox HorizontalAlignment="Left" Margin="96,10,0,0" Grid.Row="4" VerticalAlignment="Top" Width="120"/>
-        <ComboBox HorizontalAlignment="Left" Margin="71,10,0,0" Grid.Row="4" VerticalAlignment="Top" Width="120" Grid.Column="1"/>
-        <Label Content="Label" HorizontalAlignment="Left" Margin="263,8,0,0" Grid.Row="6" VerticalAlignment="Top" RenderTransformOrigin="-9.421,4.962"/>
-        <TextBox Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="23" Margin="301,25,0,0" Grid.Row="7" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="83,10,0,0" Grid.Row="8" VerticalAlignment="Top" Width="75"/>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="215,15,0,0" Grid.Row="8" VerticalAlignment="Top" Width="75"/>
-        <Border BorderBrush="Black" BorderThickness="1" Grid.Column="1" HorizontalAlignment="Left" Height="25" Margin="50,15,0,0" Grid.Row="8" VerticalAlignment="Top" Width="231">
-            <StackPanel>
-                <CheckBox Content="CheckBox"/>
-                <Button Content="Button" HorizontalAlignment="Left" Margin="215,15,0,0" VerticalAlignment="Top" Width="75"/>
+        <StackPanel Grid.Row="4" 
+                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Orientation="Horizontal"
+        >
+            <Label HorizontalAlignment="Left" VerticalAlignment="Top" 
+                   Height="26" Margin="0,0,0,0"
+                   Content="Transaction Amount:"
+            />
+            <TextBox Height="26" Width="80" Margin="10,0,0,0"
+                     Text="{Binding Amount_Display}"
+            />
+        </StackPanel>
+        <StackPanel Grid.Row="4" Grid.Column="1" 
+                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Orientation="Horizontal"
+                    Visibility="{Binding ShowCategory, ElementName=VMHandle, Converter={StaticResource BoolToVisConverter}}"
+        >
+            <Label HorizontalAlignment="Left" VerticalAlignment="Top" 
+                   Margin="0,0,0,0"
+                   Content="Category:"
+            />
+            <ComboBox HorizontalAlignment="Center" VerticalAlignment="Center" 
+                      Height="26" Width="150" Margin="15,0,15,0"
+                      Name="Category_ComboBox"
+        />
+        </StackPanel>
+
+        <Label Grid.Row="5" Grid.ColumnSpan="2"
+               HorizontalAlignment="Center" VerticalAlignment="Bottom" 
+               Margin="0,0,0,0"
+               Content="Additional Details"
+        />
+        <TextBox Grid.Row="6" Grid.ColumnSpan="2" 
+                 HorizontalAlignment="Center" VerticalAlignment="Top" 
+                 Height="97" Width="550" Margin="0,15,0,0" 
+                 TextWrapping="Wrap" 
+                 Text="{Binding Notes}"
+        />
+
+        <StackPanel Grid.Row="7"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Orientation="Horizontal"
+        >
+            <Button HorizontalAlignment="Left" VerticalAlignment="Top"
+                    Height="25" Width="120" Margin="10, 0"
+                    Content="Delete"
+                    Name="Delete_Button"
+                    Click="Delete_Button_Click"
+            />
+            <Button HorizontalAlignment="Left" VerticalAlignment="Top"
+                    Height="25" Width="120" Margin="10, 0"
+                    Content="Revert Changes"
+                    Name="Revert_Button"
+                    Click="Revert_Button_Click"
+            />
+        </StackPanel>
+        <Border Grid.Column="1" Grid.Row="7" 
+                HorizontalAlignment="Center" VerticalAlignment="Center" 
+                Margin="0,0" Padding="25,10"
+                BorderBrush="Black" BorderThickness="1" 
+        >
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Orientation="Horizontal"
+            >
+                <CheckBox VerticalAlignment="Center"
+                          FlowDirection="RightToLeft"
+                          Content="Confirm"
+                          IsChecked="{Binding IsConfirmed}"
+                />
+                <Button HorizontalAlignment="Left" VerticalAlignment="Top"
+                        Height="25" Width="100" Margin="20,0,0,0"
+                        Content="Save"
+                        Name="Save_Button"
+                        Click="Save_Button_Click"
+                />
             </StackPanel>
         </Border>
-
-
     </Grid>
 </Window>

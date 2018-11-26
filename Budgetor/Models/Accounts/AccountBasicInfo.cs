@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Budgetor.Constants.Accounts;
+using Budgetor.Constants;
 
 namespace Budgetor.Models
 {

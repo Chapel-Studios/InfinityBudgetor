@@ -8,7 +8,7 @@ namespace Budgetor.Models
 {
     class DepositDetail : TransactionDetailBase
     {
-        public DepositDetail() : base(Constants.Transactions.TransactionType.Deposit)
+        public DepositDetail() : base(Constants.TransactionType.Deposit)
         {
 
         }

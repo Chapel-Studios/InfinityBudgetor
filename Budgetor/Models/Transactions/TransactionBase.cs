@@ -1,11 +1,12 @@
 ﻿using Budgetor.Models.Contracts;
-using Budgetor.Repo.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Budgetor.Constants;
+using Budgetor.Repo.Models;
+using Budgetor.Helpers;
 
 namespace Budgetor.Models
 {
@@ -13,9 +14,28 @@ namespace Budgetor.Models
     {
         public string Title { get; set; }
 
-        public Constants.Transactions.TransactionType TransactionType { get; private set; }
+        public int TransactionId { get; set; }
 
-        public decimal Amount { get; set; }
+        public TransactionType TransactionType { get; set; }
+
+        public decimal? Amount { get; set; }
+
+        public string Amount_Display
+        {
+            get
+            {
+                if (Amount.HasValue)
+                    return DispayFormatHelper.GetDisplayAmountText(this.Amount.Value);
+                else
+                    return DispayFormatHelper.GetDisplayAmountText(0);
+            }
+            set
+            {
+                var b = decimal.TryParse(value, out decimal d);
+                if (b)
+                    this.Amount = d;
+            }
+        }
 
         public AccountBasicInfo ToAccount { get; set; }
 
@@ -31,12 +51,14 @@ namespace Budgetor.Models
 
         public AccountBasicInfo OccerrenceAccount { get; set; }
 
+        public string Notes { get; set; }
+
         public TransactionDetailBase()
         {
 
         }
 
-        public TransactionDetailBase(Constants.Transactions.TransactionType transactionType)
+        public TransactionDetailBase(TransactionType transactionType)
         {
             TransactionType = transactionType;
         }
@@ -44,7 +66,7 @@ namespace Budgetor.Models
         public TransactionDetailBase(Transaction repoTransaction, AccountBasicInfo toAccount, AccountBasicInfo fromAccount, AccountBasicInfo occerrenceAccount)
         {
             Title = repoTransaction.Title;
-            TransactionType = Constants.Transactions.GetDisplayByTypeName(repoTransaction.TransactionType).Enum;
+            TransactionType = Constants.Transactions.GetDisplayByTypeName(repoTransaction.TransactionType).EnumOption;
             Amount = repoTransaction.Amount;
             ToAccount = toAccount;
             FromAccount = fromAccount;
@@ -53,6 +75,8 @@ namespace Budgetor.Models
             IsUserCreated = repoTransaction.IsUserCreated;
             IsConfirmed = repoTransaction.IsConfirmed;
             OccerrenceAccount = occerrenceAccount;
+            Notes = repoTransaction.Notes;
+            TransactionId = repoTransaction.LocalId;
         }
     }
 }

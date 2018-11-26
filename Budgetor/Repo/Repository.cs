@@ -47,11 +47,11 @@ namespace Budgetor.Repo
             return context.IncomeSourcesListViews.ToList();
         }
 
-        internal List<FromAccount> GetFromList(List<string> getTypes)
+        internal List<AccountComboBoxInfo> GetAccountComboBoxInfo(List<string> getTypes)
         {
             var param = new SqlParameter("@typeList", string.Join(",", getTypes));
             return context.Database
-                .SqlQuery<FromAccount>("GetFromAccounts @typeList", param)
+                .SqlQuery<AccountComboBoxInfo>("GetAccountComboBoxInfo @typeList", param)
                 .ToList();
         }
 
@@ -183,6 +183,7 @@ namespace Budgetor.Repo
                 record.IsConfirmed = transactionToSave.IsConfirmed;
                 record.Title = transactionToSave.Title;
                 record.ToAccount = transactionToSave.ToAccount;
+                record.Notes = transactionToSave.Notes;
 
                 context.Entry(record).State = EntityState.Modified;
             }

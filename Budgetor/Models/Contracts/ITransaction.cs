@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Budgetor.Constants;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,13 +7,17 @@ using System.Threading.Tasks;
 
 namespace Budgetor.Models.Contracts
 {
-    interface ITransactionDetail
+    public interface ITransactionDetail
     {
         string Title { get; set; }
 
-        Constants.Transactions.TransactionType TransactionType { get; }
+        int TransactionId { get; set; }
 
-        decimal Amount { get; set; }
+        TransactionType TransactionType { get; set; }
+
+        decimal? Amount { get; set; }
+
+        string Amount_Display { get; set; }
 
         AccountBasicInfo ToAccount { get; set; }
 
