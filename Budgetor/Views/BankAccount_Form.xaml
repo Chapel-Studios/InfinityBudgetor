@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Title="" 
         Name="VMHandle"
-        Height="420" Width="500">
+        Height="420" Width="500" Closing="OnWindowClose">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
     </Window.Resources>
@@ -33,7 +33,7 @@
                  Height="26" Width="300"
                  Margin="0,7"
                  TextWrapping="Wrap"
-                 Text="{Binding AccountName}"
+                 Text="{Binding AccountName, Mode=TwoWay}"
                  TextBlock.FontStyle="Italic"
                  TextBlock.FontWeight="Light"
         /> <!--"E.G. Credit Union Checking"-->
@@ -69,7 +69,7 @@
                         VerticalAlignment="Center"
                         Margin="0,8" Height="26" Width="105"
                         SelectedDate="{Binding 
-                            Path=DateTime_Created,
+                            Path=DateTime_Created_Local,
                             Mode=TwoWay,
                             TargetNullValue={x:Static System:DateTime.Now}
                         }"

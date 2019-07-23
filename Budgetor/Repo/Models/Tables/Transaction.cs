@@ -1,12 +1,10 @@
+using Budgetor.Models;
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Budgetor.Repo.Models
 {
-    using Budgetor.Models;
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
-
     public partial class Transaction
     {
         [Key]
@@ -19,7 +17,7 @@ namespace Budgetor.Repo.Models
         [Column(TypeName = "money")]
         public decimal Amount { get; set; }
 
-        public int ToAccount { get; set; }
+        public int? ToAccount { get; set; }
 
         public int FromAccount { get; set; }
 
@@ -44,18 +42,19 @@ namespace Budgetor.Repo.Models
 
         }
 
-        public Transaction(TransactionSaveModel saveModel)
+        public Transaction(TransactionSaveInfo saveModel)
         {
             LocalId = saveModel.TransactionId;
             Title = saveModel.Title;
             Amount = saveModel.Amount;
             ToAccount = saveModel.ToAccount;
             FromAccount = saveModel.FromAccount;
-            DateTime_Occurred = DateTime_Occurred;
+            DateTime_Occurred = saveModel.DateTime_Occurred;
             TransactionType = Constants.Transactions.GetDisplay(saveModel.TransactionType).TypeName;
             IsUserCreated = saveModel.IsUserCreated;
             IsConfirmed = saveModel.IsConfirmed;
             OccerrenceAccount = saveModel.OccerrenceAccount;
+            Notes = saveModel.Notes;
         }
     }
 }

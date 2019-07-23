@@ -1,9 +1,5 @@
 ﻿using Budgetor.Constants;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Budgetor.Models.Contracts
 {
@@ -15,9 +11,7 @@ namespace Budgetor.Models.Contracts
 
         TransactionType TransactionType { get; set; }
 
-        decimal? Amount { get; set; }
-
-        string Amount_Display { get; set; }
+        decimal Amount { get; set; }
 
         AccountBasicInfo ToAccount { get; set; }
 
@@ -33,5 +27,6 @@ namespace Budgetor.Models.Contracts
 
         AccountBasicInfo OccerrenceAccount { get; set; }
 
+        string Notes { get; set; }
     }
 }

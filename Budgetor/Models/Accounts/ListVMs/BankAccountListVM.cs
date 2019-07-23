@@ -17,7 +17,7 @@ namespace Budgetor.Models
 
         public decimal Balance { get; set; }
 
-        public string DisplayBalance => DispayFormatHelper.GetDisplayAmountText(this.Balance);
+        public string DisplayBalance => DispayExtensions.GetDisplayAmountText(this.Balance);
 
     }
 }

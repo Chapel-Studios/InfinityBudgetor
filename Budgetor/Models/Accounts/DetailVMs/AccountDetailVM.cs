@@ -1,12 +1,25 @@
 ﻿
 
 using Budgetor.Repo.Models;
+using System;
 
 namespace Budgetor.Models
 {
     public class AccountDetailVM : AccountBasicInfo
     {
         public string Notes { get; set; }
+
+        public DateTime DateTime_Created_Local
+        {
+            get
+            {
+                return DateTime_Created.ToLocalTime();
+            }
+            set
+            {
+                DateTime_Created = (DateTime)value.ToUniversalTime();
+            }
+        }
 
         public AccountDetailVM(Constants.AccountType accountType) : base(accountType)
         {

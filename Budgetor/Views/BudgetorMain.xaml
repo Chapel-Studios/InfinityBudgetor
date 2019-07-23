@@ -8,62 +8,49 @@
         xmlns:controls="clr-namespace:Budgetor.Controls"
         mc:Ignorable="d"
         Title="BudgetorMain" 
-        Height="450" Width="800" WindowStyle="ThreeDBorderWindow" >
+        Height="625" Width="1000" WindowStyle="ThreeDBorderWindow" >
     <Window.Resources>
         <!--<ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="..\Themes\Generic.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>-->
-
-        <!--<Style TargetType="{x:Type controls:EditButton}">
-        </Style>-->
-        <DataTemplate x:Key="BankAccountsList_DT">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding AccountName}" Width="150"></TextBlock>
-                <TextBlock Text="{Binding DisplayBalance}" Width="50"></TextBlock>
-                <controls:EditButton AccountId="{Binding AccountId}"
-                                     Content="Edit" 
-                                     Click="EditBankAccount_Click"
-                />
-            </StackPanel>
-        </DataTemplate>
         <DataTemplate x:Key="IncomeSourcesList_DT">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding AccountName}" Width="150"></TextBlock>
-                <TextBlock Text="{Binding PayCycle}" Width="50"></TextBlock>
-                <TextBlock Text="{Binding UsualAmount}" Width="50"></TextBlock>
-                <TextBlock Text="{Binding NextPayDate}" Width="50"></TextBlock>
-            </StackPanel>
+            <Grid Width="225">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition MaxWidth="50"/>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="50"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding AccountName}"></TextBlock>
+                <TextBlock Grid.Column="1" Text="{Binding PayCycle}" ></TextBlock>
+                <TextBlock Grid.Column="2" Text="{Binding UsualAmount}"></TextBlock>
+                <TextBlock Grid.Column="3" Text="{Binding NextPayDate}"></TextBlock>
+            </Grid>
         </DataTemplate>
-        <Style x:Key="AccountsList_Style" TargetType="{x:Type ListBox}" BasedOn="{x:Null}">
-            <Setter Property="Margin" Value="25, 25, 0, 0" />
-            <Setter Property="HorizontalAlignment" Value="Left" />
-        </Style>
     </Window.Resources>
     <Grid>
         <TabControl>
             <TabItem Header="Accounts"
                      Name="AccountsTab"
                      Padding="10">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <StackPanel Orientation="Horizontal"
-                                VerticalAlignment="Top"
-                                >
-                        <StackPanel Orientation="Vertical">
-                            <StackPanel Orientation="Horizontal"
+                <StackPanel Orientation="Horizontal"
+                            VerticalAlignment="Top"
+                            Margin="15"
+                >
+                    <!-- Bank Accounts -->
+                    <StackPanel Margin="25,25,0,0" Orientation="Vertical">
+                        <!-- Header -->
+                        <StackPanel Orientation="Horizontal"
                                         HorizontalAlignment="Center">
-                                <TextBlock Width="auto" VerticalAlignment="Center">
-                                    <TextBlock.Text>
-                                        Bank Accounts
-                                    </TextBlock.Text>
-                                </TextBlock>
+                            <TextBlock Width="auto" VerticalAlignment="Center">
+                                <TextBlock.Text>
+                                    Bank Accounts
+                                </TextBlock.Text>
+                            </TextBlock>
 
-                                <Button HorizontalAlignment="Right"
+                            <Button HorizontalAlignment="Right"
                                     VerticalAlignment="Top"
                                     Height="25" Width="45"
                                         Margin="15,0"
@@ -71,26 +58,64 @@
                                     Name="AddBankAccount_Button"
                                     Click= "AddBankAccount_Button_Click"
                                 />
-                            </StackPanel>
-                            <ListBox 
-                                Name="BankAccountsList"
-                                ItemsSource="{Binding BankAccounts}" 
-                                ItemTemplate="{StaticResource BankAccountsList_DT}"
-                                Style="{StaticResource AccountsList_Style}"
-                                Width="200"
-                            />
                         </StackPanel>
+                        <!-- List -->
+                        <ListView HorizontalAlignment="Stretch"
+                                      ItemsSource="{Binding BankAccounts}" 
+                            >
+                            <ListView.View>
+                                <GridView>
+                                    <GridView.Columns>
+                                        <GridViewColumn Width="150">
+                                            <GridViewColumn.Header>
+                                                <TextBlock Text="Account Name" HorizontalAlignment="Left"/>
+                                            </GridViewColumn.Header>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding AccountName}"  HorizontalAlignment="Left"></TextBlock>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Width="50">
+                                            <GridViewColumn.Header>
+                                                <TextBlock Text="Balance"/>
+                                            </GridViewColumn.Header>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding DisplayBalance}"></TextBlock>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Width="45">
+                                            <GridViewColumn.Header>
+                                                <TextBlock Text="Edit"/>
+                                            </GridViewColumn.Header>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <controls:EditButton HorizontalAlignment="Right" Width="30"
+                                                                             Content="Edit"  ContextualId="{Binding AccountId}"
+                                                                             Click="EditBankAccount_Click"
+                                                        />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                    </GridView.Columns>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </StackPanel>
 
-                        <StackPanel Orientation="Vertical">
-                            <StackPanel Orientation="Horizontal"
+                    <!-- Income sources -->
+                    <StackPanel Margin="25,25,0,0" Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal"
                                         HorizontalAlignment="Center">
-                                <TextBlock Width="auto" VerticalAlignment="Center">
-                                    <TextBlock.Text>
-                                        Income Sources
-                                    </TextBlock.Text>
-                                </TextBlock>
+                            <TextBlock Width="auto" VerticalAlignment="Center">
+                                <TextBlock.Text>
+                                    Income Sources
+                                </TextBlock.Text>
+                            </TextBlock>
 
-                                <Button HorizontalAlignment="Right"
+                            <Button HorizontalAlignment="Right"
                                     VerticalAlignment="Top"
                                     Height="25" Width="45"
                                         Margin="15,0"
@@ -98,30 +123,177 @@
                                     Name="AddIncSource_Button"
                                     Click= "AddIncSource_Button_Click"
                                 />
-                            </StackPanel>
-                            <ListBox 
-                                Name="IncomeSourcesList"
-                                ItemsSource="{Binding IncomeSources}" 
-                                ItemTemplate="{StaticResource IncomeSourcesList_DT}"
-                                Style="{StaticResource AccountsList_Style}"
-                                Width="300"
-                            />
                         </StackPanel>
+
+                        <ListView HorizontalAlignment="Stretch"
+                                      ItemsSource="{Binding IncomeSources}" 
+                            >
+                            <ListView.View>
+                                <GridView>
+                                    <GridView.Columns>
+                                        <GridViewColumn Width="160">
+                                            <GridViewColumn.Header>
+                                                <TextBlock Text="Account Name" HorizontalAlignment="Left"/>
+                                            </GridViewColumn.Header>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding AccountName}"  HorizontalAlignment="Left"></TextBlock>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Width="80">
+                                            <GridViewColumn.Header>
+                                                <TextBlock Text="Pay Cycle"/>
+                                            </GridViewColumn.Header>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding PayCycle}"></TextBlock>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Width="80">
+                                            <GridViewColumn.Header>
+                                                <TextBlock Text="Usual Amount"/>
+                                            </GridViewColumn.Header>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding UsualAmount}"></TextBlock>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Width="80">
+                                            <GridViewColumn.Header>
+                                                <TextBlock Text="Next Deposit"/>
+                                            </GridViewColumn.Header>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding NextPayDate}"></TextBlock>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Width="45">
+                                            <GridViewColumn.Header>
+                                                <TextBlock Text="Edit"/>
+                                            </GridViewColumn.Header>
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <controls:EditButton HorizontalAlignment="Right" Width="30"
+                                                                             Content="Edit"  ContextualId="{Binding AccountId}"
+                                                                             Click="EditIncSource_Click"
+                                                        />
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                    </GridView.Columns>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
                     </StackPanel>
-                </Grid>
+                </StackPanel>
+
             </TabItem>
             <TabItem Header="Transactions"
                      Name="TransactionsTab"
-                     Padding="10">
-                <Grid>
-                    <Button HorizontalAlignment="Left"
-                            VerticalAlignment="Top"
-                            Height="25" Width="100"
-                            Margin="15"
+                     Padding="10"
+            >
+                <Grid Margin="15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="450"/>
+                        <ColumnDefinition Width="160*"/>
+                        <ColumnDefinition Width="160*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="16*"/>
+                        <RowDefinition Height="99*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Orientation="Horizontal"
+                                Background="#A5A5A5"
+                    >
+                        <Button HorizontalAlignment="Left" VerticalAlignment="Center"
+                            Height="25" Width="100" Margin="15,0"
                             Content="Add Transaction"
                             Name="AddNewTransaction_Button"
                             Click= "AddNewTransaction_Button_Click"
-                    />
+                        />
+                        <TextBlock VerticalAlignment="Center"
+                                   Text="Transactions For "
+                        />
+                    </StackPanel>
+
+                    <ListView Grid.Row="1" ItemsSource="{Binding DisplayTransactions}">
+                        <ListView.View>
+                            <GridView>
+                                <GridView.Columns>
+                                    <GridViewColumn Width="40">
+                                        <GridViewColumn.Header>
+                                            <TextBlock Text="Edit"/>
+                                        </GridViewColumn.Header>
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <controls:EditButton HorizontalAlignment="Right"
+                                                                     Content="Edit" ContextualId="{Binding TransactionId}"
+                                                                     Click="EditTransaction_Click"
+                                                />
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Width="60">
+                                        <GridViewColumn.Header>
+                                            <TextBlock Text="Date"/>
+                                        </GridViewColumn.Header>
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Display_DateTime_Occurred}"></TextBlock>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Width="60">
+                                        <GridViewColumn.Header>
+                                            <TextBlock Text="Type"/>
+                                        </GridViewColumn.Header>
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Display_TransactionType}"></TextBlock>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Width="60">
+                                        <GridViewColumn.Header>
+                                            <TextBlock Text="Title"/>
+                                        </GridViewColumn.Header>
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Title}"></TextBlock>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Width="150">
+                                        <GridViewColumn.Header>
+                                            <TextBlock Text="Account Used"/>
+                                        </GridViewColumn.Header>
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Display_Account}"></TextBlock>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Width="60">
+                                        <GridViewColumn.Header>
+                                            <TextBlock Text="Amount"/>
+                                        </GridViewColumn.Header>
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Display_Amount}"></TextBlock>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+
+                                </GridView.Columns>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+
                 </Grid>
             </TabItem>
         </TabControl>

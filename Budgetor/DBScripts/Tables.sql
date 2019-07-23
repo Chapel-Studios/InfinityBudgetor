@@ -59,7 +59,7 @@ CREATE TABLE dbo.Transactions (
 	PRIMARY KEY NONCLUSTERED (LocalId),
 	Title NVARCHAR(50) NOT NULL,
 	Amount MONEY DEFAULT 0 NOT NULL,
-	ToAccount INT NOT NULL,
+	ToAccount INT NULL,
 	FOREIGN KEY (ToAccount) REFERENCES dbo.Accounts(LocalId),
 	FromAccount INT NOT NULL,
 	FOREIGN KEY (FromAccount) REFERENCES dbo.Accounts(LocalId),

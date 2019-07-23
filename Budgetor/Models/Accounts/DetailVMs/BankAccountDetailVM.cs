@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Budgetor.Models
@@ -21,28 +22,42 @@ namespace Budgetor.Models
 
         public int? InitialDepositAccountId { get; set; }
 
-        public decimal? InitialBalance { get; set; }
+        private decimal? _InitialBalance;
+        public decimal? InitialBalance
+        {
+            get
+            {
+                return _InitialBalance;
+            }
+            set
+            {
+                _InitialBalance = value;
+            }
+        }
 
         public string InitialBalance_Display
         {
             get
             {
                 if (InitialBalance.HasValue)
-                    return DispayFormatHelper.GetDisplayAmountText(this.InitialBalance.Value);
+                    return DispayExtensions.GetDisplayAmountText(this.InitialBalance.Value);
                 else
-                    return DispayFormatHelper.GetDisplayAmountText(0);
+                    return DispayExtensions.GetDisplayAmountText(0);
             }
             set
             {
+                value = Regex.Replace(value, "[^0-9.]", String.Empty);
                 var b = decimal.TryParse(value, out decimal d);
                 if (b)
-                    this.InitialBalance = d;
+                {
+                    this.InitialBalance = d == 0 ? (decimal?)null : d;
+                }
             }
         }
 
         public BankAccountDetailVM() : base(Constants.AccountType.BankAccount)
         {
-
+            DateTime_Created = DateTime.UtcNow;
         }
 
         public BankAccountDetailVM(DepositAccount_DetailView repoModel) : base(Constants.AccountType.BankAccount)

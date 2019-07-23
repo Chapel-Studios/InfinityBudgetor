@@ -1,12 +1,8 @@
 ﻿using Budgetor.Models.Contracts;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Budgetor.Constants;
 using Budgetor.Repo.Models;
-using Budgetor.Helpers;
+using Budgetor.Overminds;
 
 namespace Budgetor.Models
 {
@@ -18,24 +14,7 @@ namespace Budgetor.Models
 
         public TransactionType TransactionType { get; set; }
 
-        public decimal? Amount { get; set; }
-
-        public string Amount_Display
-        {
-            get
-            {
-                if (Amount.HasValue)
-                    return DispayFormatHelper.GetDisplayAmountText(this.Amount.Value);
-                else
-                    return DispayFormatHelper.GetDisplayAmountText(0);
-            }
-            set
-            {
-                var b = decimal.TryParse(value, out decimal d);
-                if (b)
-                    this.Amount = d;
-            }
-        }
+        public decimal Amount { get; set; }
 
         public AccountBasicInfo ToAccount { get; set; }
 
@@ -55,16 +34,25 @@ namespace Budgetor.Models
 
         public TransactionDetailBase()
         {
-
+            DateTime_Occurred = DateTime.Now;
         }
 
         public TransactionDetailBase(TransactionType transactionType)
         {
             TransactionType = transactionType;
+            DateTime_Occurred = DateTime.Now;
         }
 
-        public TransactionDetailBase(Transaction repoTransaction, AccountBasicInfo toAccount, AccountBasicInfo fromAccount, AccountBasicInfo occerrenceAccount)
+        public TransactionDetailBase(Transaction repoTransaction, AccountsOM om)
         {
+            AccountBasicInfo toAccount = repoTransaction.ToAccount.HasValue
+                                ? om.GetGenericAccountDetails(repoTransaction.ToAccount.Value)
+                                : null;
+            AccountBasicInfo fromAccount = om.GetGenericAccountDetails(repoTransaction.FromAccount);
+            AccountBasicInfo occerrenceAccount = repoTransaction.OccerrenceAccount.HasValue
+                                ? om.GetGenericAccountDetails(repoTransaction.OccerrenceAccount.Value)
+                                : null;
+            
             Title = repoTransaction.Title;
             TransactionType = Constants.Transactions.GetDisplayByTypeName(repoTransaction.TransactionType).EnumOption;
             Amount = repoTransaction.Amount;

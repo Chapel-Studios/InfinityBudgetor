@@ -38,7 +38,7 @@ namespace Budgetor.Models
             DateTime_Deactivated = baseAccount.DateTime_Deactivated;
             DefaultToAccountId = source.DefaultToAccountId;
             ExpectedAmount = source.ExpectedAmount;
-            Schedule = new ScheduleVM(accountSchedule);
+            Schedule = accountSchedule == null ? null : new ScheduleVM(accountSchedule);
             TotalFromSource = source.TotalFromSource;
 
         }

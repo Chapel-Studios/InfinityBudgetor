@@ -1,7 +1,9 @@
 ﻿using Budgetor.Controls;
 using Budgetor.Models;
 using Budgetor.Overminds;
+using System;
 using System.Windows;
+
 namespace Budgetor.Views
 {
     /// <summary>
@@ -11,6 +13,8 @@ namespace Budgetor.Views
     {
         #region Properties
 
+        private readonly Repo.Repository _Repo;
+
         private AccountsOM _AccountsOM;
         public AccountsOM AccountsOM
         {
@@ -18,7 +22,7 @@ namespace Budgetor.Views
             {
                 if (_AccountsOM == null)
                 {
-                    _AccountsOM = new AccountsOM();
+                    _AccountsOM = new AccountsOM(_Repo);
                 }
 
                 return _AccountsOM;
@@ -32,7 +36,7 @@ namespace Budgetor.Views
             {
                 if (_TransactionsOM == null)
                 {
-                    _TransactionsOM = new TransactionsOM();
+                    _TransactionsOM = new TransactionsOM(_Repo);
                 }
 
                 return _TransactionsOM;
@@ -40,6 +44,7 @@ namespace Budgetor.Views
         }
 
         public AccountsTabVM AccountsTabVM;
+        public TransactionsTabVM TransactionsTabVM;
 
 
         #endregion Properties
@@ -50,8 +55,12 @@ namespace Budgetor.Views
         {
             InitializeComponent();
 
-            AccountsTabVM = AccountsOM.GetAcountsTabVM();
-            AccountsTab.DataContext = AccountsTabVM;
+            _Repo = new Repo.Repository();
+
+            UpdateAccountsTab();
+
+            TransactionsTabVM = TransactionsOM.GetTransactionsTabVM();
+            TransactionsTab.DataContext = TransactionsTabVM;
         }
 
         #endregion Constructors
@@ -60,19 +69,53 @@ namespace Budgetor.Views
 
         private void EditBankAccount_Click(object sender, RoutedEventArgs e)
         {
-            var button = sender as EditButton;
-            EditBankAccount(button.AccountId);
+            try
+            {
+                var button = sender as EditButton;
+                EditBankAccount(button.ContextualId);
+            }
+            catch (Exception ex)
+            {
+                //todo: add error logging
+            }
         }
 
         private void AddBankAccount_Button_Click(object sender, RoutedEventArgs e)
         {
-            EditBankAccount(null);
+            try
+            {
+                EditBankAccount(null);
+            }
+            catch (Exception ex)
+            {
+                //todo: add error logging
+            }
         }
 
         private void AddIncSource_Button_Click(object sender, RoutedEventArgs e)
         {
-            var button = sender as EditButton;
-            EditBankAccount(button.AccountId);
+            try
+            {
+                var button = sender as EditButton;
+                EditBankAccount(button.ContextualId);
+            }
+            catch (Exception ex)
+            {
+                //todo: add error logging
+            }
+        }
+
+        private void EditIncSource_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var button = sender as EditButton;
+                throw new NotImplementedException();
+            }
+            catch (Exception ex)
+            {
+                //todo: add error logging
+            }
         }
 
         #endregion Accounts Tab Calls
@@ -81,7 +124,27 @@ namespace Budgetor.Views
 
         private void AddNewTransaction_Button_Click(object sender, RoutedEventArgs e)
         {
-            EditTransaction(null);
+            try
+            {
+                EditTransaction(null);
+            }
+            catch (Exception ex)
+            {
+                //todo: add error logging
+            }
+        }
+
+        private void EditTransaction_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var button = sender as EditButton;
+                EditTransaction(button.ContextualId);
+            }
+            catch (Exception ex)
+            {
+                //todo: add error logging
+            }
         }
 
         #endregion Transactions Tab Calls
@@ -90,7 +153,7 @@ namespace Budgetor.Views
 
         private void EditBankAccount(int? id)
         {
-            var editor = new BankAccount_Form(AccountsOM.GetEditBankAccountVM(id), AccountsOM, TransactionsOM);
+            var editor = new BankAccount_Form(AccountsOM.GetEditBankAccountVM(id), AccountsOM, TransactionsOM, UpdateAccountsTab);
             editor.Show();
         }
 
@@ -104,6 +167,15 @@ namespace Budgetor.Views
         {
             var editor = new Transaction_Modal(TransactionsOM.GetTransactionModalVM(id), TransactionsOM);
             editor.Show();
+        }
+
+        private void UpdateAccountsTab(bool isUpdateRequired = true)
+        {
+            if (isUpdateRequired)
+            {
+                AccountsTabVM = AccountsOM.GetAcountsTabVM();
+                AccountsTab.DataContext = AccountsTabVM;
+            }
         }
 
         #endregion Private Methods

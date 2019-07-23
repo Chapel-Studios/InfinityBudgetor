@@ -31,7 +31,7 @@ namespace Budgetor.Repo.Models
 
         public int? InitialDepositId { get; set; }
 
-        public int? InitialBalance { get; set; }
+        public decimal? InitialBalance { get; set; }
 
         public int? InitialDepositAccountId { get; set; }
         

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Budgetor.Views"
         mc:Ignorable="d"
-        Title="" Name="VMHandle"
+        Title="{Binding ModalTitle}" Name="VMHandle"
         Height="500" Width="650"
 >
     <Window.Resources>
@@ -28,6 +28,7 @@
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
         
+        <!-- Title -->
         <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" 
                     Margin="0,0,0,0"
                     Orientation="Horizontal" Panel.ZIndex="20" 
@@ -39,9 +40,10 @@
             <TextBox HorizontalAlignment="Left" VerticalAlignment="Top" 
                      Height="26" Width="200" Margin="15,0,0,0" 
                      TextWrapping="Wrap" 
-                     Text="{Binding Title}"
+                     Text="{Binding Transaction.Title, Mode=TwoWay}"
             />
         </StackPanel>
+        <!-- Type -->
         <StackPanel Grid.Column="1"
                     HorizontalAlignment="Center" VerticalAlignment="Center" 
                     Height="26" Margin="0,0,0,0"
@@ -53,10 +55,12 @@
             />
             <ComboBox HorizontalAlignment="Left" VerticalAlignment="Top"
                       Height="26" Width="120" Margin="15,0,0,0"
-                      Name="TransactionType_ComboBox"
+                      Name="TransactionType_ComboBox" SelectionChanged="TransactionType_ComboBox_SelectionChanged"
+                      SelectedValue="{Binding SelectedTransactionType, Mode=TwoWay}"
             />
         </StackPanel>
 
+        <!-- Time -->
         <GroupBox Grid.Row="1" Grid.ColumnSpan="2"
                   Height="60" Margin="40,10,40,10"
                   BorderBrush="Black" BorderThickness="1"
@@ -68,7 +72,7 @@
                 <DatePicker HorizontalAlignment="Left" VerticalAlignment="Center"
                             Height="26"
                             Name="TransactionDate_DatePicker"
-                            SelectedDate="{Binding DateTime_Occurred}"
+                            SelectedDate="{Binding Transaction.DateTime_Occurred, Mode=TwoWay}"
                 />
                 <Label Height="26" Margin="10,0"
                        Content="Date" 
@@ -81,7 +85,7 @@
                 <Expander VerticalAlignment="Center" HorizontalAlignment="Left"
                           Height="36" Width="250"
                           ExpandDirection="Right" 
-                          IsExpanded="{Binding UseTime, ElementName=VMHandle}"
+                          IsExpanded="{Binding UseTime, Mode=TwoWay}"
                 >
                     <Expander.Header>
                         <BulletDecorator HorizontalAlignment="Right" Width="70" Margin="0,0,0,0"
@@ -101,7 +105,7 @@
                         <TextBox HorizontalAlignment="Left" VerticalAlignment="Center" 
                                  Height="26" Width="25" Margin="0,0,0,0"
                                  TextAlignment="Center" TextBlock.TextAlignment="Center"
-                                 Text="{Binding SelectedMinutesString, ElementName=VMHandle}"
+                                 Text="{Binding SelectedMinutesString, Mode=TwoWay}"
                         />
                         <ComboBox Height="26" Width="50" Margin="10,0,0,0"
                                   Name="Meridian_ComboBox"
@@ -117,34 +121,37 @@
             </StackPanel>
         </GroupBox>
 
+        <!-- From Account -->
         <Label Grid.Row="2" 
                HorizontalAlignment="Center" VerticalAlignment="Center"
                Margin="0,0,0,0"
                Name="FromAccount_Label"
-               Content="{Binding FromAccountLabelCopy, ElementName=VMHandle}"
-               Visibility="{Binding ShowFromAccount, ElementName=VMHandle, Converter={StaticResource BoolToVisConverter}}"
+               Content="{Binding FromAccountLabelCopy, Mode=TwoWay}"
+               Visibility="{Binding ShowFromAccount, Converter={StaticResource BoolToVisConverter}}"
         />
         <ComboBox Grid.Row="3" 
                   HorizontalAlignment="Center" VerticalAlignment="Center" 
                   Height="26" Width="175" Margin="0,0,0,0"
                   Name="FromAccount_ComboBox"
-                  Visibility="{Binding ShowFromAccount, ElementName=VMHandle, Converter={StaticResource BoolToVisConverter}}"
+                  Visibility="{Binding ShowFromAccount, Converter={StaticResource BoolToVisConverter}}"
         />
 
+        <!-- To Account -->
         <Label Grid.Row="2" Grid.Column="1" 
                HorizontalAlignment="Center" VerticalAlignment="Center"
                Margin="0,0,0,0"
                Name="ToAccount_Label"
-               Content="{Binding ToAccountLabelCopy, ElementName=VMHandle}"
-               Visibility="{Binding ShowToAccount, ElementName=VMHandle, Converter={StaticResource BoolToVisConverter}}"
+               Content="{Binding ToAccountLabelCopy, Mode=TwoWay}"
+               Visibility="{Binding ShowToAccount, Converter={StaticResource BoolToVisConverter}}"
         />
         <ComboBox Grid.Row="3" Grid.Column="1"
                   HorizontalAlignment="Center" VerticalAlignment="Center" 
                   Height="26" Width="175" Margin="0,0,0,0"
                   Name="ToAccount_ComboBox"
-                  Visibility="{Binding ShowToAccount, ElementName=VMHandle, Converter={StaticResource BoolToVisConverter}}"
+                  Visibility="{Binding ShowToAccount, Converter={StaticResource BoolToVisConverter}}"
         />
-        
+
+        <!-- Amount -->
         <StackPanel Grid.Row="4" 
                     HorizontalAlignment="Center" VerticalAlignment="Center"
                     Orientation="Horizontal"
@@ -154,13 +161,15 @@
                    Content="Transaction Amount:"
             />
             <TextBox Height="26" Width="80" Margin="10,0,0,0"
-                     Text="{Binding Amount_Display}"
+                     Text="{Binding Display_Amount, Mode=TwoWay}"
             />
         </StackPanel>
+
+        <!-- Category -->
         <StackPanel Grid.Row="4" Grid.Column="1" 
                     HorizontalAlignment="Center" VerticalAlignment="Center"
                     Orientation="Horizontal"
-                    Visibility="{Binding ShowCategory, ElementName=VMHandle, Converter={StaticResource BoolToVisConverter}}"
+                    Visibility="{Binding ShowCategory, Converter={StaticResource BoolToVisConverter}}"
         >
             <Label HorizontalAlignment="Left" VerticalAlignment="Top" 
                    Margin="0,0,0,0"
@@ -172,6 +181,7 @@
         />
         </StackPanel>
 
+        <!-- Notes -->
         <Label Grid.Row="5" Grid.ColumnSpan="2"
                HorizontalAlignment="Center" VerticalAlignment="Bottom" 
                Margin="0,0,0,0"
@@ -181,9 +191,10 @@
                  HorizontalAlignment="Center" VerticalAlignment="Top" 
                  Height="97" Width="550" Margin="0,15,0,0" 
                  TextWrapping="Wrap" 
-                 Text="{Binding Notes}"
+                 Text="{Binding Transaction.Notes, Mode=TwoWay}"
         />
 
+        <!-- Buttons -->
         <StackPanel Grid.Row="7"
                     HorizontalAlignment="Center" VerticalAlignment="Center"
                     Orientation="Horizontal"
@@ -212,7 +223,7 @@
                 <CheckBox VerticalAlignment="Center"
                           FlowDirection="RightToLeft"
                           Content="Confirm"
-                          IsChecked="{Binding IsConfirmed}"
+                          IsChecked="{Binding Transaction.IsConfirmed, Mode=TwoWay}"
                 />
                 <Button HorizontalAlignment="Left" VerticalAlignment="Top"
                         Height="25" Width="100" Margin="20,0,0,0"

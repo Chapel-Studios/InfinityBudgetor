@@ -20,7 +20,7 @@ namespace Budgetor.Helpers
             {
                 if (_accountOverMind == null)
                 {
-                    _accountOverMind = new AccountsOM();
+                    _accountOverMind = new AccountsOM(new Repo.Repository());
                 }
                 return _accountOverMind;
             }
@@ -33,14 +33,14 @@ namespace Budgetor.Helpers
             hasRan = Budgetor.Properties.Settings.Default.DateTime_FirstRun != DateTime.MinValue;
 
             //todo: remove Dev testing option
-            //if (hasRan)
-            //{
-            //    var force = MessageBox.Show("Force First-Run Init?", "Dev", MessageBoxButton.YesNo);
-            //    if (force == MessageBoxResult.Yes)
-            //    {
-            //        hasRan = false;
-            //    }
-            //}
+            if (hasRan && AccountOverMind.GetBankAccountsList().Count == 0)
+            {
+                var force = MessageBox.Show("There are no accounts but we see that the system has ran before. Would you like to Force Re-Run the First Time Experience?", "Dev", MessageBoxButton.YesNo);
+                if (force == MessageBoxResult.Yes)
+                {
+                    hasRan = false;
+                }
+            }
         }
 
         public void FirstRunInit()

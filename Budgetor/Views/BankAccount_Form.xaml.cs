@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Windows;
 using Budgetor.Constants;
+using Budgetor.Helpers;
+using Budgetor.Helpers.Delegates;
 using Budgetor.Models;
 using Budgetor.Overminds;
-using Budgetor.Helpers.Extensions;
 
 namespace Budgetor.Views
 {
@@ -23,7 +23,7 @@ namespace Budgetor.Views
         private bool ShowCreationDateWarning { get; set; }
         public bool NeedResponse { get; set; }
         private bool DidUserCancel { get; set; }
-        private TransactionSaveModel InitialDeposit { get; set; }
+        private TransactionSaveInfo InitialDeposit { get; set; }
 
         public bool IsEditMode { get; set; }
         public bool IsAddMode
@@ -31,6 +31,8 @@ namespace Budgetor.Views
             get { return !IsEditMode; }
             set { IsEditMode = !value; }
         }
+
+        public bool IsDirty => IsAddMode || (Account != OGAccount);
 
         private BankAccountDetailVM _OGAccount;
         public BankAccountDetailVM OGAccount
@@ -57,36 +59,20 @@ namespace Budgetor.Views
         }
         public BankAccountDetailVM Account { get; set; }
 
-        private int? _SelectedFromAccount;
-        public int SelectedFromAccount
-        {
-            get
-            {
-                if (!_SelectedFromAccount.HasValue)
-                {
-                    if (vm != null)
-                    {
-                        _SelectedFromAccount = vm.FromAccounts.GetDefaultAccount();
-                    }
-                    else
-                    {
-                        _SelectedFromAccount = 1;
-                    }
-                }
-                return _SelectedFromAccount.Value;
-            }
-            set
-            {
-                _SelectedFromAccount = value;
-            }
-        }
+        private FormCloseDelegate _OnClose;
 
         #endregion Properties
 
         #region Constructors
 
-        public BankAccount_Form(ManageBankAccountVM initialVM, AccountsOM accountOverMind, TransactionsOM transactionsOverMind)
+        public BankAccount_Form(
+            ManageBankAccountVM initialVM, 
+            AccountsOM accountOverMind, 
+            TransactionsOM transactionsOverMind,
+            FormCloseDelegate onClose = null
+        )
         {
+            _OnClose = onClose;
             accountsOM = accountOverMind;
             transactionsOM = transactionsOverMind;
             vm = initialVM;
@@ -100,7 +86,7 @@ namespace Budgetor.Views
             VMHandle.DataContext = vm;
             BankAccount_Grid.DataContext = Account;
 
-            FromAccount_ComboBox.BindToList(initialVM.FromAccounts, SelectedFromAccount);
+            FromAccount_ComboBox.BindToList(vm, "FromAccounts", "SelectedFromAccount");
         }
 
         #endregion Constructors
@@ -115,34 +101,62 @@ namespace Budgetor.Views
         private void Deactivate_Button_Click(object sender, RoutedEventArgs e)
         {
             accountsOM.DeactivateAccount(vm.Account.AccountId);
+            Account.DateTime_Deactivated = DateTime.UtcNow;
             this.Close();
         }
 
         private void Save_Button_Click(object sender, RoutedEventArgs e)
         {
-            var amount = Account.InitialBalance.Value;
-
-            if (Account != OGAccount)
+            try
             {
-                OGAccount = accountsOM.SaveAccount(Account);
-            }
-            if (IsAddMode)
-            {
-                InitialDeposit = new TransactionSaveModel()
+                if (IsAddMode)
                 {
-                    Amount = amount,
-                    DateTime_Occurred = Account.DateTime_Created,
-                    FromAccount = SelectedFromAccount,
-                    IsConfirmed = true,
-                    IsUserCreated = false,
-                    Title = "Default Cash Account Initial Deposit",
-                    OccerrenceAccount = null,
-                    ToAccount = Account.AccountId,
-                    TransactionType = TransactionType.Deposit
-                };
-                transactionsOM.SaveTransaction(InitialDeposit);
+                    // Store Initial Deposit info or will be lost on account save
+                    decimal? amount = Account.InitialBalance;
+
+                    // Save Account without transaction to get an AccountId
+                    OGAccount = accountsOM.SaveAccount(Account);
+
+                    // Create Initial Transaction and update the account with it's info
+                    if (amount.HasValue)
+                    {
+                        InitialDeposit = new TransactionSaveInfo()
+                        {
+                            Amount = amount.Value,
+                            DateTime_Occurred = Account.DateTime_Created,
+                            FromAccount = vm.SelectedFromAccount,
+                            IsConfirmed = true,
+                            IsUserCreated = false,
+                            Title = "Initial Deposit",
+                            OccerrenceAccount = null,
+                            ToAccount = Account.AccountId,
+                            TransactionType = TransactionType.Deposit,
+                            Notes = $"Initial Deposit for {Account.AccountName} {Constants.Accounts.GetDisplay(Account.AccountType)}"
+                        };
+
+                        TransactionDetailBase savedTransaction = transactionsOM.SaveTransaction(InitialDeposit);
+
+                        Account.InitialBalance = savedTransaction.Amount;
+                        Account.InitialDepositAccountId = savedTransaction.FromAccount.AccountId;
+                        Account.InitialDepositId = savedTransaction.TransactionId;
+
+                        OGAccount = accountsOM.SaveAccount(Account);
+                    }
+                }
+                else
+                {
+                    if (IsDirty)
+                    {
+                        OGAccount = accountsOM.SaveAccount(Account);
+                    }
+                }
+
+                this.Close();
             }
-            this.Close();
+            catch (Exception ex)
+            {
+                //todo: add error logging
+            }
         }
 
         private void EditTransaction_Button_Click(object sender, RoutedEventArgs e)
@@ -150,11 +164,19 @@ namespace Budgetor.Views
 
         }
 
+        private void OnWindowClose(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            OnWindowClose();
+        }
+
         #endregion Form Calls
 
         #region Private Methods
 
-        
+        private void OnWindowClose()
+        {
+            _OnClose?.Invoke(IsDirty);
+        }
 
         #endregion Private Methods
     }

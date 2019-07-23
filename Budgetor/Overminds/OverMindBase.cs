@@ -1,28 +1,14 @@
 ﻿using Budgetor.Models;
 using Budgetor.Repo;
 using Budgetor.Repo.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Budgetor.Overminds
 {
     public class OverMindBase
     {
-        private Repository _Repo;
-        protected Repository Repo
-        {
-            get
-            {
-                if (_Repo == null)
-                {
-                    _Repo = new Repository();
-                }
-                return _Repo;
-            }
-        }
+        #region Properties
+
+        protected readonly Repository Repo;
 
         private AccountsOM _AccountsOM;
         protected AccountsOM AccountsOM
@@ -31,23 +17,43 @@ namespace Budgetor.Overminds
             {
                 if (_AccountsOM == null)
                 {
-                    _AccountsOM = new AccountsOM();
+                    _AccountsOM = new AccountsOM(Repo);
                 }
                 return _AccountsOM;
             }
         }
 
+        private TransactionsOM _TransactionsOM;
+        protected TransactionsOM TransactionsOM
+        {
+            get
+            {
+                if (_TransactionsOM == null)
+                {
+                    _TransactionsOM = new TransactionsOM(Repo);
+                }
+                return _TransactionsOM;
+            }
+        }
+
+        #endregion Properties
+
+        #region Constructors
+
+        public OverMindBase(Repository repo, AccountsOM accountsOM = null, TransactionsOM transactionsOM = null)
+        {
+            _TransactionsOM = transactionsOM;
+            _AccountsOM = accountsOM;
+            Repo = repo;
+        }
+
+        #endregion Constructors
+
         #region Mapping
 
         protected TransactionDetailBase MapRepoTransactionToTransactionBase(Transaction repoTransaction)
         {
-            return new TransactionDetailBase(repoTransaction,
-                                            AccountsOM.GetGenericAccountDetails(repoTransaction.ToAccount),
-                                            AccountsOM.GetGenericAccountDetails(repoTransaction.FromAccount),
-                                            repoTransaction.OccerrenceAccount.HasValue
-                                                ? AccountsOM.GetGenericAccountDetails(repoTransaction.OccerrenceAccount.Value)
-                                                : null
-            );
+            return new TransactionDetailBase(repoTransaction, AccountsOM);
         }
 
         #endregion Mapping
