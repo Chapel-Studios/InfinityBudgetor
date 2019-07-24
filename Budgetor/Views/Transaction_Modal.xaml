@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Budgetor.Views"
         mc:Ignorable="d"
         Title="{Binding ModalTitle}" Name="VMHandle"
-        Height="500" Width="650"
+        Height="500" Width="650" Closing="OnModalClose"
 >
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />

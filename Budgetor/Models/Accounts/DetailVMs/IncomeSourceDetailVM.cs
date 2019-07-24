@@ -1,11 +1,7 @@
-﻿using Budgetor.Models.Contracts;
-using Budgetor.Models.Scheduling;
+﻿using Budgetor.Helpers;
 using Budgetor.Repo.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace Budgetor.Models
 {
@@ -13,19 +9,62 @@ namespace Budgetor.Models
     {
         public int IncomeSourceId { get; set; }
 
-        public decimal ExpectedAmount { get; set; }
+        private decimal _ExpectedAmount;
+        public decimal ExpectedAmount
+        {
+            get
+            {
+                return _ExpectedAmount;
+            }
+            set
+            {
+                _ExpectedAmount = value;
+            }
+        }
+
+        public string ExpectedAmount_Display
+        {
+            get
+            {
+                return this.ExpectedAmount.GetDisplayAmountText();
+            }
+            set
+            {
+                value = Regex.Replace(value, "[^0-9.]", String.Empty);
+                var b = decimal.TryParse(value, out decimal d);
+                if (b)
+                {
+                    this.ExpectedAmount = b ? d : 0M;
+                }
+            }
+        }
 
         public decimal TotalFromSource { get; set; }
-        
+        public string TotalFromSource_Displpay => TotalFromSource.GetDisplayAmountText();
+
         public int? DefaultToAccountId { get; set; }
 
-        public Scheduling.ScheduleVM Schedule { get; set; }
+        public Schedule_Base Schedule { get; set; }
 
         #region Constructors
 
         public IncomeSourceDetailVM() : base(Constants.AccountType.IncomeSource)
         {
 
+        }
+
+        public IncomeSourceDetailVM(IncomeSource_DetailView repoModel, Schedule sched = null) : base(Constants.AccountType.IncomeSource)
+        {
+            IncomeSourceId = repoModel.IncomeSourceId;
+            Notes = repoModel.Notes;
+            AccountId = repoModel.AccountId;
+            AccountName = repoModel.AccountName;
+            DateTime_Created = repoModel.DateTime_Created;
+            DateTime_Deactivated = repoModel.DateTime_Deactivated;
+            ExpectedAmount = repoModel.ExpectedAmount;
+            TotalFromSource = repoModel.TotalFromSource;
+            DefaultToAccountId = repoModel.DefaultToAccountId;
+            Schedule = new Schedule_Base(sched);
         }
 
         public IncomeSourceDetailVM(IncomeSource source, AccountDetailVM baseAccount, Schedule accountSchedule) : base(baseAccount.AccountType)
@@ -38,7 +77,7 @@ namespace Budgetor.Models
             DateTime_Deactivated = baseAccount.DateTime_Deactivated;
             DefaultToAccountId = source.DefaultToAccountId;
             ExpectedAmount = source.ExpectedAmount;
-            Schedule = accountSchedule == null ? null : new ScheduleVM(accountSchedule);
+            Schedule = accountSchedule == null ? null : new Schedule_Base(accountSchedule);
             TotalFromSource = source.TotalFromSource;
 
         }

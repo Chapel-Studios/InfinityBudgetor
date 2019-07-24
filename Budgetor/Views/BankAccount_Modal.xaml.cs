@@ -9,9 +9,9 @@ using Budgetor.Overminds;
 namespace Budgetor.Views
 {
     /// <summary>
-    /// Interaction logic for BankAccount_Form.xaml
+    /// Interaction logic for BankAccount_Modal.xaml
     /// </summary>
-    public partial class BankAccount_Form : Window
+    public partial class BankAccount_Modal : Window
     {
         #region Properties
 
@@ -49,7 +49,6 @@ namespace Budgetor.Views
                     DateTime_Deactivated = value.DateTime_Deactivated,
                     DepositAccountId = value.DepositAccountId,
                     InitialBalance = value.InitialBalance,
-                    InitialBalance_Display = value.InitialBalance_Display,
                     InitialDepositId = value.InitialDepositId,
                     IsActiveCashAccount = value.IsActiveCashAccount,
                     IsDefault = value.IsDefault,
@@ -59,19 +58,22 @@ namespace Budgetor.Views
         }
         public BankAccountDetailVM Account { get; set; }
 
-        private FormCloseDelegate _OnClose;
+        private ModalCloseDelegate _OnClose;
+        private OpenTransactionModalDelegate _OpenTransactionModal;
 
         #endregion Properties
 
         #region Constructors
 
-        public BankAccount_Form(
+        public BankAccount_Modal(
             ManageBankAccountVM initialVM, 
             AccountsOM accountOverMind, 
             TransactionsOM transactionsOverMind,
-            FormCloseDelegate onClose = null
+            OpenTransactionModalDelegate openTransactionModal,
+            ModalCloseDelegate onClose = null
         )
         {
+            _OpenTransactionModal = openTransactionModal;
             _OnClose = onClose;
             accountsOM = accountOverMind;
             transactionsOM = transactionsOverMind;
@@ -161,19 +163,19 @@ namespace Budgetor.Views
 
         private void EditTransaction_Button_Click(object sender, RoutedEventArgs e)
         {
-
+            _OpenTransactionModal(Account.InitialDepositId);
         }
 
-        private void OnWindowClose(object sender, System.ComponentModel.CancelEventArgs e)
+        private void OnModalClose(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            OnWindowClose();
+            OnModalClose();
         }
 
         #endregion Form Calls
 
         #region Private Methods
 
-        private void OnWindowClose()
+        private void OnModalClose()
         {
             _OnClose?.Invoke(IsDirty);
         }

@@ -7,9 +7,9 @@ using System.Windows;
 namespace Budgetor.Views
 {
     /// <summary>
-    /// Interaction logic for BudgetorMain.xaml
+    /// Interaction logic for Budgetor_Main.xaml
     /// </summary>
-    public partial class BudgetorMain : Window
+    public partial class Budgetor_Main : Window
     {
         #region Properties
 
@@ -51,7 +51,7 @@ namespace Budgetor.Views
 
         #region Constructors
 
-        public BudgetorMain()
+        public Budgetor_Main()
         {
             InitializeComponent();
 
@@ -59,10 +59,6 @@ namespace Budgetor.Views
 
             UpdateAccountsTab();
             UpdateTransactionsTab();
-
-            AccountsTab.DataContext = AccountsTabVM;
-
-            TransactionsTab.DataContext = TransactionsTabVM;
         }
 
         #endregion Constructors
@@ -98,8 +94,7 @@ namespace Budgetor.Views
         {
             try
             {
-                var button = sender as EditButton;
-                EditBankAccount(button.ContextualId);
+                EditIncSource(null);
             }
             catch (Exception ex)
             {
@@ -112,7 +107,7 @@ namespace Budgetor.Views
             try
             {
                 var button = sender as EditButton;
-                throw new NotImplementedException();
+                EditIncSource(button.ContextualId);
             }
             catch (Exception ex)
             {
@@ -155,19 +150,19 @@ namespace Budgetor.Views
 
         private void EditBankAccount(int? id)
         {
-            var editor = new BankAccount_Form(AccountsOM.GetEditBankAccountVM(id), AccountsOM, TransactionsOM, UpdateCallback);
+            var editor = new BankAccount_Modal(AccountsOM.GetEditBankAccountVM(id), AccountsOM, TransactionsOM, EditTransaction, UpdateCallback);
             editor.Show();
         }
 
         private void EditIncSource(int? id)
         {
-            //var editor = new BankAccount_Form(AccountFactory.GetEditBankAccountVM(id), AccountFactory);
-            //editor.Show();
+            var editor = new IncomeSource_Modal(AccountsOM.GetManageIncSourceVM(id), AccountsOM, UpdateCallback);
+            editor.Show();
         }
 
         private void EditTransaction(int? id)
         {
-            var editor = new Transaction_Modal(TransactionsOM.GetTransactionModalVM(id), TransactionsOM);
+            var editor = new Transaction_Modal(TransactionsOM.GetTransactionModalVM(id), TransactionsOM, UpdateCallback);
             editor.Show();
         }
 
@@ -183,11 +178,13 @@ namespace Budgetor.Views
         private void UpdateAccountsTab()
         {
             AccountsTabVM = AccountsOM.GetAcountsTabVM();
+            AccountsTab.DataContext = AccountsTabVM;
         }
 
         private void UpdateTransactionsTab()
         {
             TransactionsTabVM = TransactionsOM.GetTransactionsTabVM();
+            TransactionsTab.DataContext = TransactionsTabVM;
         }
 
         #endregion Private Methods

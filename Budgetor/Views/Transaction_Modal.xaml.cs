@@ -1,4 +1,5 @@
 ﻿using Budgetor.Helpers;
+using Budgetor.Helpers.Delegates;
 using Budgetor.Models;
 using Budgetor.Overminds;
 using System.Windows;
@@ -16,14 +17,19 @@ namespace Budgetor.Views
         private TransactionModalVM vm;
         private TransactionsOM transactionsOM;
 
+        private ModalCloseDelegate _OnClose;
+        private bool IsBeingDeleted;
+
         #endregion Properties
 
         #region Constructors
 
-        public Transaction_Modal(TransactionModalVM initialVM, TransactionsOM om)
+        public Transaction_Modal(TransactionModalVM initialVM, TransactionsOM om, ModalCloseDelegate onClose)
         {
             vm = initialVM;
             transactionsOM = om;
+            _OnClose = onClose;
+            IsBeingDeleted = false;
 
             InitializeComponent();
 
@@ -54,6 +60,7 @@ namespace Budgetor.Views
         private void Delete_Button_Click(object sender, RoutedEventArgs e)
         {
             // TODO: 'Are you Sure?' Dialog
+            IsBeingDeleted = true;
             transactionsOM.DeleteTransaction(vm.Transaction.TransactionId);
             this.Close();
         }
@@ -69,6 +76,16 @@ namespace Budgetor.Views
             this.Close();
         }
 
+        private void OnModalClose(object sender, System.EventArgs e)
+        {
+            OnModalClose();
+        }
+
         #endregion Form Calls
+
+        private void OnModalClose()
+        {
+            _OnClose?.Invoke(IsBeingDeleted || vm.IsDirty);
+        }
     }
 }

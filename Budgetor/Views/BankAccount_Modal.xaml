@@ -1,4 +1,4 @@
-﻿<Window x:Class="Budgetor.Views.BankAccount_Form"
+﻿<Window x:Class="Budgetor.Views.BankAccount_Modal"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -8,7 +8,8 @@
         mc:Ignorable="d"
         Title="" 
         Name="VMHandle"
-        Height="420" Width="500" Closing="OnWindowClose">
+        Height="420" Width="500"
+        Closing="OnModalClose">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
     </Window.Resources>
@@ -26,7 +27,7 @@
             <RowDefinition Height="100"/>
             <RowDefinition Height="35*" />
         </Grid.RowDefinitions>
-
+        
         <TextBox HorizontalAlignment="Right"
                  VerticalAlignment="Center"
                  Grid.ColumnSpan="2"

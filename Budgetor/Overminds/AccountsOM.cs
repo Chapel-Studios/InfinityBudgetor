@@ -1,6 +1,6 @@
-﻿using Budgetor.Models;
-using Budgetor.Models.Contracts;
-using Budgetor.Models.Scheduling;
+﻿using Budgetor.Constants;
+using Budgetor.Helpers;
+using Budgetor.Models;
 using Budgetor.Repo;
 using Budgetor.Repo.Models;
 using System;
@@ -29,9 +29,16 @@ namespace Budgetor.Overminds
             return new AccountDetailVM(Repo.GetAccount(accountId));
         }
 
-        public BankAccountDetailVM GetBankAccountById(int BankAccountId)
+        public BankAccountDetailVM GetBankAccountById(int bankAccountId)
         {
-            return new BankAccountDetailVM(Repo.GetDepositAccountDetail(BankAccountId));
+            return new BankAccountDetailVM(Repo.GetDepositAccountDetail(bankAccountId));
+        }
+
+        public IncomeSourceDetailVM GetIncomeSourceById(int incSourceId)
+        {
+            IncomeSource_DetailView result = Repo.GetIncomeSourceDetail(incSourceId);
+            Schedule sched = result.ScheduleId.HasValue ? Repo.GetSchedule(result.ScheduleId.Value) : null;
+            return new IncomeSourceDetailVM(result, sched);
         }
 
         #endregion Get Accounts
@@ -128,6 +135,39 @@ namespace Budgetor.Overminds
         }
 
         #endregion ManageBankAccount Window Calls
+
+        #region ManageIncSource Window Calls
+
+        public ManageIncSourceVM GetManageIncSourceVM(int? id)
+        {
+            IncomeSourceDetailVM incSource;
+            if (id.HasValue)
+            {
+                incSource = GetIncomeSourceById(id.Value);
+            }
+            else
+            {
+                incSource = new IncomeSourceDetailVM();
+            }
+
+            List<AccountComboBoxItem> tos = GetAccountComboBoxItem(new List<string>()
+            {
+                Constants.Accounts.BankAccount.TypeName
+            });
+
+            return new ManageIncSourceVM()
+            {
+                Account = incSource,
+                IsEditMode = id.HasValue,
+                ToAccounts = tos,
+                Frequencies = Frequency.GetFrequencyComboBoxItems(),
+                SelectedFrequency = (int?)incSource.Schedule?.Frequency ?? 0,
+                SelectedToAccount = incSource?.DefaultToAccountId
+                    ?? (tos.GetDefaultAccount() ?? 0)
+            };
+        }
+
+        #endregion ManageIncSource Window Calls
 
         #region Saves
 

@@ -6,5 +6,7 @@ using System.Threading.Tasks;
 
 namespace Budgetor.Helpers.Delegates
 {
-    public delegate void FormCloseDelegate(bool isUpdateRequired);
+    public delegate void ModalCloseDelegate(bool isUpdateRequired);
+
+    public delegate void OpenTransactionModalDelegate(int? id);
 }

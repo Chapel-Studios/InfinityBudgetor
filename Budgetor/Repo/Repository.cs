@@ -34,6 +34,15 @@ namespace Budgetor.Repo
                 .FirstOrDefault();
         }
 
+        internal IncomeSource_DetailView GetIncomeSourceDetail(int id)
+        {
+            var accountIdParameter = new SqlParameter("@accountId", id);
+
+            return context.Database
+                .SqlQuery<IncomeSource_DetailView>("GetIncomeSource @accountId", accountIdParameter)
+                .FirstOrDefault();
+        }
+
         internal List<BankAccountsListView> GetBankAccountsListViews()
         {
             return context.BankAccountsListViews.ToList();
@@ -266,7 +275,7 @@ namespace Budgetor.Repo
             //TODO: what should this return?
             var record = context.Transactions.Where(x => x.LocalId == transactionId).FirstOrDefault();
             context.Transactions.Remove(record);
-            context.Entry(record).State = EntityState.Modified;
+            context.Entry(record).State = EntityState.Deleted;
             context.SaveChanges();
         }
 

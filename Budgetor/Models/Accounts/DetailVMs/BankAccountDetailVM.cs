@@ -40,7 +40,7 @@ namespace Budgetor.Models
             get
             {
                 if (InitialBalance.HasValue)
-                    return DispayExtensions.GetDisplayAmountText(this.InitialBalance.Value);
+                    return this.InitialBalance.Value.GetDisplayAmountText();
                 else
                     return DispayExtensions.GetDisplayAmountText(0);
             }

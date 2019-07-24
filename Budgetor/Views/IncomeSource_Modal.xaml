@@ -1,0 +1,157 @@
+﻿<Window x:Class="Budgetor.Views.IncomeSource_Modal"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Budgetor.Views"
+        mc:Ignorable="d"
+        Title="IncomeSource_Modal"
+        Name="VMHandle"
+        Height="500" Width="550" 
+        Closing="OnModalClose"
+>
+    <Grid>
+        <Grid Margin="15,15,15,0" Name="IncSource_Grid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3.5*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="50" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="26"/>
+                <RowDefinition Height="100*"/>
+                <RowDefinition Height="60" />
+            </Grid.RowDefinitions>
+
+            <TextBox 
+                HorizontalAlignment="Right" VerticalAlignment="Center" 
+                Margin="0,0,0,0" 
+                Grid.Column="0" Grid.Row="0" 
+                Height="24" Width="300"
+                TextWrapping="Wrap" 
+                Text="{Binding AccountName, Mode=TwoWay}" 
+                
+            />
+            <Label 
+                HorizontalAlignment="Left" VerticalAlignment="Center" 
+                Margin="25,0,0,0" 
+                Grid.Column="1" Grid.Row="0" >
+                <Label.Content>
+                    Account Name
+                </Label.Content>
+            </Label>
+
+            <TextBox 
+                HorizontalAlignment="Right" VerticalAlignment="Center" 
+                Margin="0,0,0,0" 
+                Grid.Column="0" Grid.Row="1" 
+                Height="24" Width="80"
+                TextWrapping="Wrap" 
+                Text="{Binding ExpectedAmount_Display, Mode=TwoWay}" 
+                
+            />
+            <Label 
+                HorizontalAlignment="Left" VerticalAlignment="Center" 
+                Margin="25,0,0,0" 
+                Grid.Column="1" Grid.Row="1" >
+                <Label.Content>
+                    Standard Payment Amount
+                </Label.Content>
+            </Label>
+            
+            <TextBlock 
+                HorizontalAlignment="Center" VerticalAlignment="Center"
+                Margin="0,0,0,0" 
+                Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" 
+                TextWrapping="Wrap" 
+                Text="First Payment to Track?" 
+            />
+
+            <Label 
+                HorizontalAlignment="Right" VerticalAlignment="Center" 
+                Margin="0,0,0,0" 
+                Grid.Column="0" Grid.Row="3" >
+                <Label.Content>
+                    How often do you recieve payments from this source?
+                </Label.Content>
+            </Label>
+            <ComboBox 
+                HorizontalAlignment="Left" VerticalAlignment="Center" 
+                Margin="10,0,0,0" Width="120"
+                Grid.Column="1" Grid.Row="3" 
+                Name="Frequency_ComboBox"
+            />
+
+            <Label 
+                HorizontalAlignment="Right" VerticalAlignment="Center" 
+                Margin="0,0,0,0" 
+                Grid.Column="0" Grid.Row="4" >
+                <Label.Content>
+                    To which account should this go by default?
+                </Label.Content>
+            </Label>
+            <ComboBox 
+                HorizontalAlignment="Left" VerticalAlignment="Center" 
+                Margin="10,0,0,0" Width="120"
+                Grid.Column="1" Grid.Row="4" 
+                Name="ToAccount_ComboBox"
+            />
+
+            <Label HorizontalAlignment="Center" 
+               VerticalAlignment="Top"
+               Grid.Row="5" Grid.ColumnSpan="2"
+               Height="26" Width="82"
+               Content="Special Notes" Margin="0,0,0,0" 
+            />
+            <TextBox HorizontalAlignment="Center"
+                VerticalAlignment="Stretch"
+                Grid.Row="6" Grid.ColumnSpan="2"
+                Width="450"
+                Margin="0,10"
+                TextWrapping="Wrap"
+                Text="{Binding Notes, Mode=TwoWay}"
+            />
+
+            <Grid HorizontalAlignment="Stretch"
+              VerticalAlignment="Center"
+              Grid.Row="7" Grid.ColumnSpan="3" Height="26" Margin="0,0"
+        >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+                <Button HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Height="25" Width="120"
+                    Content="Cancel"
+                    Name="Cancel_Button"
+                    Click="Cancel_Button_Click"
+            />
+                <Button HorizontalAlignment="Center"
+                    VerticalAlignment="Top"
+                    Grid.Column="1"
+                    Height="25" Width="120"
+                    Content="Deactivate Account"
+                    Name="Deactivate_Button"
+                    Click="Deactivate_Button_Click"
+            />
+                <Button HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Grid.Column="2"
+                    Height="25" Width="120"
+                    Content="Save Account"
+                    Name="Save_Button"
+                    Click="Save_Button_Click"
+            />
+
+            </Grid>
+        </Grid>
+
+    </Grid>
+</Window>

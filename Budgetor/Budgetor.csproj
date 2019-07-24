@@ -76,7 +76,7 @@
     <Compile Include="Constants\Transactions.cs" />
     <Compile Include="Controls\AddAccountButton.cs" />
     <Compile Include="Controls\EditButton.cs" />
-    <Compile Include="Helpers\Delegates\FormCloseDelegate.cs" />
+    <Compile Include="Helpers\Delegates\ModalDelegates.cs" />
     <Compile Include="Helpers\Extensions\AccountComboBoxItemExtensions.cs" />
     <Compile Include="Helpers\Extensions\EnumExtensions.cs" />
     <Compile Include="Helpers\Extensions\MiscExtensions.cs" />
@@ -85,10 +85,12 @@
     <Compile Include="Models\Accounts\DetailVMs\AccountDetailVM.cs" />
     <Compile Include="Models\Accounts\DetailVMs\IncomeSourceDetailVM.cs" />
     <Compile Include="Constants\Frequency.cs" />
-    <Compile Include="Models\Accounts\EditBankAccountVM.cs" />
+    <Compile Include="Models\Accounts\ManagementVMs\ManageBankAccountVM.cs" />
+    <Compile Include="Models\Accounts\ManagementVMs\ManageIncSourceVM.cs" />
     <Compile Include="Models\Contracts\IComboBoxItem.cs" />
-    <Compile Include="Models\Contracts\ITransaction.cs" />
-    <Compile Include="Models\Scheduling\Schedule.cs" />
+    <Compile Include="Models\Contracts\ITransactionDetail.cs" />
+    <Compile Include="Models\Scheduling\FrequencyComboBoxItem.cs" />
+    <Compile Include="Models\Scheduling\Schedule_Base.cs" />
     <Compile Include="Models\Shared\BindableBase.cs" />
     <Compile Include="Constants\ConstantBaseTypes.cs" />
     <Compile Include="Constants\MiscConstants.cs" />
@@ -110,8 +112,9 @@
     <Compile Include="Models\Accounts\ListVMs\AccountListBaseVM.cs" />
     <Compile Include="Overminds\OverMindBase.cs" />
     <Compile Include="Overminds\TransactionsOM.cs" />
-    <Compile Include="Repo\Models\Sprocs\DepositAccount_Detail.cs" />
+    <Compile Include="Repo\Models\Sprocs\DepositAccount_DetailView.cs" />
     <Compile Include="Repo\Models\Sprocs\AccountComboBoxInfo.cs" />
+    <Compile Include="Repo\Models\Sprocs\IncomeSource_DetailView.cs" />
     <Compile Include="Repo\Models\Views\BankAccountsListView.cs" />
     <Compile Include="Repo\Models\Tables\DepositAccount.cs" />
     <Compile Include="Repo\Models\Tables\IncomeSource.cs" />
@@ -121,11 +124,11 @@
     <Compile Include="Repo\Models\Tables\Transaction.cs" />
     <Compile Include="Repo\Repository.cs" />
     <Compile Include="Settings.cs" />
-    <Compile Include="Views\BankAccount_Form.xaml.cs">
-      <DependentUpon>BankAccount_Form.xaml</DependentUpon>
+    <Compile Include="Views\BankAccount_Modal.xaml.cs">
+      <DependentUpon>BankAccount_Modal.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\BudgetorMain.xaml.cs">
-      <DependentUpon>BudgetorMain.xaml</DependentUpon>
+    <Compile Include="Views\Budgetor_Main.xaml.cs">
+      <DependentUpon>Budgetor_Main.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\Accounts\AccountsTabVM.cs" />
     <Compile Include="Repo\Models\Tables\Account.cs" />
@@ -134,6 +137,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Repo\Budgetor_Context.cs" />
+    <Compile Include="Views\IncomeSource_Modal.xaml.cs">
+      <DependentUpon>IncomeSource_Modal.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Transaction_Modal.xaml.cs">
       <DependentUpon>Transaction_Modal.xaml</DependentUpon>
     </Compile>
@@ -141,11 +147,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\BankAccount_Form.xaml">
+    <Page Include="Views\BankAccount_Modal.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\BudgetorMain.xaml">
+    <Page Include="Views\Budgetor_Main.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\IncomeSource_Modal.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -186,6 +196,7 @@
   <ItemGroup>
     <Content Include="DBScripts\Sprocs\GetBankAccount.sql" />
     <Content Include="DBScripts\SeedData\ScheduleFrequencyTypes.sql" />
+    <Content Include="DBScripts\Sprocs\GetIncomeSource.sql" />
     <Content Include="DBScripts\Tables.sql" />
     <Content Include="DBScripts\Views\BankAccountsListViews.sql" />
     <Content Include="DBScripts\Sprocs\GetAccountComboBoxInfo.sql" />

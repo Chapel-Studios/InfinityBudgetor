@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Budgetor.Models;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Budgetor.Constants
 {
@@ -73,6 +75,11 @@ namespace Budgetor.Constants
         public static DisplaySet<FrequencyType> GetDisplayByTypeName(string frequency)
         {
             return Frequencies.Find(x => x.TypeName == frequency);
+        }
+
+        public static List<FrequencyComboBoxItem> GetFrequencyComboBoxItems()
+        {
+            return Frequencies.Select(x => new FrequencyComboBoxItem(x)).ToList();
         }
 
     }
