@@ -158,23 +158,6 @@ namespace Budgetor.Overminds
                 // Create the base account to get an accountId
                 AccountDetailVM baseAccount = SaveAccount((AccountDetailVM)account);
                 account.AccountId = baseAccount.AccountId;
-
-                //// Add an initial deposit transaction
-                //if (account.InitialBalance.HasValue)
-                //{
-                //    var initialD = Repo.SaveTransaction(new Transaction(new TransactionSaveInfo() {
-                //        Amount = account.InitialBalance.Value,
-                //        IsConfirmed = true,
-                //        IsUserCreated = true,
-                //        Notes = $"Initial Deposit for {account.AccountName} {Constants.Accounts.GetDisplay(account.AccountType)}",
-                //        DateTime_Occurred = account.DateTime_Created,
-                //        Title = "Initial Deposit",
-                //        ToAccount = account.AccountId,
-                //        TransactionType = Constants.TransactionType.Deposit,
-                //        FromAccount = account.DepositAccountId
-                //    }));
-                //    account.InitialDepositId = initialD.LocalId;
-                //}
             }
 
             

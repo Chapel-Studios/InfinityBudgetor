@@ -58,8 +58,10 @@ namespace Budgetor.Views
             _Repo = new Repo.Repository();
 
             UpdateAccountsTab();
+            UpdateTransactionsTab();
 
-            TransactionsTabVM = TransactionsOM.GetTransactionsTabVM();
+            AccountsTab.DataContext = AccountsTabVM;
+
             TransactionsTab.DataContext = TransactionsTabVM;
         }
 
@@ -153,7 +155,7 @@ namespace Budgetor.Views
 
         private void EditBankAccount(int? id)
         {
-            var editor = new BankAccount_Form(AccountsOM.GetEditBankAccountVM(id), AccountsOM, TransactionsOM, UpdateAccountsTab);
+            var editor = new BankAccount_Form(AccountsOM.GetEditBankAccountVM(id), AccountsOM, TransactionsOM, UpdateCallback);
             editor.Show();
         }
 
@@ -169,13 +171,23 @@ namespace Budgetor.Views
             editor.Show();
         }
 
-        private void UpdateAccountsTab(bool isUpdateRequired = true)
+        private void UpdateCallback(bool isUpdateRequired = true)
         {
             if (isUpdateRequired)
             {
-                AccountsTabVM = AccountsOM.GetAcountsTabVM();
-                AccountsTab.DataContext = AccountsTabVM;
+                UpdateAccountsTab();
+                UpdateTransactionsTab();
             }
+        }
+
+        private void UpdateAccountsTab()
+        {
+            AccountsTabVM = AccountsOM.GetAcountsTabVM();
+        }
+
+        private void UpdateTransactionsTab()
+        {
+            TransactionsTabVM = TransactionsOM.GetTransactionsTabVM();
         }
 
         #endregion Private Methods
