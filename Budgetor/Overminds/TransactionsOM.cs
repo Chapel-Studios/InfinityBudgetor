@@ -85,7 +85,12 @@ namespace Budgetor.Overminds
             Schedule_Base schedule = null;
             if (id.HasValue)
                 schedule = new Schedule_Base(Repo.GetSchedule(id.Value));
-            return new ManageScheduleVM(schedule, Frequency.GetFrequencyComboBoxItems());
+            return new ManageScheduleVM(schedule, 
+                                        Frequency.GetFrequencyComboBoxItems(),
+                                        Time.GetHoursComboBoxItems(),
+                                        Time.GetMeridianComboBoxItems(),
+                                        Time.GetTimeZonesComboBoxItems()
+            );
         }
 
         internal Schedule_Base SaveSchedule(Schedule_Base sched)

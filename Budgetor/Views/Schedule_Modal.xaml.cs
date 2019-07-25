@@ -83,6 +83,7 @@ namespace Budgetor.Views
             {
                 if (IsDirty)
                 {
+                    Schedule.Frequency = (Constants.FrequencyType)vm.SelectedFrequency;
                     OGSchedule = TransactionsOM.SaveSchedule(Schedule);
                 }
 

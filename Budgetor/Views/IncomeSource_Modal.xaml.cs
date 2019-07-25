@@ -153,7 +153,7 @@ namespace Budgetor.Views
 
         private void EditSchedule()
         {
-            var editor = new Schedule_Modal(TransactionsOM.GetManageScheduleVM(Account.Schedule?.ScheduleId), TransactionsOM, Account.AccountName, Accounts.GetDisplay(Account.AccountType).DisplayText, UpdateFrequency);
+            var editor = new Schedule_Modal(TransactionsOM.GetManageScheduleVM(Account.Schedule?.ScheduleId, vm.SelectedFrequency), TransactionsOM, Account.AccountName, Accounts.GetDisplay(Account.AccountType).DisplayText, UpdateFrequency);
             editor.Show();
         }
 
@@ -162,6 +162,7 @@ namespace Budgetor.Views
             if (isDirty)
             {
                 vm.SelectedFrequency = (int)schedule.Frequency;
+                Account.Schedule = schedule;
             }
         }
 

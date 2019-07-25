@@ -31,7 +31,11 @@ namespace Budgetor.Models
             }
             set
             {
-                _SelectedFrequency = value;
+                if (value != _SelectedFrequency)
+                {
+                    _SelectedFrequency = value;
+                    RaisePropertyChanged("SelectedFrequency");
+                }
             }
         }
 
@@ -155,7 +159,12 @@ namespace Budgetor.Models
 
 
 
-        public ManageScheduleVM(Schedule_Base sched, List<FrequencyComboBoxItem> acceptedFrequencies)
+        public ManageScheduleVM(Schedule_Base sched, 
+                                List<FrequencyComboBoxItem> acceptedFrequencies,
+                                List<IComboBoxItem> hoursList,
+                                List<IComboBoxItem> meridianList,
+                                List<IComboBoxItem> timeZoneList
+        )
         {
             if (sched == null)
             {
@@ -171,6 +180,12 @@ namespace Budgetor.Models
             Frequencies = acceptedFrequencies;
             _SelectedFrequency = (int?)sched?.Frequency;
             Schedule = sched;
+            HoursList = new List<IComboBoxItem>();
+            HoursList.AddRange(hoursList);
+            MeridianList = new List<IComboBoxItem>();
+            MeridianList.AddRange(meridianList);
+            TimeZoneList = new List<IComboBoxItem>();
+            TimeZoneList.AddRange(timeZoneList);
         }
     }
 }
