@@ -27,6 +27,7 @@ namespace Budgetor.Overminds
 
         #endregion Constructor
 
+        #region Transactions
 
         internal TransactionModalVM GetTransactionModalVM(int? transactionId)
         {
@@ -74,5 +75,25 @@ namespace Budgetor.Overminds
             return new ObservableCollection<TransactionsListItemVM>(Repo.GetTransactions(beginning, cutOff).Select(x => new TransactionsListItemVM(MapRepoTransactionToTransactionBase(x)))
                     .ToList());
         }
+
+        #endregion Transactions
+
+        #region Schedules
+
+        internal ManageScheduleVM GetManageScheduleVM(int? id)
+        {
+            Schedule_Base schedule = null;
+            if (id.HasValue)
+                schedule = new Schedule_Base(Repo.GetSchedule(id.Value));
+            return new ManageScheduleVM(schedule, Frequency.GetFrequencyComboBoxItems());
+        }
+
+        internal Schedule_Base SaveSchedule(Schedule_Base sched)
+        {
+            return new Schedule_Base(Repo.SaveSchedule(new Schedule(sched)));
+        }
+
+        #endregion Schedules
+
     }
 }

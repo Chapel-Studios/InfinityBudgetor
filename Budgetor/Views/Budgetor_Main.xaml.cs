@@ -156,7 +156,7 @@ namespace Budgetor.Views
 
         private void EditIncSource(int? id)
         {
-            var editor = new IncomeSource_Modal(AccountsOM.GetManageIncSourceVM(id), AccountsOM, UpdateCallback);
+            var editor = new IncomeSource_Modal(AccountsOM.GetManageIncSourceVM(id), AccountsOM, TransactionsOM, UpdateCallback);
             editor.Show();
         }
 

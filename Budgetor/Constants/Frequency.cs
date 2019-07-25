@@ -16,7 +16,7 @@ namespace Budgetor.Constants
 
         public static DisplaySet<FrequencyType> Infrequent = new DisplaySet<FrequencyType>()
         {
-            DisplayText = "InFrequent",
+            DisplayText = "Infrequent",
             HelpText = "These only occur when you create them.",
             TypeName = _Infrequent,
             EnumOption = FrequencyType.Infrequent

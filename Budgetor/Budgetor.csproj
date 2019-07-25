@@ -90,9 +90,10 @@
     <Compile Include="Models\Contracts\IComboBoxItem.cs" />
     <Compile Include="Models\Contracts\ITransactionDetail.cs" />
     <Compile Include="Models\Scheduling\FrequencyComboBoxItem.cs" />
+    <Compile Include="Models\Scheduling\ManageScheduleVM.cs" />
     <Compile Include="Models\Scheduling\Schedule_Base.cs" />
     <Compile Include="Models\Shared\BindableBase.cs" />
-    <Compile Include="Constants\ConstantBaseTypes.cs" />
+    <Compile Include="Constants\DisplaySet.cs" />
     <Compile Include="Constants\MiscConstants.cs" />
     <Compile Include="Constants\Accounts.cs" />
     <Compile Include="Helpers\Extensions\DispayExtensions.cs" />
@@ -140,6 +141,9 @@
     <Compile Include="Views\IncomeSource_Modal.xaml.cs">
       <DependentUpon>IncomeSource_Modal.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Schedule_Modal.xaml.cs">
+      <DependentUpon>Schedule_Modal.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Transaction_Modal.xaml.cs">
       <DependentUpon>Transaction_Modal.xaml</DependentUpon>
     </Compile>
@@ -156,6 +160,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\IncomeSource_Modal.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Schedule_Modal.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

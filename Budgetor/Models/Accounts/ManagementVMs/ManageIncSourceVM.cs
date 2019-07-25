@@ -53,6 +53,7 @@ namespace Budgetor.Models
         public ManageIncSourceVM()
         {
             ToAccounts = new List<AccountComboBoxItem>();
+            Frequencies = new List<FrequencyComboBoxItem>();
         }
     }
 }

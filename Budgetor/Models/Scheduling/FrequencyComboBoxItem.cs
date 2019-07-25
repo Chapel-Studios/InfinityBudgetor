@@ -45,7 +45,6 @@ namespace Budgetor.Models
         }
 
         private string _StringValue;
-        private DisplaySet<FrequencyType> x;
 
         public override string StringValue
         {

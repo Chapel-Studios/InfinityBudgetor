@@ -1,4 +1,5 @@
-﻿using Budgetor.Helpers;
+﻿using Budgetor.Constants;
+using Budgetor.Helpers;
 using Budgetor.Helpers.Delegates;
 using Budgetor.Models;
 using Budgetor.Overminds;
@@ -17,6 +18,7 @@ namespace Budgetor.Views
         private ManageIncSourceVM vm;
         private ModalCloseDelegate _OnClose;
         private AccountsOM AccountsOM;
+        private TransactionsOM TransactionsOM;
 
         public bool IsDirty => !vm.IsEditMode || (Account != OGAccount);
 
@@ -35,7 +37,7 @@ namespace Budgetor.Views
                         DateTime_Created = value.Schedule.DateTime_Created,
                         DateTime_Deactivated = value.Schedule.DateTime_Deactivated,
                         Frequency = value.Schedule.Frequency,
-                        LocalId = value.Schedule.LocalId,
+                        ScheduleId = value.Schedule.ScheduleId,
                         Occurrence_Final = value.Schedule.Occurrence_Final,
                         Occurrence_First = value.Schedule.Occurrence_First,
                         Occurrence_LastConfirmed = value.Schedule.Occurrence_LastConfirmed,
@@ -67,12 +69,14 @@ namespace Budgetor.Views
         public IncomeSource_Modal(
             ManageIncSourceVM initialVM,
             AccountsOM accountOverMind,
+            TransactionsOM transactionsOM,
             ModalCloseDelegate onClose = null
         )
         {
             vm = initialVM;
             _OnClose = onClose;
             AccountsOM = accountOverMind;
+            TransactionsOM = transactionsOM;
             OGAccount = initialVM.Account;
 
             InitializeComponent();
@@ -133,6 +137,11 @@ namespace Budgetor.Views
             OnModalClose();
         }
 
+        private void EditSchedule_Click(object sender, RoutedEventArgs e)
+        {
+            EditSchedule();
+        }
+
         #endregion Form Calls
 
         #region Private Methods
@@ -140,6 +149,20 @@ namespace Budgetor.Views
         private void OnModalClose()
         {
             _OnClose?.Invoke(IsDirty);
+        }
+
+        private void EditSchedule()
+        {
+            var editor = new Schedule_Modal(TransactionsOM.GetManageScheduleVM(Account.Schedule?.ScheduleId), TransactionsOM, Account.AccountName, Accounts.GetDisplay(Account.AccountType).DisplayText, UpdateFrequency);
+            editor.Show();
+        }
+
+        private void UpdateFrequency(bool isDirty, Schedule_Base schedule)
+        {
+            if (isDirty)
+            {
+                vm.SelectedFrequency = (int)schedule.Frequency;
+            }
         }
 
         #endregion Private Methods

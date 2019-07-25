@@ -6,7 +6,7 @@ namespace Budgetor.Models
 {
     public class Schedule_Base
     {
-        public int LocalId { get; set; }
+        public int ScheduleId { get; set; }
 
         public FrequencyType Frequency { get; set; }
 
@@ -22,6 +22,10 @@ namespace Budgetor.Models
 
         public DateTime? DateTime_Deactivated { get; set; }
 
+        public bool HasCustomTransactionTime { get; set; }
+
+        public bool IsAutoConfirm { get; set; }
+
         public Schedule_Base()
         {
 
@@ -31,7 +35,7 @@ namespace Budgetor.Models
         {
             if (schedule != null)
             {
-                LocalId = schedule.LocalId;
+                ScheduleId = schedule.LocalId;
                 Frequency = Constants.Frequency.GetDisplayByTypeName(schedule.Frequency).EnumOption;
                 DateTime_Created = schedule.DateTime_Created;
                 DateTime_Deactivated = schedule.DateTime_Deactivated;
