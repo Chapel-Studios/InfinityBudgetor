@@ -157,7 +157,7 @@ namespace Budgetor.Models
         {
             get
             {
-                if (SelectedHour > 12)
+                if (Transaction.DateTime_Occurred.Hour > 12)
                 {
                     _SelectedMeridian = "PM";
                 }

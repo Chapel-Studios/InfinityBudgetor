@@ -40,7 +40,7 @@
             Margin="0"
             Grid.Column="2" 
             Name="TransactionDate_DatePicker"
-            SelectedDate="{Binding Occurrence_First, Mode=TwoWay}"
+            SelectedDate="{Binding Schedule.Occurrence_First, Mode=TwoWay}"
         />
 
         <Label 
@@ -74,7 +74,7 @@
 
                 <CheckBox 
                     HorizontalAlignment="Center" VerticalAlignment="Center"
-                    IsChecked="{Binding HasEndDate, Mode=TwoWay}"
+                    IsChecked="{Binding Path=HasEndDate, Mode=TwoWay}"
                 />
 
                 <DatePicker 
@@ -82,7 +82,7 @@
                     Margin="0,0,0,0" 
                     Grid.Column="1" 
                     Name="EndDate_DatePicker"
-                    SelectedDate="{Binding Occurrence_Final, Mode=TwoWay}"
+                    SelectedDate="{Binding Schedule.Occurrence_Final, Mode=TwoWay}"
                     IsEnabled="{Binding HasEndDate}"
                 />
             </Grid>
@@ -103,7 +103,7 @@
 
                 <CheckBox 
                     HorizontalAlignment="Center" VerticalAlignment="Center"
-                    IsChecked="{Binding HasCustomTransactionTime, Mode=TwoWay}">
+                    IsChecked="{Binding Schedule.HasCustomTransactionTime, Mode=TwoWay}">
                 </CheckBox>
 
                 <StackPanel 
@@ -111,7 +111,7 @@
                     Orientation="Horizontal" 
                     Background="#FFE5E5E5"
                     Grid.Column="1"
-                    IsEnabled="{Binding HasCustomTransactionTime}"
+                    IsEnabled="{Binding Schedule.HasCustomTransactionTime}"
                 >
                     <ComboBox Height="26" Width="45"
                                   Name="Hour_ComboBox"
@@ -139,7 +139,7 @@
             <CheckBox 
             HorizontalAlignment="Center" VerticalAlignment="Center"
             Height="15" Margin="0" 
-            IsChecked="{Binding IsAutoConfirm, Mode=TwoWay}"
+            IsChecked="{Binding Schedule.IsAutoConfirm, Mode=TwoWay}"
             />
             <Label
                 HorizontalAlignment="Center" VerticalAlignment="Center"

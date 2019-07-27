@@ -34,7 +34,7 @@
                  Height="26" Width="300"
                  Margin="0,7"
                  TextWrapping="Wrap"
-                 Text="{Binding AccountName, Mode=TwoWay}"
+                 Text="{Binding Account.AccountName, Mode=TwoWay}"
                  TextBlock.FontStyle="Italic"
                  TextBlock.FontWeight="Light"
         /> <!--"E.G. Credit Union Checking"-->
@@ -70,11 +70,11 @@
                         VerticalAlignment="Center"
                         Margin="0,8" Height="26" Width="105"
                         SelectedDate="{Binding 
-                            Path=DateTime_Created_Local,
+                            Path=Account.DateTime_Created_Local,
                             Mode=TwoWay,
                             TargetNullValue={x:Static System:DateTime.Now}
                         }"
-                        IsEnabled="{Binding IsAddMode, ElementName=VMHandle}"
+                        IsEnabled="{Binding IsAddMode}"
             />
             <Label HorizontalAlignment="Center"
                    VerticalAlignment="Center"
@@ -94,13 +94,13 @@
             <CheckBox HorizontalAlignment="Left" VerticalAlignment="Center"
                       Height="15" Width="142" Margin="15,5,0,5" 
                       Grid.Row="2" Grid.ColumnSpan="2"
-                      IsChecked="{Binding IsDefault, Mode=TwoWay}"
+                      IsChecked="{Binding Account.IsDefault, Mode=TwoWay}"
                       Content="Set as default account?" 
             />
             <CheckBox HorizontalAlignment="Left" VerticalAlignment="Center"
                       Height="15" Width="137" Margin="15,5,0,5" 
                       Grid.Row="3" Grid.ColumnSpan="2"
-                      IsChecked="{Binding IsActiveCashAccount, Mode=TwoWay}"
+                      IsChecked="{Binding Account.IsActiveCashAccount, Mode=TwoWay}"
                       Content="Is this a cash account?"
             />
         </Grid>
@@ -108,11 +108,11 @@
         <TextBox HorizontalAlignment="Right" VerticalAlignment="Center" 
                  Grid.Column="1" Grid.Row="1" 
                  Height="24" Width="80" Margin="0,18"
-                 Text="{Binding InitialBalance_Display, Mode=TwoWay}"
+                 Text="{Binding Account.InitialBalance_Display, Mode=TwoWay}"
                  TextWrapping="Wrap"
                  TextBlock.FontStyle="Italic"
                  TextBlock.TextAlignment="Center"
-                 IsEnabled="{Binding IsAddMode, ElementName=VMHandle}"
+                 IsEnabled="{Binding IsAddMode}"
         />
         <Label HorizontalAlignment="Left" 
                VerticalAlignment="Center"
@@ -127,7 +127,7 @@
                   Grid.Column="1" Grid.Row="2"
                   Width="120" Height="22"
                   Name="FromAccount_ComboBox"
-                  Visibility="{Binding IsAddMode, ElementName=VMHandle, Converter={StaticResource BoolToVisConverter}}"
+                  Visibility="{Binding IsAddMode, Converter={StaticResource BoolToVisConverter}}"
         />
         <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center"
                    Grid.Column="2" Grid.Row="2"
@@ -137,7 +137,7 @@
                    Text="Which account did this come from?"
                    TextWrapping="Wrap" 
                    TextAlignment="Center"
-                   Visibility="{Binding IsAddMode, Mode=OneTime, ElementName=VMHandle, Converter={StaticResource BoolToVisConverter}}"
+                   Visibility="{Binding IsAddMode, Mode=OneTime, Converter={StaticResource BoolToVisConverter}}"
         />
         <Button HorizontalAlignment="Center" VerticalAlignment="Top"
                 Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2"
@@ -160,7 +160,7 @@
                  Height="100" Width="442"
                  Margin="10,0"
                  TextWrapping="Wrap"
-                 Text="{Binding Notes, Mode=TwoWay}"
+                 Text="{Binding Account.Notes, Mode=TwoWay}"
         />
 
         <Grid HorizontalAlignment="Stretch"

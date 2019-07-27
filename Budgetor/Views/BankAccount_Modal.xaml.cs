@@ -25,38 +25,8 @@ namespace Budgetor.Views
         private bool DidUserCancel { get; set; }
         private TransactionSaveInfo InitialDeposit { get; set; }
 
-        public bool IsEditMode { get; set; }
-        public bool IsAddMode
-        {
-            get { return !IsEditMode; }
-            set { IsEditMode = !value; }
-        }
 
-        public bool IsDirty => IsAddMode || (Account != OGAccount);
 
-        private BankAccountDetailVM _OGAccount;
-        public BankAccountDetailVM OGAccount
-        {
-            get { return _OGAccount; }
-            set
-            {
-                _OGAccount = value;
-                Account = new BankAccountDetailVM()
-                {
-                    AccountId = value.AccountId,
-                    AccountName = value.AccountName,
-                    DateTime_Created = value.DateTime_Created,
-                    DateTime_Deactivated = value.DateTime_Deactivated,
-                    DepositAccountId = value.DepositAccountId,
-                    InitialBalance = value.InitialBalance,
-                    InitialDepositId = value.InitialDepositId,
-                    IsActiveCashAccount = value.IsActiveCashAccount,
-                    IsDefault = value.IsDefault,
-                    Notes = value.Notes
-                };
-            }
-        }
-        public BankAccountDetailVM Account { get; set; }
 
         private ModalCloseDelegate _OnClose;
         private OpenTransactionModalDelegate _OpenTransactionModal;
@@ -78,15 +48,12 @@ namespace Budgetor.Views
             accountsOM = accountOverMind;
             transactionsOM = transactionsOverMind;
             vm = initialVM;
-            IsEditMode = initialVM.IsEditMode;
-            OGAccount = initialVM.Account;
 
             InitializeComponent();
 
             Title = vm.IsEditMode ? vm.Account.AccountName : "Add a new bank account";
 
             VMHandle.DataContext = vm;
-            BankAccount_Grid.DataContext = Account;
 
             FromAccount_ComboBox.BindToList(vm, "FromAccounts", "SelectedFromAccount");
         }
@@ -103,7 +70,7 @@ namespace Budgetor.Views
         private void Deactivate_Button_Click(object sender, RoutedEventArgs e)
         {
             accountsOM.DeactivateAccount(vm.Account.AccountId);
-            Account.DateTime_Deactivated = DateTime.UtcNow;
+            vm.Account.DateTime_Deactivated = DateTime.UtcNow;
             this.Close();
         }
 
@@ -111,13 +78,13 @@ namespace Budgetor.Views
         {
             try
             {
-                if (IsAddMode)
+                if (vm.IsAddMode)
                 {
                     // Store Initial Deposit info or will be lost on account save
-                    decimal? amount = Account.InitialBalance;
+                    decimal? amount = vm.Account.InitialBalance;
 
                     // Save Account without transaction to get an AccountId
-                    OGAccount = accountsOM.SaveAccount(Account);
+                    vm.OGAccount = accountsOM.SaveAccount(vm.Account);
 
                     // Create Initial Transaction and update the account with it's info
                     if (amount.HasValue)
@@ -125,31 +92,31 @@ namespace Budgetor.Views
                         InitialDeposit = new TransactionSaveInfo()
                         {
                             Amount = amount.Value,
-                            DateTime_Occurred = Account.DateTime_Created,
+                            DateTime_Occurred = vm.Account.DateTime_Created,
                             FromAccount = vm.SelectedFromAccount,
                             IsConfirmed = true,
                             IsUserCreated = false,
                             Title = "Initial Deposit",
                             OccerrenceAccount = null,
-                            ToAccount = Account.AccountId,
+                            ToAccount = vm.Account.AccountId,
                             TransactionType = TransactionType.Deposit,
-                            Notes = $"Initial Deposit for {Account.AccountName} {Constants.Accounts.GetDisplay(Account.AccountType)}"
+                            Notes = $"Initial Deposit for {vm.Account.AccountName} {Constants.Accounts.GetDisplay(vm.Account.AccountType)}"
                         };
 
                         TransactionDetailBase savedTransaction = transactionsOM.SaveTransaction(InitialDeposit);
 
-                        Account.InitialBalance = savedTransaction.Amount;
-                        Account.InitialDepositAccountId = savedTransaction.FromAccount.AccountId;
-                        Account.InitialDepositId = savedTransaction.TransactionId;
+                        vm.Account.InitialBalance = savedTransaction.Amount;
+                        vm.Account.InitialDepositAccountId = savedTransaction.FromAccount.AccountId;
+                        vm.Account.InitialDepositId = savedTransaction.TransactionId;
 
-                        OGAccount = accountsOM.SaveAccount(Account);
+                        vm.OGAccount = accountsOM.SaveAccount(vm.Account);
                     }
                 }
                 else
                 {
-                    if (IsDirty)
+                    if (vm.IsDirty)
                     {
-                        OGAccount = accountsOM.SaveAccount(Account);
+                        vm.OGAccount = accountsOM.SaveAccount(vm.Account);
                     }
                 }
 
@@ -163,7 +130,7 @@ namespace Budgetor.Views
 
         private void EditTransaction_Button_Click(object sender, RoutedEventArgs e)
         {
-            _OpenTransactionModal(Account.InitialDepositId);
+            _OpenTransactionModal(vm.Account.InitialDepositId);
         }
 
         private void OnModalClose(object sender, System.ComponentModel.CancelEventArgs e)
@@ -177,7 +144,7 @@ namespace Budgetor.Views
 
         private void OnModalClose()
         {
-            _OnClose?.Invoke(IsDirty);
+            _OnClose?.Invoke(vm.IsDirty);
         }
 
         #endregion Private Methods

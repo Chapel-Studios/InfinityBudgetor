@@ -12,9 +12,45 @@ namespace Budgetor.Models
     {
         #region Properties
 
-        public Schedule_Base Schedule { get; set; }
+        private Schedule_Base _OGSchedule;
+        public Schedule_Base OGSchedule
+        {
+            get { return _OGSchedule; }
+            set
+            {
+                _OGSchedule = value;
+
+                Schedule = new Schedule_Base()
+                {
+                    DateTime_Created = value.DateTime_Created,
+                    DateTime_Deactivated = value.DateTime_Deactivated,
+                    Frequency = value.Frequency,
+                    ScheduleId = value.ScheduleId,
+                    Occurrence_Final = value.Occurrence_Final,
+                    Occurrence_First = value.Occurrence_First,
+                    Occurrence_LastConfirmed = value.Occurrence_LastConfirmed,
+                    Occurrence_LastPlanned = value.Occurrence_LastPlanned
+                };
+            }
+        }
+        private Schedule_Base _Schedule;
+        public Schedule_Base Schedule
+        {
+            get => _Schedule;
+            set
+            {
+                if (value != _Schedule)
+                {
+                    _Schedule = value;
+                    RaisePropertyChanged("Schedule");
+                }
+            }
+        }
 
         public bool IsEditMode { get; set; }
+
+        public bool IsDirty => !IsEditMode || (Schedule != OGSchedule);
+
 
 
         public List<FrequencyComboBoxItem> Frequencies { get; set; }
@@ -39,7 +75,29 @@ namespace Budgetor.Models
             }
         }
 
-        public bool HasEndDate => Schedule.Occurrence_Final.HasValue;
+        public bool HasEndDate
+        {
+            get
+            {
+                return Schedule.Occurrence_Final.HasValue;
+            }
+            set
+            {
+                if (value)
+                {
+                    ///todo: make schedule helper that will set this to next occurance by default
+                    Schedule.Occurrence_Final = DateTime.UtcNow;
+                }
+                else
+                {
+                    Schedule.Occurrence_Final = null;
+                }
+
+                RaisePropertyChanged("HasEndDate");
+
+            }
+        }
+            
 
         public string WindowTitle { get; set; }
 
@@ -70,7 +128,6 @@ namespace Budgetor.Models
             }
         }
 
-        public int SelectedMinutes { get; set; }
         public string SelectedMinutesString
         {
             get
@@ -97,7 +154,7 @@ namespace Budgetor.Models
         {
             get
             {
-                if (SelectedHour > 12)
+                if (Schedule.Occurrence_First.Hour > 12)
                 {
                     _SelectedMeridian = "PM";
                 }
@@ -176,10 +233,14 @@ namespace Budgetor.Models
                     IsAutoConfirm = false
                 };
             }
+            else
+            {
+                IsEditMode = true;
+            }
 
             Frequencies = acceptedFrequencies;
             _SelectedFrequency = (int?)sched?.Frequency;
-            Schedule = sched;
+            OGSchedule = sched;
             HoursList = new List<IComboBoxItem>();
             HoursList.AddRange(hoursList);
             MeridianList = new List<IComboBoxItem>();

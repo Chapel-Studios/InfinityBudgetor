@@ -216,7 +216,7 @@ namespace Budgetor.Overminds
 
         internal DateTime DeactivateAccount(int accountId)
         {
-            var account = GetBankAccountById(accountId);
+            var account = GetGenericAccountDetails(accountId);
             switch (account.AccountType)
             {
                 case Constants.AccountType.BankAccount:

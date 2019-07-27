@@ -25,6 +25,7 @@ namespace Budgetor.Models
             set
             {
                 _SelectedToAccount = value;
+                RaisePropertyChanged("SelectedToAccount");
             }
         }
 
@@ -42,6 +43,7 @@ namespace Budgetor.Models
             set
             {
                 _SelectedFrequency = value;
+                RaisePropertyChanged("SelectedFrequency");
             }
         }
 

@@ -18,31 +18,6 @@ namespace Budgetor.Views
         private UpdateScheduleDelegate _OnClose;
         private TransactionsOM TransactionsOM;
 
-        public bool IsDirty => !vm.IsEditMode || (Schedule != OGSchedule);
-
-        private Schedule_Base _OGSchedule;
-        public Schedule_Base OGSchedule
-        {
-            get { return _OGSchedule; }
-            set
-            {
-                _OGSchedule = value;
-
-                Schedule = new Schedule_Base()
-                {
-                    DateTime_Created = value.DateTime_Created,
-                    DateTime_Deactivated = value.DateTime_Deactivated,
-                    Frequency = value.Frequency,
-                    ScheduleId = value.ScheduleId,
-                    Occurrence_Final = value.Occurrence_Final,
-                    Occurrence_First = value.Occurrence_First,
-                    Occurrence_LastConfirmed = value.Occurrence_LastConfirmed,
-                    Occurrence_LastPlanned = value.Occurrence_LastPlanned
-                };
-            }
-        }
-        public Schedule_Base Schedule { get; set; }
-
         #endregion Properties
 
         #region Constructors
@@ -51,7 +26,6 @@ namespace Budgetor.Views
         {
             vm = initialVM;
             _OnClose = onClose;
-            OGSchedule = vm.Schedule;
             TransactionsOM = transactionsOM;
 
             InitializeComponent();
@@ -59,7 +33,6 @@ namespace Budgetor.Views
             Title = $"Customize schedule for {accountName} ({accountType})";
 
             VMHandle.DataContext = vm;
-            Schedule_Grid.DataContext = Schedule;
 
             Frequency_ComboBox.BindToList(vm, "Frequencies", "SelectedFrequency");
 
@@ -74,17 +47,18 @@ namespace Budgetor.Views
 
         private void Cancel_Button_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            //this.Close();
+            vm.Schedule.Occurrence_LastConfirmed = DateTime.UtcNow;
         }
 
         private void Save_Button_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                if (IsDirty)
+                if (vm.IsDirty)
                 {
-                    Schedule.Frequency = (Constants.FrequencyType)vm.SelectedFrequency;
-                    OGSchedule = TransactionsOM.SaveSchedule(Schedule);
+                    vm.Schedule.Frequency = (Constants.FrequencyType)vm.SelectedFrequency;
+                    vm.OGSchedule = TransactionsOM.SaveSchedule(vm.Schedule);
                 }
 
                 this.Close();
@@ -106,7 +80,7 @@ namespace Budgetor.Views
 
         private void OnModalClose()
         {
-            _OnClose?.Invoke(IsDirty, Schedule);
+            _OnClose?.Invoke(vm.IsDirty, vm.Schedule);
         }
 
         #endregion Private Methods
