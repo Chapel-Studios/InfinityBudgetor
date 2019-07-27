@@ -12,167 +12,199 @@
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
     </Window.Resources>
-    <Grid Margin="15,15,15,0" Name="Schedule_Grid">
+    <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="5*"/>
             <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="4*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
-            <RowDefinition Height="40" />
-            <RowDefinition Height="70" />
-            <RowDefinition Height="70" />
-            <RowDefinition Height="40" />
+            <RowDefinition Height="70*" />
             <RowDefinition Height="60" />
         </Grid.RowDefinitions>
         
-        <Label 
-            HorizontalAlignment="Right" VerticalAlignment="Center" 
-            Margin="0,0,0,0" 
-            Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" >
-            <Label.Content>
-                When should this schedule start?
-            </Label.Content>
-        </Label>
-        <DatePicker 
-            HorizontalAlignment="Center" VerticalAlignment="Center"
-            Margin="0"
-            Grid.Column="2" 
-            Name="TransactionDate_DatePicker"
-            SelectedDate="{Binding Schedule.Occurrence_First, Mode=TwoWay}"
-        />
-
-        <Label 
-            HorizontalAlignment="Right" VerticalAlignment="Center" 
-            Margin="0,0,0,0"
-            Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" 
-        >
-            <Label.Content>
-                How often should this occur?
-            </Label.Content>
-        </Label>
-        <ComboBox 
-            HorizontalAlignment="Center" VerticalAlignment="Center"
-            Margin="0,0,0,0" Width="120"
-            Grid.Column="2" Grid.Row="1"
-            Name="Frequency_ComboBox"
-        />
-
-        <GroupBox 
-            BorderBrush="Black" BorderThickness="1"
-            Margin="10,5"
-            Height="60" Width="250"
-            Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
-            Header="Set an End Date?"
-        >
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="2*"/>
-                </Grid.ColumnDefinitions>
-
-                <CheckBox 
+        <StackPanel Orientation="Horizontal" 
                     HorizontalAlignment="Center" VerticalAlignment="Center"
-                    IsChecked="{Binding Path=HasEndDate, Mode=TwoWay}"
-                />
-
-                <DatePicker 
-                    HorizontalAlignment="Center" VerticalAlignment="Center"
-                    Margin="0,0,0,0" 
-                    Grid.Column="1" 
-                    Name="EndDate_DatePicker"
-                    SelectedDate="{Binding Schedule.Occurrence_Final, Mode=TwoWay}"
-                    IsEnabled="{Binding HasEndDate}"
-                />
-            </Grid>
-        </GroupBox>
-
-        <GroupBox 
-            BorderBrush="Black" BorderThickness="1"
-            Margin="10,5"
-            Height="60" Width="250"
-            Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3"
-            Header="Set a Transaction Time?"
         >
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="2*"/>
-                </Grid.ColumnDefinitions>
-
-                <CheckBox 
-                    HorizontalAlignment="Center" VerticalAlignment="Center"
-                    IsChecked="{Binding Schedule.HasCustomTransactionTime, Mode=TwoWay}">
-                </CheckBox>
-
-                <StackPanel 
-                    HorizontalAlignment="Center" VerticalAlignment="Center" 
-                    Orientation="Horizontal" 
-                    Background="#FFE5E5E5"
-                    Grid.Column="1"
-                    IsEnabled="{Binding Schedule.HasCustomTransactionTime}"
-                >
-                    <ComboBox Height="26" Width="45"
-                                  Name="Hour_ComboBox"
-                        />
-                    <TextBlock Height="26" Margin="5,0"
-                                   Text=":" TextBlock.FontSize="18"
-                        />
-                    <TextBox HorizontalAlignment="Left" VerticalAlignment="Center" 
-                                 Height="26" Width="25" Margin="0,0,0,0"
-                                 TextAlignment="Center" TextBlock.TextAlignment="Center"
-                                 Text="{Binding SelectedMinutesString, Mode=TwoWay}"
-                        />
-                    <ComboBox Height="26" Width="50" Margin="10,0,0,0"
-                                  Name="Meridian_ComboBox"
-                        />
-                </StackPanel>
-            </Grid>
-        </GroupBox>
-
-        <StackPanel 
-            HorizontalAlignment="Center" VerticalAlignment="Center" 
-            Orientation="Horizontal"
-            Grid.Row="4" Grid.ColumnSpan="3"
-        >
-            <CheckBox 
-            HorizontalAlignment="Center" VerticalAlignment="Center"
-            Height="15" Margin="0" 
-            IsChecked="{Binding Schedule.IsAutoConfirm, Mode=TwoWay}"
-            />
-            <Label
-                HorizontalAlignment="Center" VerticalAlignment="Center"
-                Margin="0" 
-                Grid.Row="4" Grid.ColumnSpan="3"
+            <Label Height="24"
+                Margin="0,0,0,0"
             >
-                <Label.Content>Automatically Confirm transactions for this schedule?</Label.Content>
+                <Label.Content>
+                    How often should this occur?
+                </Label.Content>
             </Label>
+            <ComboBox 
+                Margin="0,0,0,0" Width="120" Height="24"
+                Name="Frequency_ComboBox"
+            />
         </StackPanel>
 
-        <Grid
-            HorizontalAlignment="Stretch" VerticalAlignment="Center"
-            Grid.Row="5" Grid.ColumnSpan="3"
+        <TabControl 
+            Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1"
         >
+            <TabItem Name="Infrequent"
+                Visibility="Collapsed"
+            >
+                <TextBlock
+                    Margin="25"
+                    VerticalAlignment="Center" HorizontalAlignment="Center"
+                    TextWrapping="WrapWithOverflow" TextAlignment="Center"
+                >
+                        Infrequent transactions can not be scheduled and only occur as manual transactions
+                </TextBlock>
+            </TabItem>
+            
+            <TabItem 
+                Name="Weekly" 
+                Visibility="Collapsed" 
+            >
+                <Grid Margin="15,15,15,0" Name="Schedule_Grid">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="4*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40" />
+                        <RowDefinition Height="70" />
+                        <RowDefinition Height="70" />
+                        <RowDefinition Height="40" />
+                    </Grid.RowDefinitions>
+
+                    <Label 
+                        HorizontalAlignment="Right" VerticalAlignment="Center" 
+                        Margin="0,0,0,0" 
+                        Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0"
+                    >
+                        <Label.Content>
+                            When should this schedule start?
+                        </Label.Content>
+                    </Label>
+                    <DatePicker 
+                        HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Margin="0"
+                        Grid.Column="2" 
+                        Name="TransactionDate_DatePicker"
+                        SelectedDate="{Binding Schedule.Occurrence_First, Mode=TwoWay}"
+                    />
+
+                    <GroupBox 
+                        BorderBrush="Black" BorderThickness="1"
+                        Margin="10,5"
+                        Height="60" Width="250"
+                        Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
+                        Header="Set an End Date?"
+                    >
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <CheckBox 
+                        HorizontalAlignment="Center" VerticalAlignment="Center"
+                        IsChecked="{Binding Path=HasEndDate, Mode=TwoWay}"
+                    />
+
+                            <DatePicker 
+                        HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Margin="0,0,0,0" 
+                        Grid.Column="1" 
+                        Name="EndDate_DatePicker"
+                        SelectedDate="{Binding Schedule.Occurrence_Final, Mode=TwoWay}"
+                        IsEnabled="{Binding HasEndDate}"
+                    />
+                        </Grid>
+                    </GroupBox>
+
+                    <GroupBox 
+                        BorderBrush="Black" BorderThickness="1"
+                        Margin="10,5"
+                        Height="60" Width="250"
+                        Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
+                        Header="Set a Transaction Time?"
+                    >
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="2*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <CheckBox 
+                        HorizontalAlignment="Center" VerticalAlignment="Center"
+                        IsChecked="{Binding Schedule.HasCustomTransactionTime, Mode=TwoWay}">
+                            </CheckBox>
+
+                            <StackPanel 
+                        HorizontalAlignment="Center" VerticalAlignment="Center" 
+                        Orientation="Horizontal" 
+                        Background="#FFE5E5E5"
+                        Grid.Column="1"
+                        IsEnabled="{Binding Schedule.HasCustomTransactionTime}"
+                    >
+                                <ComboBox Height="26" Width="45"
+                                        Name="Hour_ComboBox"
+                            />
+                                <TextBlock Height="26" Margin="5,0"
+                                        Text=":" TextBlock.FontSize="18"
+                            />
+                                <TextBox HorizontalAlignment="Left" VerticalAlignment="Center" 
+                                        Height="26" Width="25" Margin="0,0,0,0"
+                                        TextAlignment="Center" TextBlock.TextAlignment="Center"
+                                        Text="{Binding SelectedMinutesString, Mode=TwoWay}"
+                            />
+                                <ComboBox Height="26" Width="50" Margin="10,0,0,0"
+                                        Name="Meridian_ComboBox"
+                            />
+                            </StackPanel>
+                        </Grid>
+                    </GroupBox>
+
+                    <StackPanel 
+                        HorizontalAlignment="Center" VerticalAlignment="Center" 
+                        Orientation="Horizontal"
+                        Grid.Row="3" Grid.ColumnSpan="3"
+                    >
+                        <CheckBox 
+                HorizontalAlignment="Center" VerticalAlignment="Center"
+                Height="15" Margin="0" 
+                IsChecked="{Binding Schedule.IsAutoConfirm, Mode=TwoWay}"
+                />
+                        <Label
+                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Margin="0" 
+                    Grid.Row="4" Grid.ColumnSpan="3"
+                >
+                            <Label.Content>Automatically Confirm transactions for this schedule?</Label.Content>
+                        </Label>
+                    </StackPanel>
+
+                </Grid>
+            </TabItem>
+            
+        </TabControl>
+
+        <Grid
+                HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                Grid.Row="2" Grid.ColumnSpan="3"
+            >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
 
             <Button HorizontalAlignment="Center" VerticalAlignment="Top"
-                    Height="25" Width="120"
-                    Content="Cancel"
-                    Name="Cancel_Button"
-                    Click="Cancel_Button_Click"
-            />
+                        Height="25" Width="120"
+                        Content="Cancel"
+                        Name="Cancel_Button"
+                        Click="Cancel_Button_Click"
+                />
             <Button HorizontalAlignment="Center" VerticalAlignment="Top"
-                    Grid.Column="1"
-                    Height="25" Width="120"
-                    Content="Confirm"
-                    Name="Save_Button"
-                    Click="Save_Button_Click"
-            />
+                        Grid.Column="1"
+                        Height="25" Width="120"
+                        Content="Confirm"
+                        Name="Save_Button"
+                        Click="Save_Button_Click"
+                />
         </Grid>
-        
     </Grid>
 </Window>
