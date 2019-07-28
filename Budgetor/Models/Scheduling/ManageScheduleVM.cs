@@ -54,6 +54,7 @@ namespace Budgetor.Models
 
 
         public List<FrequencyComboBoxItem> Frequencies { get; set; }
+
         private int? _SelectedFrequency;
         public int SelectedFrequency
         {

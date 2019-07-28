@@ -4,6 +4,7 @@ using Budgetor.Models;
 using Budgetor.Overminds;
 using System;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace Budgetor.Views
 {
@@ -17,7 +18,6 @@ namespace Budgetor.Views
         private ManageScheduleVM vm;
         private UpdateScheduleDelegate _OnClose;
         private TransactionsOM TransactionsOM;
-
         #endregion Properties
 
         #region Constructors
@@ -85,5 +85,16 @@ namespace Budgetor.Views
 
         #endregion Private Methods
 
+        private void Frequency_ComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            foreach (TabItem tab in Frequency_Control.Items)
+            {
+                if (tab.Name == ((FrequencyComboBoxItem)Frequency_ComboBox.SelectedItem).Display)
+                {
+                    Frequency_Control.SelectedItem = tab;
+                    return;
+                }
+            }
+        }
     }
 }
