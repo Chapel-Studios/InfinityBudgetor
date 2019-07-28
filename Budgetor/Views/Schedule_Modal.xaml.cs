@@ -47,8 +47,8 @@ namespace Budgetor.Views
 
         private void Cancel_Button_Click(object sender, RoutedEventArgs e)
         {
-            //this.Close();
-            vm.Schedule.Occurrence_LastConfirmed = DateTime.UtcNow;
+            this.Close();
+            //vm.Schedule.Occurrence_LastConfirmed = DateTime.UtcNow;
         }
 
         private void Save_Button_Click(object sender, RoutedEventArgs e)
