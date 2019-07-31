@@ -1,4 +1,4 @@
-﻿using Budgetor.Models;
+﻿using Budgetor.Models.Scheduling;
 
 namespace Budgetor.Helpers.Delegates
 {

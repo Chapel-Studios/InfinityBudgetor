@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Windows;
 using Budgetor.Constants;
-using Budgetor.Helpers;
 using Budgetor.Helpers.Delegates;
-using Budgetor.Models;
+using Budgetor.Helpers.Extensions;
+using Budgetor.Models.Accounts;
+using Budgetor.Models.Transactions;
 using Budgetor.Overminds;
 
 namespace Budgetor.Views

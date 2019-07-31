@@ -30,7 +30,7 @@ SELECT
 FROM IncomeSources i
 	LEFT JOIN Accounts a ON a.LocalId = i.AccountId
 	LEFT JOIN Schedules s on i.ScheduleId = s.LocalId
-	LEFT JOIN ScheduleFrequencyTypes f on s.Frequency = f.FrequencyType
+	LEFT JOIN Schedules_FrequencyTypes f on s.Frequency = f.FrequencyType
 WHERE
 	a.DateTime_Deactivated IS NULL
 	AND a.IsSystem = 0

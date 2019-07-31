@@ -1,4 +1,4 @@
-using Budgetor.Models;
+using Budgetor.Models.Transactions;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;

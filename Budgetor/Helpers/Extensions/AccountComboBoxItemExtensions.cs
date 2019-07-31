@@ -1,9 +1,9 @@
 ﻿using Budgetor.Repo.Models;
-using Budgetor.Models;
 using System.Collections.Generic;
 using System.Linq;
+using Budgetor.Models.Accounts;
 
-namespace Budgetor.Helpers
+namespace Budgetor.Helpers.Extensions
 {
     public static class AccountComboBoxItemExtensions
     {

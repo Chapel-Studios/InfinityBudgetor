@@ -1,4 +1,4 @@
-﻿using Budgetor.Models;
+﻿using Budgetor.Models.Transactions;
 using Budgetor.Repo;
 using Budgetor.Repo.Models;
 

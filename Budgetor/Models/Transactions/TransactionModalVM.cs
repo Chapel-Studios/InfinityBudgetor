@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Budgetor.Constants;
-using Budgetor.Helpers;
+using Budgetor.Helpers.Extensions;
+using Budgetor.Models.Accounts;
 using Budgetor.Models.Contracts;
+using Budgetor.Models.Shared;
 
-namespace Budgetor.Models
+namespace Budgetor.Models.Transactions
 {
     public class TransactionModalVM : BindableBase
     {

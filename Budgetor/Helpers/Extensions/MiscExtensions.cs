@@ -1,7 +1,7 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace Budgetor.Helpers
+namespace Budgetor.Helpers.Extensions
 {
     public static class MiscExtensions
     {

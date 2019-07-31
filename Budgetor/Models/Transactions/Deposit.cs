@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Budgetor.Models
+﻿namespace Budgetor.Models.Transactions
 {
     class DepositDetail : TransactionDetailBase
     {

@@ -1,14 +1,9 @@
-﻿using Budgetor.Helpers;
-using Budgetor.Models;
+﻿using Budgetor.Helpers.Extensions;
 using Budgetor.Repo.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
-namespace Budgetor.Models
+namespace Budgetor.Models.Accounts
 {
     public class BankAccountDetailVM : AccountDetailVM
     {

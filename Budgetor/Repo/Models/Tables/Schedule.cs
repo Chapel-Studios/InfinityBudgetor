@@ -1,11 +1,8 @@
 namespace Budgetor.Repo.Models
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
-    using Budgetor.Models;
+    using Budgetor.Models.Scheduling;
 
     public partial class Schedule
     {
@@ -32,7 +29,11 @@ namespace Budgetor.Repo.Models
 
         public bool HasCustomTransactionTime { get; set; }
 
+        public bool? UsesLastDayOfTheMonth { get; set; }
 
+        public string IgnoreWeekendsOption { get; set; }
+
+        public string DateString { get; set; }
 
         public Schedule()
         {
@@ -42,15 +43,18 @@ namespace Budgetor.Repo.Models
         public Schedule(Schedule_Base sched)
         {
             this.LocalId = sched.ScheduleId;
+            this.Frequency = sched.Frequency.ToString();
+            this.Occurrence_First = sched.Occurrence_First;
+            this.Occurrence_LastConfirmed = sched.Occurrence_LastConfirmed;
+            this.Occurrence_LastPlanned = sched.Occurrence_LastPlanned;
+            this.Occurrence_Final = sched.Occurrence_Final;
+            this.IsAutoConfirm = sched.IsAutoConfirm;
             this.DateTime_Created = sched.DateTime_Created;
             this.DateTime_Deactivated = sched.DateTime_Deactivated;
-            this.Frequency = sched.Frequency.ToString();
-            this.Occurrence_LastPlanned = sched.Occurrence_LastPlanned;
-            this.Occurrence_LastConfirmed = sched.Occurrence_LastConfirmed;
-            this.Occurrence_First = sched.Occurrence_First;
-            this.Occurrence_Final = sched.Occurrence_Final;
             this.HasCustomTransactionTime = sched.HasCustomTransactionTime;
-            this.IsAutoConfirm = sched.IsAutoConfirm;
+            this.UsesLastDayOfTheMonth = sched.UsesLastDayOfTheMonth;
+            this.IgnoreWeekendsOption = sched.IgnoreWeekendsOption ?? string.Empty;
+            this.DateString = string.Join(",", sched.SelectedDates);
         }
     }
 }

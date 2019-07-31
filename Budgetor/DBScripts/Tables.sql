@@ -14,26 +14,37 @@ IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Transacti
 IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Accounts' AND TABLE_SCHEMA = 'dbo')
 	DROP TABLE dbo.Accounts
 
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Schedules_CustomDates' AND TABLE_SCHEMA = 'dbo')
+	DROP TABLE dbo.Schedules_CustomDates
+
 IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Schedules' AND TABLE_SCHEMA = 'dbo')
 	DROP TABLE dbo.Schedules
 
-IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'ScheduleFrequencyTypes' AND TABLE_SCHEMA = 'dbo')
-	DROP TABLE dbo.ScheduleFrequencyTypes
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Schedules_FrequencyTypes' AND TABLE_SCHEMA = 'dbo')
+	DROP TABLE dbo.Schedules_FrequencyTypes
+
+IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Schedules_IgnoreWeekendOptions' AND TABLE_SCHEMA = 'dbo')
+	DROP TABLE dbo.Schedules_IgnoreWeekendOptions
 
 	
 
-CREATE TABLE dbo.ScheduleFrequencyTypes (
+CREATE TABLE dbo.Schedules_FrequencyTypes (
 	FrequencyType NVARCHAR(10) NOT NULL,
 	FrequencyName NVARCHAR(50) NOT NULL,
 	PRIMARY KEY NONCLUSTERED (FrequencyType),
 )
-ALTER TABLE [dbo].[ScheduleFrequencyTypes] WITH CHECK ADD CHECK ((NOT [FrequencyType] LIKE '% %'))
+ALTER TABLE [dbo].[Schedules_FrequencyTypes] WITH CHECK ADD CHECK (NOT [FrequencyType] LIKE '% %')
+
+CREATE TABLE dbo.Schedules_IgnoreWeekendOptions (
+    OptionName NVARCHAR(10) NOT NULL, 
+	PRIMARY KEY NONCLUSTERED (OptionName),
+)
 
 CREATE TABLE dbo.Schedules (
 	LocalId INT NOT NULL IDENTITY(1,1),
 	PRIMARY KEY NONCLUSTERED (LocalId),
 	Frequency NVARCHAR(10) NOT NULL,
-	FOREIGN KEY (Frequency) REFERENCES dbo.ScheduleFrequencyTypes(FrequencyType),
+	FOREIGN KEY (Frequency) REFERENCES dbo.Schedules_FrequencyTypes(FrequencyType),
 	Occurrence_First DATETIME NOT NULL,
 	Occurrence_LastConfirmed DATETIME NULL,
 	Occurrence_LastPlanned DATETIME NULL,
@@ -42,7 +53,10 @@ CREATE TABLE dbo.Schedules (
     IsAutoConfirm BIT NOT NULL,
 	DateTime_Created DATETIME DEFAULT getDate() NOT NULL,
 	DateTime_Deactivated DATETIME NULL,
-
+    UsesLastDayOfTheMonth BIT NULL,
+    IgnoreWeekendsOption NVARCHAR(10) NULL,
+	FOREIGN KEY (IgnoreWeekendsOption) REFERENCES dbo.Schedules_IgnoreWeekendOptions(OptionName),
+	DateString NVARCHAR(100) NOT NULL,
 )
 
 CREATE TABLE dbo.Accounts (
@@ -100,5 +114,12 @@ CREATE TABLE dbo.IncomeSources (
 	ScheduleId INT NULL,
 	FOREIGN KEY (ScheduleId) REFERENCES dbo.Schedules(LocalId),
 )
+
+CREATE TABLE dbo.Schedules_CustomDates (
+    ScheduleId INT NOT NULL,
+    FOREIGN KEY (ScheduleId) REFERENCES dbo.Schedules(LocalId),
+    ScheduledDate Int NOT NULL,
+)
+ALTER TABLE [dbo].[Schedules_CustomDates] WITH CHECK ADD CHECK ([ScheduledDate] < 32)
 
 GO

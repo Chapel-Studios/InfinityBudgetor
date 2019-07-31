@@ -1,7 +1,7 @@
 ﻿using Budgetor.Models.Contracts;
 using System;
 
-namespace Budgetor.Models
+namespace Budgetor.Models.Transactions
 {
     public class TransactionSaveInfo
     {

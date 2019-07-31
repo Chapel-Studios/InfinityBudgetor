@@ -74,9 +74,8 @@
                 HorizontalAlignment="Left" VerticalAlignment="Center"
                 Margin="10,0" Width="120"
                 Grid.Column="2" Grid.Row="2"
-                SelectedDate="{Binding
-                    Path=Schedule.Occurrence_First,
-                    Mode=TwoWay,
+                SelectedDate="{Binding Schedule.Occurrence_First,
+                    Mode = TwoWay,
                     TargetNullValue={x:Static System:DateTime.Now}
                 }"
             />

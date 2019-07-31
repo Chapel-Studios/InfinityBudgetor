@@ -1,6 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿using Budgetor.Models.Shared;
+using System.Collections.ObjectModel;
 
-namespace Budgetor.Models
+namespace Budgetor.Models.Accounts
 {
     public class AccountsTabVM : BindableBase
     {

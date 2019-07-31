@@ -1,4 +1,5 @@
 ﻿using Budgetor.Models.Contracts;
+using Budgetor.Models.Shared;
 using System.Collections.Generic;
 
 namespace Budgetor.Constants

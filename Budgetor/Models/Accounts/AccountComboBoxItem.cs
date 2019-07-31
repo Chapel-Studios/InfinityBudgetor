@@ -1,12 +1,8 @@
 ﻿using Budgetor.Constants;
+using Budgetor.Models.Shared;
 using Budgetor.Repo.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Budgetor.Models
+namespace Budgetor.Models.Accounts
 {
     public class AccountComboBoxItem : GenericComboBoxItem
     {
@@ -44,7 +40,7 @@ namespace Budgetor.Models
             get => _AccountType;
             set
             {
-                _StringValue = Accounts.GetDisplay(value).TypeName;
+                _StringValue = Constants.Accounts.GetDisplay(value).TypeName;
                 _AccountType = value;
             }
         }
@@ -55,7 +51,7 @@ namespace Budgetor.Models
             get => _StringValue;
             set
             {
-                _AccountType = Accounts.GetDisplayByTypeName(value).EnumOption;
+                _AccountType = Constants.Accounts.GetDisplayByTypeName(value).EnumOption;
                 _StringValue = value;
             }
         }
@@ -81,7 +77,7 @@ namespace Budgetor.Models
         {
             AccountName = info.AccountName;
             AccountId = info.AccountId;
-            AccountType = Accounts.GetDisplayByTypeName(info.AccountType).EnumOption;
+            AccountType = Constants.Accounts.GetDisplayByTypeName(info.AccountType).EnumOption;
             IsDefault = info.IsDefault;
         }
 

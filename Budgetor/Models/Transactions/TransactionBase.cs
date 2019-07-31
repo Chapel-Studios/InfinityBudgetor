@@ -3,8 +3,9 @@ using System;
 using Budgetor.Constants;
 using Budgetor.Repo.Models;
 using Budgetor.Overminds;
+using Budgetor.Models.Accounts;
 
-namespace Budgetor.Models
+namespace Budgetor.Models.Transactions
 {
     public class TransactionDetailBase : ITransactionDetail
     {

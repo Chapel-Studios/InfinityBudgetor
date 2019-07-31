@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Budgetor.Models
+namespace Budgetor.Models.Shared
 {
     public class BindableBase : INotifyPropertyChanged
     {

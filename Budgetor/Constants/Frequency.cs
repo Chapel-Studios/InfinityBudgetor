@@ -1,4 +1,5 @@
-﻿using Budgetor.Models;
+﻿using Budgetor.Models.Scheduling;
+using Budgetor.Models.Shared;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,7 +13,7 @@ namespace Budgetor.Constants
         private const string _Monthly = "Monthly";
         private const string _Quarterly = "Quarterly";
         private const string _Yearly = "Yearly";
-        //public const string Custom = "Custom";
+        private const string _Custom = "Custom";
 
         public static DisplaySet<FrequencyType> Infrequent = new DisplaySet<FrequencyType>()
         {
@@ -36,6 +37,14 @@ namespace Budgetor.Constants
             HelpText = "These only occur once every other week based on your starting date.",
             TypeName = _BiWeekly,
             EnumOption = FrequencyType.BiWeekly
+        };
+
+        public static DisplaySet<FrequencyType> Custom = new DisplaySet<FrequencyType>()
+        {
+            DisplayText = "Custom",
+            HelpText = "Create a custom schedule to match your needs",
+            TypeName = _Custom,
+            EnumOption = FrequencyType.Custom
         };
 
         public static DisplaySet<FrequencyType> Monthly = new DisplaySet<FrequencyType>()
@@ -64,7 +73,7 @@ namespace Budgetor.Constants
 
         private static List<DisplaySet<FrequencyType>> Frequencies = new List<DisplaySet<FrequencyType>>()
         {
-            Infrequent, Weekly, BiWeekly, Monthly, Quarterly, Yearly
+            Infrequent, Weekly, BiWeekly, Monthly, Quarterly, Yearly, Custom
         };
 
         public static DisplaySet<FrequencyType> GetDisplay(FrequencyType frequency)
@@ -91,6 +100,7 @@ namespace Budgetor.Constants
         BiWeekly = 14,
         Monthly = 30,
         Quarterly = 90,
-        Yearly = 365
+        Yearly = 365,
+        Custom = 777
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Budgetor.Controls;
-using Budgetor.Models;
+using Budgetor.Models.Accounts;
+using Budgetor.Models.Transactions;
 using Budgetor.Overminds;
 using System;
 using System.Windows;

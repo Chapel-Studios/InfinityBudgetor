@@ -1,15 +1,11 @@
 ﻿using Budgetor.Constants;
-using Budgetor.Models;
+using Budgetor.Models.Accounts;
 using Budgetor.Overminds;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
-namespace Budgetor.Helpers
+namespace Budgetor.Helpers.Utilities
 {
     public class FirstTimeExperienceHelper : IDisposable
     {
@@ -59,6 +55,7 @@ namespace Budgetor.Helpers
         }
 
 
+        #region Private Methods
 
         private IncomeSourceDetailVM CreateDoNotTrackIncomeSource()
         {
@@ -113,6 +110,8 @@ namespace Budgetor.Helpers
 
             return cash;
         }
+
+        #endregion Private Methods
 
         #region IDisposable Implementation
         private IntPtr handle;

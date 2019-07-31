@@ -1,6 +1,6 @@
 namespace Budgetor.Repo.Models
 {
-    using Budgetor.Models;
+    using Budgetor.Models.Accounts;
     using System;
     using System.ComponentModel.DataAnnotations;
 

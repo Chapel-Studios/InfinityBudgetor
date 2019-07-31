@@ -1,11 +1,7 @@
-﻿using Budgetor.Helpers;
+﻿using Budgetor.Helpers.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Budgetor.Models
+namespace Budgetor.Models.Accounts
 {
     public class IncomeSourceListVM : AccountListItemBaseVM
     {

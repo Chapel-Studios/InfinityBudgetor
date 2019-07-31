@@ -1,13 +1,16 @@
 ﻿using Budgetor.Repo.Models;
-using Budgetor.Models;
+using Budgetor.Models.Transactions;
+using Budgetor.Models.Shared;
 using Budgetor.Constants;
 using System;
 using System.Collections.Generic;
 using Budgetor.Models.Contracts;
 using System.Linq;
 using System.Collections.ObjectModel;
-using Budgetor.Helpers;
+using Budgetor.Helpers.Extensions;
 using Budgetor.Repo;
+using Budgetor.Models.Scheduling;
+using Budgetor.Helpers.Utilities;
 
 namespace Budgetor.Overminds
 {
@@ -83,13 +86,14 @@ namespace Budgetor.Overminds
         internal ManageScheduleVM GetManageScheduleVM(int? id)
         {
             Schedule_Base schedule = null;
-            if (id.HasValue)
+            if (id.HasValue && id.Value != 0)
                 schedule = new Schedule_Base(Repo.GetSchedule(id.Value));
             return new ManageScheduleVM(schedule, 
                                         Frequency.GetFrequencyComboBoxItems(),
                                         Time.GetHoursComboBoxItems(),
                                         Time.GetMeridianComboBoxItems(),
-                                        Time.GetTimeZonesComboBoxItems()
+                                        Time.GetTimeZonesComboBoxItems(),
+                                        ScheduleHelper.GetIgnoreWeekendOptions()
             );
         }
 

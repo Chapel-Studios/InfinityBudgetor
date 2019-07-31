@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Budgetor.Constants;
 
-namespace Budgetor.Models
+namespace Budgetor.Models.Accounts
 {
     public class AccountBasicInfo
     {

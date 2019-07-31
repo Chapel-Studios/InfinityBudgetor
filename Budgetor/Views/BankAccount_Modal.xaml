@@ -69,8 +69,7 @@
             <DatePicker HorizontalAlignment="Left" 
                         VerticalAlignment="Center"
                         Margin="0,8" Height="26" Width="105"
-                        SelectedDate="{Binding 
-                            Path=Account.DateTime_Created_Local,
+                        SelectedDate="{Binding Account.DateTime_Created_Local,
                             Mode=TwoWay,
                             TargetNullValue={x:Static System:DateTime.Now}
                         }"

@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Budgetor.Constants;
-using Budgetor.Helpers;
-using Budgetor.Repo.Models;
+﻿using Budgetor.Constants;
+using Budgetor.Helpers.Extensions;
 
-namespace Budgetor.Models
+namespace Budgetor.Models.Transactions
 {
     public class TransactionsListItemVM : TransactionDetailBase
     {
@@ -41,7 +35,7 @@ namespace Budgetor.Models
 
         public string Display_DateTime_Occurred { get => DateTime_Occurred.GetDisplayDate(); }
 
-        public string Display_TransactionType { get => Transactions.GetDisplay(this.TransactionType).Display; }
+        public string Display_TransactionType { get => Constants.Transactions.GetDisplay(this.TransactionType).Display; }
 
         public string Display_Amount
         {

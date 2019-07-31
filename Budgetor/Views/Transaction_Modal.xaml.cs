@@ -1,6 +1,6 @@
-﻿using Budgetor.Helpers;
+﻿using Budgetor.Helpers.Extensions;
 using Budgetor.Helpers.Delegates;
-using Budgetor.Models;
+using Budgetor.Models.Transactions;
 using Budgetor.Overminds;
 using System.Windows;
 using System.Windows.Controls;

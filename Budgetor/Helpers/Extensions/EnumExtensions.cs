@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace Budgetor.Helpers
+namespace Budgetor.Helpers.Extensions
 {
     public static class EnumExtensions
     {

@@ -1,6 +1,7 @@
 ﻿using Budgetor.Constants;
 using Budgetor.Helpers;
-using Budgetor.Models;
+using Budgetor.Helpers.Extensions;
+using Budgetor.Models.Accounts;
 using Budgetor.Repo;
 using Budgetor.Repo.Models;
 using System;
@@ -155,9 +156,8 @@ namespace Budgetor.Overminds
                 Constants.Accounts.BankAccount.TypeName
             });
 
-            return new ManageIncSourceVM()
+            return new ManageIncSourceVM(incSource)
             {
-                Account = incSource,
                 IsEditMode = id.HasValue,
                 ToAccounts = tos,
                 Frequencies = Frequency.GetFrequencyComboBoxItems(),

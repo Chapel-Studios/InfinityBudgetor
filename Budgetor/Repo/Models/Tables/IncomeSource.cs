@@ -1,11 +1,7 @@
 namespace Budgetor.Repo.Models
 {
-    using Budgetor.Models;
-    using System;
-    using System.Collections.Generic;
+    using Budgetor.Models.Accounts;
     using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
 
     public partial class IncomeSource
     {

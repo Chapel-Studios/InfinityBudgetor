@@ -1,12 +1,11 @@
-﻿using Budgetor.Helpers;
+﻿using Budgetor.Constants;
+using Budgetor.Helpers.Extensions;
 using Budgetor.Models.Contracts;
+using Budgetor.Models.Shared;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Budgetor.Models
+namespace Budgetor.Models.Scheduling
 {
     public class ManageScheduleVM : BindableBase
     {
@@ -50,8 +49,6 @@ namespace Budgetor.Models
         public bool IsEditMode { get; set; }
 
         public bool IsDirty => !IsEditMode || (Schedule != OGSchedule);
-
-
 
         public List<FrequencyComboBoxItem> Frequencies { get; set; }
 
@@ -98,7 +95,31 @@ namespace Budgetor.Models
 
             }
         }
-            
+
+
+        public string SelectedWeekendOption
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Schedule?.IgnoreWeekendsOption))
+                {
+                    return "Monday";
+                }
+                else
+                {
+                    return Schedule.IgnoreWeekendsOption;
+                }
+            }
+            set
+            {
+                if (value != Schedule.IgnoreWeekendsOption)
+                {
+                    Schedule.IgnoreWeekendsOption = value;
+                    RaisePropertyChanged("SelectedWeekendOption");
+                }
+            }
+        }
+        public List<IComboBoxItem> WeekendOptions { get; set; }
 
         public string WindowTitle { get; set; }
 
@@ -214,14 +235,17 @@ namespace Budgetor.Models
 
         #endregion Properties
 
+        #region Exposed Methods
 
+        #endregion Exposed Methods
 
 
         public ManageScheduleVM(Schedule_Base sched, 
                                 List<FrequencyComboBoxItem> acceptedFrequencies,
                                 List<IComboBoxItem> hoursList,
                                 List<IComboBoxItem> meridianList,
-                                List<IComboBoxItem> timeZoneList
+                                List<IComboBoxItem> timeZoneList,
+                                List<IComboBoxItem> ignoreWEOptions
         )
         {
             if (sched == null)
@@ -248,6 +272,8 @@ namespace Budgetor.Models
             MeridianList.AddRange(meridianList);
             TimeZoneList = new List<IComboBoxItem>();
             TimeZoneList.AddRange(timeZoneList);
+            WeekendOptions = new List<IComboBoxItem>();
+            WeekendOptions.AddRange(ignoreWEOptions);
         }
     }
 }

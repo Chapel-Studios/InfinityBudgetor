@@ -1,9 +1,10 @@
-﻿using Budgetor.Helpers;
+﻿using Budgetor.Helpers.Extensions;
+using Budgetor.Models.Scheduling;
 using Budgetor.Repo.Models;
 using System;
 using System.Text.RegularExpressions;
 
-namespace Budgetor.Models
+namespace Budgetor.Models.Accounts
 {
     public class IncomeSourceDetailVM : AccountDetailVM//, IAccountDetail
     {
@@ -50,7 +51,7 @@ namespace Budgetor.Models
 
         public IncomeSourceDetailVM() : base(Constants.AccountType.IncomeSource)
         {
-
+            Schedule = new Schedule_Base(null);
         }
 
         public IncomeSourceDetailVM(IncomeSource_DetailView repoModel, Schedule sched = null) : base(Constants.AccountType.IncomeSource)

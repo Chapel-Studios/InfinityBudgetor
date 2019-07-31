@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Budgetor.Constants
+namespace Budgetor.Models.Shared
 {
     public class DisplaySet<T> : IComboBoxItem where T : Enum
     {
@@ -22,7 +22,7 @@ namespace Budgetor.Constants
         }
         public int? IntValue
         {
-            get { return (int)(object)(T)EnumOption; }
+            get { return (int)(object)EnumOption; }
             set { EnumOption = (T)(object)value; }
         }
         public string StringValue

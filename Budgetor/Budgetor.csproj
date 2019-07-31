@@ -75,11 +75,15 @@
     <Compile Include="Constants\Time.cs" />
     <Compile Include="Constants\Transactions.cs" />
     <Compile Include="Controls\AddAccountButton.cs" />
+    <Compile Include="Controls\DateSelection_CheckBox.cs" />
     <Compile Include="Controls\EditButton.cs" />
     <Compile Include="Helpers\Delegates\ModalDelegates.cs" />
     <Compile Include="Helpers\Extensions\AccountComboBoxItemExtensions.cs" />
     <Compile Include="Helpers\Extensions\EnumExtensions.cs" />
+    <Compile Include="Helpers\Extensions\ListExtensions.cs" />
     <Compile Include="Helpers\Extensions\MiscExtensions.cs" />
+    <Compile Include="Helpers\Utilities\FrequencyToVisibilityConverter.cs" />
+    <Compile Include="Helpers\Utilities\ScheduleHelper.cs" />
     <Compile Include="Models\Accounts\AccountBasicInfo.cs" />
     <Compile Include="Models\Accounts\AccountComboBoxItem.cs" />
     <Compile Include="Models\Accounts\DetailVMs\AccountDetailVM.cs" />
@@ -93,11 +97,11 @@
     <Compile Include="Models\Scheduling\ManageScheduleVM.cs" />
     <Compile Include="Models\Scheduling\Schedule_Base.cs" />
     <Compile Include="Models\Shared\BindableBase.cs" />
-    <Compile Include="Constants\DisplaySet.cs" />
+    <Compile Include="Models\Shared\DisplaySet.cs" />
     <Compile Include="Constants\MiscConstants.cs" />
     <Compile Include="Constants\Accounts.cs" />
     <Compile Include="Helpers\Extensions\DispayExtensions.cs" />
-    <Compile Include="Helpers\FirstTimeExperienceHelper.cs" />
+    <Compile Include="Helpers\Utilities\FirstTimeExperienceHelper.cs" />
     <Compile Include="Models\Shared\GenericComboBoxItem.cs" />
     <Compile Include="Models\Transactions\Deposit.cs" />
     <Compile Include="Models\Transactions\TransactionBase.cs" />
@@ -202,6 +206,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="DBScripts\SeedData\IgnoreWeekendsOptions.sql" />
     <Content Include="DBScripts\Sprocs\GetBankAccount.sql" />
     <Content Include="DBScripts\SeedData\ScheduleFrequencyTypes.sql" />
     <Content Include="DBScripts\Sprocs\GetIncomeSource.sql" />

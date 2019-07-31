@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
-using Budgetor.Helpers;
+using Budgetor.Helpers.Extensions;
+using Budgetor.Models.Shared;
 
-namespace Budgetor.Models
+namespace Budgetor.Models.Accounts
 {
     public class ManageBankAccountVM : BindableBase
     {

@@ -3,7 +3,7 @@
 using Budgetor.Repo.Models;
 using System;
 
-namespace Budgetor.Models
+namespace Budgetor.Models.Accounts
 {
     public class AccountDetailVM : AccountBasicInfo
     {

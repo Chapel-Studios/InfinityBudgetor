@@ -4,27 +4,33 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Budgetor.Views"
+        xmlns:u="clr-namespace:Budgetor.Helpers.Utilities"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="Schedule_Modal"
         Name="VMHandle"
-        Height="375" Width="420"
+        Width="420" Height="500"
         Closing="OnModalClose" >
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
+        <u:FrequencyToVisibilityConverter x:Key="FrequencyToVisConverter" />
+        <DataTemplate x:Key="DateSelectionTemplate">
+        </DataTemplate>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="40" />
+            <RowDefinition Height="90" />
             <RowDefinition Height="70*" />
             <RowDefinition Height="60" />
         </Grid.RowDefinitions>
-        
-        <StackPanel 
-            Orientation="Horizontal" 
-            HorizontalAlignment="Center" VerticalAlignment="Center"
+
+        <StackPanel Name="FrequencyPane"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Margin="0,25,0,0"
         >
             <Label 
                 Height="24"
@@ -35,82 +41,196 @@
                 </Label.Content>
             </Label>
             <ComboBox Name="Frequency_ComboBox" 
-                Margin="0,0,0,0" Width="120" Height="24"
-                SelectionChanged="Frequency_ComboBox_SelectionChanged"
+                      Margin="0,0,0,0" Width="120" Height="24"
             />
         </StackPanel>
 
-        <StackPanel>
-            
-        </StackPanel>
-        
-        <TabControl Name="Frequency_Control"
-            Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1"
+        <DockPanel Name="DetailsPane"
+                   Grid.Column="0" Grid.Row="1"
         >
-            <TabItem Name="Infrequent"
-                Visibility="Collapsed"
-            >
+            <StackPanel Name="InfrequentInfo"
+                        DockPanel.Dock="Top">
+                <StackPanel.Visibility>
+                    <Binding Path="SelectedItem" 
+                             ElementName="Frequency_ComboBox" 
+                             Converter = "{StaticResource FrequencyToVisConverter}"
+                    >
+                        <Binding.ConverterParameter>
+                            <x:Array Type="sys:String">
+                                <sys:String>Infrequent</sys:String>
+                            </x:Array>
+                        </Binding.ConverterParameter>
+                    </Binding>
+                </StackPanel.Visibility>
                 <TextBlock
                     Margin="75"
                     VerticalAlignment="Center" HorizontalAlignment="Center"
                     TextWrapping="WrapWithOverflow" TextAlignment="Center"
                 >
+                    <TextBlock.Text>
                         Infrequent transactions can not be scheduled and only occur as manual transactions
+                    </TextBlock.Text>
                 </TextBlock>
-            </TabItem>
-            
-            <TabItem Name="Weekly" 
-                Visibility="Collapsed"
-            >
-                <Grid Margin="15,15,15,0" Name="Schedule_Grid">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="5*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="4*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="40" />
-                        <RowDefinition Height="70" />
-                        <RowDefinition Height="70" />
-                        <RowDefinition Height="40" />
-                    </Grid.RowDefinitions>
+            </StackPanel>
 
-                    <Label 
-                        HorizontalAlignment="Right" VerticalAlignment="Center" 
-                        Margin="0,0,0,0" 
-                        Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0"
+            <StackPanel Name="DatesPanel"
+                        DockPanel.Dock="Top"
+            >
+                <StackPanel.Visibility>
+                    <Binding Path="SelectedItem" 
+                             ElementName="Frequency_ComboBox" 
+                             Converter = "{StaticResource FrequencyToVisConverter}"
                     >
-                        <Label.Content>
-                            When should this schedule start?
-                        </Label.Content>
-                    </Label>
-                    <DatePicker 
+                        <Binding.ConverterParameter>
+                            <x:Array Type="sys:String">
+                                <sys:String>Custom</sys:String>
+                            </x:Array>
+                        </Binding.ConverterParameter>
+                    </Binding>
+                </StackPanel.Visibility>
+                <GroupBox HorizontalAlignment="Center" MaxWidth="375"
+                          BorderBrush="Black" BorderThickness="1"
+                          Header="On which days of the month should this occur?"
+                          >
+                    <WrapPanel Name="DateOptions_Panel" Orientation="Horizontal">
+                    </WrapPanel>
+                </GroupBox>
+            </StackPanel>
+
+            <StackPanel Name="WeekendHandlingPanel"
+                        HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Orientation="Horizontal" Height="70"
+                        DockPanel.Dock="Top">
+                <GroupBox BorderBrush="Black" BorderThickness="1"
+                        Margin="10,5"
+                        Height="60" Width="250"
+                        Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
+                        Header="Schedule Only On Weekdays?" >
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <CheckBox Name="IgnoreWeekends_CheckBox"
+                                  HorizontalAlignment="Center" VerticalAlignment="Center"
+                                  IsChecked="{Binding Schedule.IgnoreWeekends, Mode=TwoWay}" Unchecked="IgnoreWeekends_CheckBox_Unchecked">
+                        </CheckBox>
+                        <ComboBox Name="WeekendHandler_ComboBox" 
+                                  Grid.Column="1" 
+                                  Margin="0" Width="120" Height="24"
+                                  IsEnabled="{Binding IsChecked, ElementName='IgnoreWeekends_CheckBox'}"/>
+                    </Grid>
+                </GroupBox>
+            </StackPanel>
+            
+            <StackPanel Name="StartDatePanel" 
+                        Height="40" Orientation="Horizontal" 
+                        DockPanel.Dock="Top"
+                        HorizontalAlignment="Center" VerticalAlignment="Center"
+            >
+                <StackPanel.Visibility>
+                    <Binding Path="SelectedItem" 
+                             ElementName="Frequency_ComboBox" 
+                             Converter = "{StaticResource FrequencyToVisConverter}"
+                    >
+                        <Binding.ConverterParameter>
+                            <x:Array Type="sys:String">
+                                <sys:String>Weekly</sys:String>
+                                <sys:String>BiWeekly</sys:String>
+                                <sys:String>BiMonthly</sys:String>
+                                <sys:String>Monthly</sys:String>
+                                <sys:String>Quarterly</sys:String>
+                                <sys:String>Yearly</sys:String>
+                                <sys:String>Custom</sys:String>
+                            </x:Array>
+                        </Binding.ConverterParameter>
+                    </Binding>
+                </StackPanel.Visibility>
+                <Label HorizontalAlignment="Center" VerticalAlignment="Center" 
+                       Margin="0,0,0,0" 
+                    >
+                    <Label.Content>
+                        When should this schedule start?
+                    </Label.Content>
+                </Label>
+                <DatePicker Name="TransactionDate_DatePicker"
                         HorizontalAlignment="Center" VerticalAlignment="Center"
                         Margin="0"
-                        Grid.Column="2" 
-                        Name="TransactionDate_DatePicker"
                         SelectedDate="{Binding Schedule.Occurrence_First, Mode=TwoWay}"
                     />
+            </StackPanel>
 
-                    <GroupBox 
+            <StackPanel Name="LastDayOfMonthPanel"
+                        HorizontalAlignment="Center" VerticalAlignment="Center" 
+                        Orientation="Horizontal" Height="40"
+                        DockPanel.Dock="Top"
+            >
+                <StackPanel.Visibility>
+                    <Binding Path="SelectedItem" 
+                            ElementName="Frequency_ComboBox" 
+                            Converter = "{StaticResource FrequencyToVisConverter}"
+                >
+                        <Binding.ConverterParameter>
+                            <x:Array Type="sys:String">
+                                <sys:String>Monthly</sys:String>
+                                <sys:String>Quarterly</sys:String>
+                            </x:Array>
+                        </Binding.ConverterParameter>
+                    </Binding>
+                </StackPanel.Visibility>
+                <CheckBox HorizontalAlignment="Center" VerticalAlignment="Center"
+                          Height="15" Margin="0" 
+                          IsChecked="{Binding Schedule.UseLastDayOfTheMonth, Mode=TwoWay}"
+                />
+                <Label HorizontalAlignment="Center" VerticalAlignment="Center"
+                       Margin="0" 
+                       Grid.Row="4" Grid.ColumnSpan="3"
+                >
+                    <Label.Content>Force this to always occur on the last day of the month?</Label.Content>
+                </Label>
+            </StackPanel>
+
+            <StackPanel Name="EndDatePanel" Height="70" Orientation="Horizontal" 
+                        HorizontalAlignment="Center" VerticalAlignment="Center"
+                        DockPanel.Dock="Top"
+                        >
+                <StackPanel.Visibility>
+                    <Binding Path="SelectedItem" 
+                             ElementName="Frequency_ComboBox" 
+                             Converter = "{StaticResource FrequencyToVisConverter}"
+                    >
+                        <Binding.ConverterParameter>
+                            <x:Array Type="sys:String">
+                                <sys:String>Weekly</sys:String>
+                                <sys:String>BiWeekly</sys:String>
+                                <sys:String>BiMonthly</sys:String>
+                                <sys:String>Monthly</sys:String>
+                                <sys:String>Quarterly</sys:String>
+                                <sys:String>Yearly</sys:String>
+                                <sys:String>Custom</sys:String>
+                            </x:Array>
+                        </Binding.ConverterParameter>
+                    </Binding>
+                </StackPanel.Visibility>
+                <GroupBox 
                         BorderBrush="Black" BorderThickness="1"
                         Margin="10,5"
                         Height="60" Width="250"
-                        Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"
                         Header="Set an End Date?"
                     >
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="2*"/>
-                            </Grid.ColumnDefinitions>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
 
-                            <CheckBox 
+                        <CheckBox 
                         HorizontalAlignment="Center" VerticalAlignment="Center"
                         IsChecked="{Binding Path=HasEndDate, Mode=TwoWay}"
                     />
 
-                            <DatePicker 
+                        <DatePicker 
                         HorizontalAlignment="Center" VerticalAlignment="Center"
                         Margin="0,0,0,0" 
                         Grid.Column="1" 
@@ -118,80 +238,118 @@
                         SelectedDate="{Binding Schedule.Occurrence_Final, Mode=TwoWay}"
                         IsEnabled="{Binding HasEndDate}"
                     />
-                        </Grid>
-                    </GroupBox>
+                    </Grid>
+                </GroupBox>
+            </StackPanel>
 
-                    <GroupBox 
+            <StackPanel Name="TransactionTimePanel" 
+                        Height="70" Orientation="Horizontal" 
+                        HorizontalAlignment="Center" VerticalAlignment="Center"
+                        DockPanel.Dock="Top"
+                        >
+                <StackPanel.Visibility>
+                    <Binding Path="SelectedItem" 
+                             ElementName="Frequency_ComboBox" 
+                             Converter = "{StaticResource FrequencyToVisConverter}"
+                    >
+                        <Binding.ConverterParameter>
+                            <x:Array Type="sys:String">
+                                <sys:String>Weekly</sys:String>
+                                <sys:String>BiWeekly</sys:String>
+                                <sys:String>BiMonthly</sys:String>
+                                <sys:String>Monthly</sys:String>
+                                <sys:String>Quarterly</sys:String>
+                                <sys:String>Yearly</sys:String>
+                                <sys:String>Custom</sys:String>
+                            </x:Array>
+                        </Binding.ConverterParameter>
+                    </Binding>
+                </StackPanel.Visibility>
+                <GroupBox 
                         BorderBrush="Black" BorderThickness="1"
                         Margin="10,5"
                         Height="60" Width="250"
                         Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
                         Header="Set a Transaction Time?"
                     >
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1*"/>
-                                <ColumnDefinition Width="2*"/>
-                            </Grid.ColumnDefinitions>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
 
-                            <CheckBox 
+                        <CheckBox 
                         HorizontalAlignment="Center" VerticalAlignment="Center"
                         IsChecked="{Binding Schedule.HasCustomTransactionTime, Mode=TwoWay}">
-                            </CheckBox>
+                        </CheckBox>
 
-                            <StackPanel 
+                        <StackPanel 
                         HorizontalAlignment="Center" VerticalAlignment="Center" 
                         Orientation="Horizontal" 
                         Background="#FFE5E5E5"
                         Grid.Column="1"
                         IsEnabled="{Binding Schedule.HasCustomTransactionTime}"
                     >
-                                <ComboBox Height="26" Width="45"
+                            <ComboBox Height="26" Width="45"
                                         Name="Hour_ComboBox"
                             />
-                                <TextBlock Height="26" Margin="5,0"
+                            <TextBlock Height="26" Margin="5,0"
                                         Text=":" TextBlock.FontSize="18"
                             />
-                                <TextBox HorizontalAlignment="Left" VerticalAlignment="Center" 
+                            <TextBox HorizontalAlignment="Left" VerticalAlignment="Center" 
                                         Height="26" Width="25" Margin="0,0,0,0"
                                         TextAlignment="Center" TextBlock.TextAlignment="Center"
                                         Text="{Binding SelectedMinutesString, Mode=TwoWay}"
                             />
-                                <ComboBox Height="26" Width="50" Margin="10,0,0,0"
+                            <ComboBox Height="26" Width="50" Margin="10,0,0,0"
                                         Name="Meridian_ComboBox"
                             />
-                            </StackPanel>
-                        </Grid>
-                    </GroupBox>
+                        </StackPanel>
+                    </Grid>
+                </GroupBox>
+            </StackPanel>
 
-                    <StackPanel 
+            <StackPanel Name="AutoConfirmPanel"
                         HorizontalAlignment="Center" VerticalAlignment="Center" 
-                        Orientation="Horizontal"
-                        Grid.Row="3" Grid.ColumnSpan="3"
-                    >
-                        <CheckBox 
-                HorizontalAlignment="Center" VerticalAlignment="Center"
-                Height="15" Margin="0" 
-                IsChecked="{Binding Schedule.IsAutoConfirm, Mode=TwoWay}"
-                />
-                        <Label
-                    HorizontalAlignment="Center" VerticalAlignment="Center"
-                    Margin="0" 
-                    Grid.Row="4" Grid.ColumnSpan="3"
-                >
-                            <Label.Content>Automatically Confirm transactions for this schedule?</Label.Content>
-                        </Label>
-                    </StackPanel>
-
-                </Grid>
-            </TabItem>
-            
-        </TabControl>
-
-        <Grid
-                HorizontalAlignment="Stretch" VerticalAlignment="Center"
-                Grid.Row="2" Grid.ColumnSpan="3"
+                        Orientation="Horizontal" Height="40"
+                        DockPanel.Dock="Top"
             >
+                <StackPanel.Visibility>
+                    <Binding Path="SelectedItem" 
+                            ElementName="Frequency_ComboBox" 
+                            Converter = "{StaticResource FrequencyToVisConverter}"
+                >
+                        <Binding.ConverterParameter>
+                            <x:Array Type="sys:String">
+                                <sys:String>Weekly</sys:String>
+                                <sys:String>BiWeekly</sys:String>
+                                <sys:String>BiMonthly</sys:String>
+                                <sys:String>Monthly</sys:String>
+                                <sys:String>Quarterly</sys:String>
+                                <sys:String>Yearly</sys:String>
+                                <sys:String>Custom</sys:String>
+                            </x:Array>
+                        </Binding.ConverterParameter>
+                    </Binding>
+                </StackPanel.Visibility>
+                <CheckBox HorizontalAlignment="Center" VerticalAlignment="Center"
+                          Height="15" Margin="0" 
+                          IsChecked="{Binding Schedule.IsAutoConfirm, Mode=TwoWay}"
+                />
+                <Label HorizontalAlignment="Center" VerticalAlignment="Center"
+                       Margin="0" 
+                       Grid.Row="4" Grid.ColumnSpan="3"
+                >
+                    <Label.Content>Automatically Confirm transactions for this schedule?</Label.Content>
+                </Label>
+            </StackPanel>
+
+        </DockPanel>
+
+        <Grid Name="UserControls"
+              HorizontalAlignment="Stretch" VerticalAlignment="Center"
+              Grid.Row="3" Grid.ColumnSpan="3"
+        >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
@@ -211,5 +369,6 @@
                         Click="Save_Button_Click"
                 />
         </Grid>
+
     </Grid>
 </Window>

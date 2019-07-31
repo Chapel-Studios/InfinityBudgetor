@@ -1,6 +1,6 @@
-﻿using Budgetor.Helpers;
-using Budgetor.Models;
+﻿using Budgetor.Helpers.Extensions;
 using Budgetor.Models.Contracts;
+using Budgetor.Models.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
