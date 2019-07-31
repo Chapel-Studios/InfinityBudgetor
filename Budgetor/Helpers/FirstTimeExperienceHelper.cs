@@ -4,15 +4,16 @@ using Budgetor.Overminds;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data.SQLite;
+using System.IO;
 using System.Windows;
 
 namespace Budgetor.Helpers
 {
     public class FirstTimeExperienceHelper : IDisposable
     {
+        private SQLiteConnection DBConnection;
+
         private AccountsOM _accountOverMind;
         public AccountsOM AccountOverMind
         {
@@ -28,9 +29,12 @@ namespace Budgetor.Helpers
 
         private readonly bool hasRan;
 
-        public FirstTimeExperienceHelper()
+        public FirstTimeExperienceHelper(SQLiteConnection dbConnection)
         {
             hasRan = Budgetor.Properties.Settings.Default.DateTime_FirstRun != DateTime.MinValue;
+            DBConnection = dbConnection;
+            CreateTables();
+            AddSeedData();
 
             //todo: remove Dev testing option
             if (hasRan && AccountOverMind.GetBankAccountsList().Count == 0)
@@ -91,7 +95,7 @@ namespace Budgetor.Helpers
             {
                 MessageBox.Show("If you change your mind you'll have to manually make a cash account later.",
                                 button: MessageBoxButton.OK,
-                                caption: MiscConstants.AppName);
+                                caption: MiscConstants.APPNAME);
             }
             else if (shouldCreate == MessageBoxResult.Yes)
             {
@@ -113,6 +117,28 @@ namespace Budgetor.Helpers
 
             return cash;
         }
+
+        private void CreateTables()
+        {
+            using (SQLiteCommand objCom = DBConnection.CreateCommand())
+            {
+                DBConnection.Open();
+                objCom.CommandText = File.ReadAllText("C:\\Candy Mountain\\Projects\\budgetor\\Budgetor\\DBScripts\\Tables.sql");
+                objCom.ExecuteNonQuery();
+                DBConnection.Close();
+            }
+        }
+
+        private void AddSeedData()
+        {
+            using (SQLiteCommand objCom = DBConnection.CreateCommand())
+            {
+                DBConnection.Open();
+                objCom.CommandText = File.ReadAllText("C:\\Candy Mountain\\Projects\\budgetor\\Budgetor\\DBScripts\\Tables.sql");
+            }
+        }
+
+        #endregion Private Methods
 
         #region IDisposable Implementation
         private IntPtr handle;
