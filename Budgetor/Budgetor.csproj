@@ -212,13 +212,27 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DBScripts\Sprocs\GetBankAccount.sql" />
-    <Content Include="DBScripts\SeedData\ScheduleFrequencyTypes.sql" />
-    <Content Include="DBScripts\Sprocs\GetIncomeSource.sql" />
-    <Content Include="DBScripts\Tables.sql" />
-    <Content Include="DBScripts\Views\BankAccountsListViews.sql" />
-    <Content Include="DBScripts\Sprocs\GetAccountComboBoxInfo.sql" />
-    <Content Include="DBScripts\Views\IncomeSourcesListViews.sql" />
+    <Content Include="DBScripts\Sprocs\GetBankAccount.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBScripts\SeedData\ScheduleFrequencyTypes.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBScripts\Sprocs\GetIncomeSource.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBScripts\Tables.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBScripts\Views\BankAccountsListViews.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBScripts\Sprocs\GetAccountComboBoxInfo.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DBScripts\Views\IncomeSourcesListViews.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

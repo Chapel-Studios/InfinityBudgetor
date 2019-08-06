@@ -29,12 +29,9 @@ namespace Budgetor.Helpers
 
         private readonly bool hasRan;
 
-        public FirstTimeExperienceHelper(SQLiteConnection dbConnection)
+        public FirstTimeExperienceHelper()
         {
             hasRan = Budgetor.Properties.Settings.Default.DateTime_FirstRun != DateTime.MinValue;
-            DBConnection = dbConnection;
-            CreateTables();
-            AddSeedData();
 
             //todo: remove Dev testing option
             if (hasRan && AccountOverMind.GetBankAccountsList().Count == 0)
@@ -63,6 +60,7 @@ namespace Budgetor.Helpers
         }
 
 
+        #region Private Methods
 
         private IncomeSourceDetailVM CreateDoNotTrackIncomeSource()
         {

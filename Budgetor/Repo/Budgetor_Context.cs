@@ -6,7 +6,7 @@ namespace Budgetor.Repo
     public partial class Budgetor_Context : DbContext
     {
         public Budgetor_Context()
-            : base("name=Budgetor_Model")
+            : base("name=SQLite_Budgetor")
         {
         }
         // Tables

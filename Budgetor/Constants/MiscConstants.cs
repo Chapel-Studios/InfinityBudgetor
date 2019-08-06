@@ -9,7 +9,10 @@ namespace Budgetor.Constants
     class MiscConstants
     {
         public const string APPNAME = "Budgetor";
-        public const string DBPATH = "%LocalAppData%/" + APPNAME + "/";
-        public const string DBFILEPATH = DBPATH + APPNAME + ".db";
+        public const string DBPATH = "%LocalAppData%\\" + APPNAME + "\\";
+        public const string DBFILENAME = APPNAME + ".db";
+        public const string DBFILEPATH = DBPATH + DBFILENAME;
+        public const string SQLSCRIPTPATH = "DBScripts/";
+
     }
 }
