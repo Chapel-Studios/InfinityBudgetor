@@ -14,7 +14,6 @@ namespace Budgetor.Repo.Models
         [StringLength(50)]
         public string Title { get; set; }
 
-        [Column(TypeName = "money")]
         public decimal Amount { get; set; }
 
         public int? ToAccount { get; set; }
