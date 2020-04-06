@@ -28,9 +28,9 @@ namespace Budgetor.Models
             get
             {
                 if (InitialBalance.HasValue)
-                    return DispayFormatHelper.GetDisplayAmountText(this.InitialBalance.Value);
+                    return DispayExtensions.GetDisplayAmountText(this.InitialBalance.Value);
                 else
-                    return DispayFormatHelper.GetDisplayAmountText(0);
+                    return DispayExtensions.GetDisplayAmountText(0);
             }
             set
             {

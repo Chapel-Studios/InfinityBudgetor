@@ -11,12 +11,12 @@ namespace Budgetor.Controls
 {
     public partial class EditButton : Button
     {
-        public int AccountId
+        public int ContextualId
         {
-            get { return (int)this.GetValue(AccountIdProperty); }
-            set { this.SetValue(AccountIdProperty, value); }
+            get { return (int)this.GetValue(ContextualIdProperty); }
+            set { this.SetValue(ContextualIdProperty, value); }
         }
-        public static readonly DependencyProperty AccountIdProperty = DependencyProperty.Register("AccountId", typeof(int), typeof(EditButton), new PropertyMetadata(0));
+        public static readonly DependencyProperty ContextualIdProperty = DependencyProperty.Register("ContextualId", typeof(int), typeof(EditButton), new PropertyMetadata(0));
 
         public EditButton()
         {

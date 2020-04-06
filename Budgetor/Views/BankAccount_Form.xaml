@@ -33,7 +33,7 @@
                  Height="26" Width="300"
                  Margin="0,7"
                  TextWrapping="Wrap"
-                 Text="{Binding AccountName}"
+                 Text="{Binding AccountName, Mode=TwoWay}"
                  TextBlock.FontStyle="Italic"
                  TextBlock.FontWeight="Light"
         /> <!--"E.G. Credit Union Checking"-->

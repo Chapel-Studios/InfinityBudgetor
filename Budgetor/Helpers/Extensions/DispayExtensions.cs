@@ -7,23 +7,23 @@ using System.Threading.Tasks;
 
 namespace Budgetor.Helpers
 {
-    public static class DispayFormatHelper
+    public static class DispayExtensions
     {
-        public static string GetDisplayAmountText(decimal value)
+        public static string GetDisplayAmountText(this decimal value)
         {
             return value.ToString("C");
         }
 
-        public static string GetDisplayDate(DateTime value)
+        public static string GetDisplayDate(this DateTime value)
         {
             return string.Format(value.ToString(), "d/m/yy");
         }
 
-        public static string GetDisplayDate(DateTime? value)
+        public static string GetDisplayDate(this DateTime? value)
         {
             if (value.HasValue)
             {
-                return GetDisplayDate(value.Value);
+                return value.Value.GetDisplayDate();
             }
             else
             {
@@ -31,7 +31,13 @@ namespace Budgetor.Helpers
             }
         }
 
-        
+        public static string ToMinuteString(this int i)
+        {
+            if (i < 10)
+                return "0" + i.ToString();
+            else return i.ToString();
+        }
+
     }
 
 }

@@ -12,6 +12,16 @@ namespace Budgetor.Overminds
 {
     public class AccountsOM : OverMindBase
     {
+
+        #region Constructor
+
+        public AccountsOM(Repository repo) : base(repo)
+        {
+
+        }
+
+        #endregion Constructor
+
         #region Get Accounts
 
         public AccountDetailVM GetGenericAccountDetails(int accountId)
@@ -142,14 +152,39 @@ namespace Budgetor.Overminds
 
         internal BankAccountDetailVM SaveAccount(BankAccountDetailVM account)
         {
-            AccountDetailVM baseAccount = SaveAccount((AccountDetailVM)account);
+            // Is this a new account?
+            if (account.AccountId == 0)
+            {
+                // Create the base account to get an accountId
+                AccountDetailVM baseAccount = SaveAccount((AccountDetailVM)account);
+                account.AccountId = baseAccount.AccountId;
+
+                // Add an initial deposit transaction
+                if (account.InitialBalance.HasValue)
+                {
+                    var initialD = Repo.SaveTransaction(new Transaction(new TransactionSaveInfo() {
+                        Amount = account.InitialBalance.Value,
+                        IsConfirmed = true,
+                        IsUserCreated = true,
+                        Notes = $"Initial Deposit for {account.AccountName} {Constants.Accounts.GetDisplay(account.AccountType)}",
+                        DateTime_Occurred = account.DateTime_Created,
+                        Title = "Initial Deposit",
+                        ToAccount = account.AccountId,
+                        TransactionType = Constants.TransactionType.Deposit,
+                        FromAccount = account.DepositAccountId
+                    }));
+                    account.InitialDepositId = initialD.LocalId;
+                }
+            }
+
+            
             var result = Repo.SaveAccount(new DepositAccount(account));
             Transaction transaction = null;
             if (result.InitialDepositId.HasValue)
             {
                 transaction = Repo.GetTransactionById(result.InitialDepositId.Value);
             }
-            return new BankAccountDetailVM(baseAccount, result, transaction);
+            return new BankAccountDetailVM(account, result, transaction);
         }
 
         #endregion Saves

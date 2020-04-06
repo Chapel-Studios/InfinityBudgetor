@@ -1,6 +1,4 @@
-﻿
-using Budgetor.Models;
-using Budgetor.Repo.Models;
+﻿using Budgetor.Repo.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -18,10 +16,9 @@ namespace Budgetor.Repo
             context = new Budgetor_Context();
         }
 
-
         #region Accounts
 
-        #region Gets
+            #region Gets
 
         internal Account GetAccount(int id)
         {
@@ -59,8 +56,6 @@ namespace Budgetor.Repo
 
         #region Saves
 
-        #region Accounts
-
         internal Account SaveAccount(Account account)
         {
             Account record = null;
@@ -74,6 +69,7 @@ namespace Budgetor.Repo
             else
             {
                 record = account;
+                record.DateTime_Created = DateTime.UtcNow;
                 context.Accounts.Add(record);
                 context.Entry(record).State = EntityState.Added;
             }
@@ -158,46 +154,10 @@ namespace Budgetor.Repo
             context.SaveChanges();
             //todo: Log this!
         }
-
-        #endregion Accounts
-
-        #region Transactions
         
-        internal Transaction SaveTransaction(Transaction transactionToSave)
-        {
-            Transaction record = null;
-            if (transactionToSave.LocalId == 0)
-            {
-                record = transactionToSave;
-                record.DateTime_Created = DateTime.UtcNow;
+            #endregion Saves
 
-                context.Transactions.Add(transactionToSave);
-                context.Entry(record).State = EntityState.Added;
-            }
-            else
-            {
-                record = context.Transactions.FirstOrDefault(a => a.LocalId == transactionToSave.LocalId);
-                record.Amount = transactionToSave.Amount;
-                record.DateTime_Occurred = transactionToSave.DateTime_Occurred;
-                record.FromAccount = transactionToSave.FromAccount;
-                record.IsConfirmed = transactionToSave.IsConfirmed;
-                record.Title = transactionToSave.Title;
-                record.ToAccount = transactionToSave.ToAccount;
-                record.Notes = transactionToSave.Notes;
-
-                context.Entry(record).State = EntityState.Modified;
-            }
-
-            context.SaveChanges();
-
-            return record;
-        }
-        
-        #endregion Transactions
-        
-        #endregion Saves
-
-        #region Deactivation
+            #region Deactivation
 
         internal Account DeactivateAccount(int accountId)
         {
@@ -231,7 +191,7 @@ namespace Budgetor.Repo
             }
         }
 
-        #endregion Deactivation
+            #endregion Deactivation
 
         #endregion Accounts
 
@@ -246,15 +206,75 @@ namespace Budgetor.Repo
 
         #region Transactions
 
+            #region Gets
+
         internal Transaction GetTransactionById(int id)
         {
             return GetTransactionsById(new List<int>() { id }).FirstOrDefault();
         }
 
-        internal List<Transaction> GetTransactionsById(List<int> ids)
+        internal IEnumerable<Transaction> GetTransactionsById(List<int> ids)
         {
-            return context.Transactions.Where(x => ids.Contains(x.LocalId)).ToList();
+            return context.Transactions.Where(x => ids.Contains(x.LocalId));
         }
+
+        internal IEnumerable<Transaction> GetTransactions(DateTime beginning, DateTime cutOff)
+        {
+            return context.Transactions.Where(x => x.DateTime_Occurred < cutOff && x.DateTime_Occurred > beginning);
+        }
+
+            #endregion Gets
+
+            #region Saves
+
+        internal Transaction SaveTransaction(Transaction transactionToSave)
+        {
+            Transaction record = null;
+            if (transactionToSave.LocalId == 0)
+            {
+                record = transactionToSave;
+                record.DateTime_Created = DateTime.UtcNow;
+
+                context.Transactions.Add(transactionToSave);
+                context.Entry(record).State = EntityState.Added;
+            }
+            else
+            {
+                record = context.Transactions.FirstOrDefault(a => a.LocalId == transactionToSave.LocalId);
+                record.Amount = transactionToSave.Amount;
+                record.DateTime_Occurred = transactionToSave.DateTime_Occurred;
+                record.FromAccount = transactionToSave.FromAccount;
+                record.IsConfirmed = transactionToSave.IsConfirmed;
+                record.Title = transactionToSave.Title;
+                record.ToAccount = transactionToSave.ToAccount;
+                record.Notes = transactionToSave.Notes;
+
+                context.Entry(record).State = EntityState.Modified;
+            }
+
+            context.SaveChanges();
+
+            return record;
+        }
+
+            #endregion Saves
+
+            #region Deletes
+
+        internal void DeleteTransaction(int transactionId)
+        {
+            //TODO: what should this return?
+            var record = context.Transactions.Where(x => x.LocalId == transactionId).FirstOrDefault();
+            context.Transactions.Remove(record);
+            context.Entry(record).State = EntityState.Modified;
+            context.SaveChanges();
+        }
+
+            #endregion Deletes
+
+        #endregion Transactions
+
+        #region Misc
 
         internal decimal GetMonthlyStartingBalanceForAccount(int accountId, DateTime month)
         {
@@ -270,7 +290,6 @@ namespace Budgetor.Repo
             return balance - deductions;
         }
 
-        #endregion Transactions
-
+        #endregion Misc
     }
 }

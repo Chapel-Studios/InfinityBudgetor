@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Windows;
 using Budgetor.Constants;
+using Budgetor.Helpers;
 using Budgetor.Models;
 using Budgetor.Overminds;
-using Budgetor.Helpers.Extensions;
 
 namespace Budgetor.Views
 {
@@ -23,7 +22,7 @@ namespace Budgetor.Views
         private bool ShowCreationDateWarning { get; set; }
         public bool NeedResponse { get; set; }
         private bool DidUserCancel { get; set; }
-        private TransactionSaveModel InitialDeposit { get; set; }
+        private TransactionSaveInfo InitialDeposit { get; set; }
 
         public bool IsEditMode { get; set; }
         public bool IsAddMode
@@ -57,30 +56,6 @@ namespace Budgetor.Views
         }
         public BankAccountDetailVM Account { get; set; }
 
-        private int? _SelectedFromAccount;
-        public int SelectedFromAccount
-        {
-            get
-            {
-                if (!_SelectedFromAccount.HasValue)
-                {
-                    if (vm != null)
-                    {
-                        _SelectedFromAccount = vm.FromAccounts.GetDefaultAccount();
-                    }
-                    else
-                    {
-                        _SelectedFromAccount = 1;
-                    }
-                }
-                return _SelectedFromAccount.Value;
-            }
-            set
-            {
-                _SelectedFromAccount = value;
-            }
-        }
-
         #endregion Properties
 
         #region Constructors
@@ -100,7 +75,7 @@ namespace Budgetor.Views
             VMHandle.DataContext = vm;
             BankAccount_Grid.DataContext = Account;
 
-            FromAccount_ComboBox.BindToList(initialVM.FromAccounts, SelectedFromAccount);
+            FromAccount_ComboBox.BindToList(vm, "FromAccounts", "SelectedFromAccount");
         }
 
         #endregion Constructors
@@ -120,29 +95,39 @@ namespace Budgetor.Views
 
         private void Save_Button_Click(object sender, RoutedEventArgs e)
         {
-            var amount = Account.InitialBalance.Value;
-
-            if (Account != OGAccount)
+            try
             {
-                OGAccount = accountsOM.SaveAccount(Account);
-            }
-            if (IsAddMode)
-            {
-                InitialDeposit = new TransactionSaveModel()
+                if (IsAddMode)
                 {
-                    Amount = amount,
-                    DateTime_Occurred = Account.DateTime_Created,
-                    FromAccount = SelectedFromAccount,
-                    IsConfirmed = true,
-                    IsUserCreated = false,
-                    Title = "Default Cash Account Initial Deposit",
-                    OccerrenceAccount = null,
-                    ToAccount = Account.AccountId,
-                    TransactionType = TransactionType.Deposit
-                };
-                transactionsOM.SaveTransaction(InitialDeposit);
+                    var amount = Account.InitialBalance.HasValue ? Account.InitialBalance.Value : 0.0M;
+                    InitialDeposit = new TransactionSaveInfo()
+                    {
+                        Amount = amount,
+                        DateTime_Occurred = Account.DateTime_Created,
+                        FromAccount = vm.SelectedFromAccount,
+                        IsConfirmed = true,
+                        IsUserCreated = false,
+                        Title = "Default Cash Account Initial Deposit",
+                        OccerrenceAccount = null,
+                        ToAccount = Account.AccountId,
+                        TransactionType = TransactionType.Deposit
+                    };
+                    if (InitialDeposit.Amount != 0)
+                        transactionsOM.SaveTransaction(InitialDeposit);
+                }
+                else
+                {
+                    if (Account != OGAccount)
+                    {
+                        OGAccount = accountsOM.SaveAccount(Account);
+                    }
+                }
+                this.Close();
             }
-            this.Close();
+            catch (Exception ex)
+            {
+                //todo: add error logging
+            }
         }
 
         private void EditTransaction_Button_Click(object sender, RoutedEventArgs e)

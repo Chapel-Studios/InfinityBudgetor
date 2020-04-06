@@ -1,14 +1,11 @@
 ﻿using Budgetor.Repo.Models;
 using Budgetor.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Budgetor.Helpers.Extensions
+namespace Budgetor.Helpers
 {
-    public static class ListMapper
+    public static class AccountComboBoxItemExtensions
     {
         public static List<AccountComboBoxItem> ConvertRepoToView(this List<AccountComboBoxInfo> infos)
         {
@@ -20,10 +17,12 @@ namespace Budgetor.Helpers.Extensions
             return result;
         }
 
-        public static int GetDefaultAccount(this List<AccountComboBoxItem> items)
+        public static int? GetDefaultAccount(this List<AccountComboBoxItem> items)
         {
-            if (items.Count < 2) // there should always be at least 1 item in the list
-                    return 1; // This should always be the 'don't track' inc source
+            if (items.Count == 0)
+                return null;
+            if (items.Count == 1) 
+                return items.FirstOrDefault().AccountId;
 
             List<int> defaults = new List<int>();
             foreach (var item in items)
@@ -34,7 +33,7 @@ namespace Budgetor.Helpers.Extensions
 
             if (defaults.Count == 0)
             {
-                return 1;
+                return items.Min(x => x.AccountId);
             }
             else if (defaults.Count == 1)
             {
