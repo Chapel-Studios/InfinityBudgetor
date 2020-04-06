@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Budgetor.Constants;
 using Budgetor.Helpers;
 using Budgetor.Models.Contracts;
@@ -90,8 +91,12 @@ namespace Budgetor.Models
             }
             set
             {
-                decimal.TryParse(value, out decimal result);
-                Transaction.Amount = result;
+                value = Regex.Replace(value, "[^0-9.]", String.Empty);
+                var b = decimal.TryParse(value, out decimal d);
+                if (b)
+                {
+                    Transaction.Amount = b ? d : Transaction.Amount;
+                }
             }
         }
 
@@ -151,7 +156,7 @@ namespace Budgetor.Models
         {
             get
             {
-                if (SelectedHour > 12)
+                if (Transaction.DateTime_Occurred.Hour > 12)
                 {
                     _SelectedMeridian = "PM";
                 }
@@ -412,7 +417,7 @@ namespace Budgetor.Models
 
             #region Modal Config
 
-        private bool IsDirty;
+        public bool IsDirty;
         public bool IsEditMode { get; set; }
         public bool IsAddMode
         {
@@ -504,7 +509,9 @@ namespace Budgetor.Models
                 IsUserCreated = OGTransaction.IsUserCreated,
                 OccerrenceAccount = OGTransaction.OccerrenceAccount,
                 Title = OGTransaction.Title,
-                ToAccount = OGTransaction.ToAccount
+                ToAccount = OGTransaction.ToAccount,
+                Notes = OGTransaction.Notes,
+                TransactionId = OGTransaction.TransactionId
             };
         }
 

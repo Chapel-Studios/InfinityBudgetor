@@ -2,6 +2,7 @@
 using System;
 using Budgetor.Constants;
 using Budgetor.Repo.Models;
+using Budgetor.Overminds;
 
 namespace Budgetor.Models
 {
@@ -42,8 +43,16 @@ namespace Budgetor.Models
             DateTime_Occurred = DateTime.Now;
         }
 
-        public TransactionDetailBase(Transaction repoTransaction, AccountBasicInfo toAccount, AccountBasicInfo fromAccount, AccountBasicInfo occerrenceAccount)
+        public TransactionDetailBase(Transaction repoTransaction, AccountsOM om)
         {
+            AccountBasicInfo toAccount = repoTransaction.ToAccount.HasValue
+                                ? om.GetGenericAccountDetails(repoTransaction.ToAccount.Value)
+                                : null;
+            AccountBasicInfo fromAccount = om.GetGenericAccountDetails(repoTransaction.FromAccount);
+            AccountBasicInfo occerrenceAccount = repoTransaction.OccerrenceAccount.HasValue
+                                ? om.GetGenericAccountDetails(repoTransaction.OccerrenceAccount.Value)
+                                : null;
+            
             Title = repoTransaction.Title;
             TransactionType = Constants.Transactions.GetDisplayByTypeName(repoTransaction.TransactionType).EnumOption;
             Amount = repoTransaction.Amount;

@@ -33,12 +33,12 @@ BEGIN
 			THEN t.FromAccount
 			ELSE NULL
 			END AS int
-		) as InitialDepositAccountId
-		, t.FromAccount as InitialDepositAccountId
+		) AS InitialDepositAccountId
+		, t.FromAccount AS InitialDepositAccountId
 	FROM
 		[dbo].[DepositAccount] d
 		LEFT JOIN [dbo].[Accounts] a ON d.AccountId = a.LocalId
-		LEFT JOIN [dbo].[Transactions] t on d.InitialDepositId = t.LocalId
+		LEFT JOIN [dbo].[Transactions] t ON d.InitialDepositId = t.LocalId
 	WHERE
 		a.LocalId = @accountId
 END

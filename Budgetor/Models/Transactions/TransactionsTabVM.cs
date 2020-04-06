@@ -6,12 +6,12 @@ namespace Budgetor.Models
     {
         private ObservableCollection<TransactionsListItemVM> _Transactions;
 
-        public TransactionsTabVM(ObservableCollection<TransactionsListItemVM> transactions)
+        internal TransactionsTabVM(ObservableCollection<TransactionsListItemVM> transactions)
         {
             Transactions = transactions;
         }
 
-        protected ObservableCollection<TransactionsListItemVM> Transactions
+        internal ObservableCollection<TransactionsListItemVM> Transactions
         {
             set
             {

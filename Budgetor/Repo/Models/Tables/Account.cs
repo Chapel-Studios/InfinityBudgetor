@@ -39,6 +39,8 @@ namespace Budgetor.Repo.Models
             LocalId = account.AccountId;
             Notes = account.Notes;
             AccountType = Constants.Accounts.GetDisplay(account.AccountType).TypeName;
+            DateTime_Created = account.DateTime_Created;
+            DateTime_Deactivated = account.DateTime_Deactivated;
         }
 
         #endregion Constructors

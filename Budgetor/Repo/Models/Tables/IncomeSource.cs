@@ -35,7 +35,7 @@ namespace Budgetor.Repo.Models
             AccountId = source.AccountId;
             DefaultToAccountId = source.DefaultToAccountId;
             ExpectedAmount = source.ExpectedAmount;
-            ScheduleId = source.Schedule?.LocalId;
+            ScheduleId = source.Schedule?.ScheduleId;
         }
 
         #endregion Constructors

@@ -38,9 +38,11 @@ CREATE TABLE dbo.Schedules (
 	Occurrence_LastConfirmed DATETIME NULL,
 	Occurrence_LastPlanned DATETIME NULL,
 	Occurrence_Final DATETIME NULL,
-	IsAutoConfirm BIT NOT NULL,
+    HasCustomTransactionTime BIT NOT NULL,
+    IsAutoConfirm BIT NOT NULL,
 	DateTime_Created DATETIME DEFAULT getDate() NOT NULL,
 	DateTime_Deactivated DATETIME NULL,
+
 )
 
 CREATE TABLE dbo.Accounts (

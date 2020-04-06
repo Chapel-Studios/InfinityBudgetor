@@ -34,6 +34,15 @@ namespace Budgetor.Repo
                 .FirstOrDefault();
         }
 
+        internal IncomeSource_DetailView GetIncomeSourceDetail(int id)
+        {
+            var accountIdParameter = new SqlParameter("@accountId", id);
+
+            return context.Database
+                .SqlQuery<IncomeSource_DetailView>("GetIncomeSource @accountId", accountIdParameter)
+                .FirstOrDefault();
+        }
+
         internal List<BankAccountsListView> GetBankAccountsListViews()
         {
             return context.BankAccountsListViews.ToList();
@@ -202,6 +211,37 @@ namespace Budgetor.Repo
             return context.Schedules.First(s => s.LocalId == scheduleId);
         }
 
+        internal Schedule SaveSchedule(Schedule sched)
+        {
+            Schedule record = null;
+            if (sched.LocalId != 0)
+            {
+                record = context.Schedules.FirstOrDefault(a => a.LocalId == sched.LocalId);
+
+                record.Frequency = sched.Frequency;
+                record.HasCustomTransactionTime = sched.HasCustomTransactionTime;
+                record.IsAutoConfirm = sched.IsAutoConfirm;
+                record.Occurrence_Final = sched.Occurrence_Final;
+                record.Occurrence_First = sched.Occurrence_First;
+                record.Occurrence_LastConfirmed = sched.Occurrence_LastConfirmed;
+                record.Occurrence_LastPlanned = sched.Occurrence_LastPlanned;
+
+                context.Entry(record).State = EntityState.Modified;
+            }
+            else
+            {
+                record = sched;
+                record.DateTime_Created = DateTime.UtcNow;
+
+                context.Schedules.Add(sched);
+                context.Entry(record).State = EntityState.Added;
+            }
+
+            context.SaveChanges();
+
+            return record;
+        }
+
         #endregion Scheduling
 
         #region Transactions
@@ -266,7 +306,7 @@ namespace Budgetor.Repo
             //TODO: what should this return?
             var record = context.Transactions.Where(x => x.LocalId == transactionId).FirstOrDefault();
             context.Transactions.Remove(record);
-            context.Entry(record).State = EntityState.Modified;
+            context.Entry(record).State = EntityState.Deleted;
             context.SaveChanges();
         }
 

@@ -53,15 +53,7 @@ namespace Budgetor.Overminds
 
         protected TransactionDetailBase MapRepoTransactionToTransactionBase(Transaction repoTransaction)
         {
-            return new TransactionDetailBase(repoTransaction,
-                                            repoTransaction.ToAccount.HasValue 
-                                                ? AccountsOM.GetGenericAccountDetails(repoTransaction.ToAccount.Value) 
-                                                : null,
-                                            AccountsOM.GetGenericAccountDetails(repoTransaction.FromAccount),
-                                            repoTransaction.OccerrenceAccount.HasValue
-                                                ? AccountsOM.GetGenericAccountDetails(repoTransaction.OccerrenceAccount.Value)
-                                                : null
-            );
+            return new TransactionDetailBase(repoTransaction, AccountsOM);
         }
 
         #endregion Mapping
